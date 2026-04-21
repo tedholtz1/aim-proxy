@@ -39,7 +39,7 @@ app.get('/getendpoint', async (req, res) => {
 
 // Step 4: Security/Login — POST to NewEndpointDomain/Api/Security
 // AppId, UserName, Password as query params; APIKey + OAuthToken as headers
-app.post('/security', async (req, res) => {
+app.all('/security', async (req, res) => {
   const { apikey, appid, oauthtoken, username, password, endpointdomain } = req.query;
   
   const baseUrl = endpointdomain || AIM_STATIC_BASE;
