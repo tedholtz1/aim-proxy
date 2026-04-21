@@ -1,1 +1,1136 @@
+bash
 
+cat /mnt/user-data/outputs/pm-music-ai.html
+Output
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PM Music — AIM Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f2eb;
+  --surface: #fff;
+  --surface2: #f0ece3;
+  --border: #e0d9cc;
+  --ink: #1a1612;
+  --muted: #8a7f72;
+  --accent: #c8430a;
+  --accent2: #e8a020;
+  --green: #2a7a4b;
+  --blue: #1a4a8a;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --display: 'Bebas Neue', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(200,67,10,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(232,160,32,0.05) 0%, transparent 50%);
+}
+
+/* Header */
+header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 3px solid var(--accent);
+}
+
+.logo {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  color: var(--bg);
+  line-height: 1;
+}
+
+.logo span { color: var(--accent2); }
+
+.header-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(245,242,235,0.4);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(245,242,235,0.15);
+  padding-left: 20px;
+}
+
+.auth-status {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(245,242,235,0.5);
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #555;
+  transition: all 0.3s;
+}
+.status-dot.on { background: #4caf50; box-shadow: 0 0 8px #4caf50; }
+.status-dot.off { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100vh - 56px); }
+
+/* Sidebar */
+aside {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  border-right: 1px solid #2a2520;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(245,242,235,0.3);
+  padding: 12px 8px 4px;
+  margin-top: 4px;
+}
+
+.sidebar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(245,242,235,0.7);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.15s;
+}
+.sidebar-btn:hover { background: rgba(245,242,235,0.06); color: var(--bg); }
+.sidebar-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.sidebar-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+
+/* Credentials panel in sidebar */
+.creds-panel {
+  background: rgba(245,242,235,0.04);
+  border: 1px solid rgba(245,242,235,0.1);
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+
+.creds-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+
+.cred-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 8px;
+}
+
+.cred-field label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(245,242,235,0.35);
+}
+
+.cred-field input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(245,242,235,0.1);
+  border-radius: 3px;
+  padding: 6px 8px;
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 11px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.cred-field input:focus { border-color: var(--accent2); }
+
+.connect-btn {
+  width: 100%;
+  padding: 8px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.connect-btn:hover { background: #e05510; }
+.connect-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.token-info {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #4caf50;
+  margin-top: 8px;
+  display: none;
+  word-break: break-all;
+  line-height: 1.4;
+}
+.token-info.show { display: block; }
+
+/* Main area */
+main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* AI Chat area */
+.ai-panel {
+  border-bottom: 2px solid var(--border);
+  background: var(--surface);
+  padding: 20px 24px;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ai-badge {
+  background: var(--ink);
+  color: var(--accent2);
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+.ai-title {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.ai-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.ai-input {
+  flex: 1;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s;
+  min-height: 48px;
+  max-height: 120px;
+}
+.ai-input:focus { border-color: var(--accent); }
+.ai-input::placeholder { color: var(--muted); }
+
+.ai-send {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  height: 48px;
+}
+.ai-send:hover { background: #e05510; transform: translateY(-1px); }
+.ai-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Quick actions */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.quick-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.quick-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* Results area */
+.results-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* AI response bubble */
+.ai-response {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  animation: fadeIn 0.3s ease;
+}
+
+.ai-response.thinking {
+  border-left-color: var(--accent2);
+  color: var(--muted);
+  font-style: italic;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Data table */
+.data-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+.table-header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-title {
+  font-family: var(--display);
+  font-size: 16px;
+  letter-spacing: 0.05em;
+}
+
+.table-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent2);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  background: var(--surface2);
+  padding: 10px 16px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface2); }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+}
+.badge-green { background: rgba(42,122,75,0.12); color: var(--green); }
+.badge-red { background: rgba(200,67,10,0.1); color: var(--accent); }
+.badge-blue { background: rgba(26,74,138,0.1); color: var(--blue); }
+.badge-gray { background: var(--surface2); color: var(--muted); }
+
+.action-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Empty / welcome state */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 16px;
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+}
+
+.welcome-title {
+  font-family: var(--display);
+  font-size: 48px;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.welcome-title span { color: var(--accent); }
+
+.welcome-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  max-width: 400px;
+  line-height: 1.8;
+}
+
+.welcome-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 600px;
+  margin-top: 8px;
+}
+
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.step-num {
+  font-family: var(--display);
+  font-size: 32px;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.step-text {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* CM Form */
+.cm-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.cm-form-title {
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+  color: var(--green);
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field.full { grid-column: 1 / -1; }
+
+.form-field label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.form-field input, .form-field textarea, .form-field select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+  border-color: var(--green);
+}
+
+.form-field textarea { min-height: 80px; resize: vertical; }
+
+.form-actions { display: flex; gap: 10px; }
+
+.btn-submit {
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-submit:hover { background: #1f5c38; }
+
+.btn-cancel {
+  background: var(--surface2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Loading spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; }
+  aside { display: none; }
+  .welcome-steps { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PM <span>MUSIC</span></div>
+  <div class="header-sub">AIM Intelligence Platform</div>
+  <div class="auth-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Not connected</span>
+  </div>
+</header>
+
+<div class="app">
+  <aside>
+    <!-- Credentials -->
+    <div class="creds-panel">
+      <div class="creds-title">⚡ AIM Connection</div>
+      <div class="cred-field">
+        <label>API Key</label>
+        <input type="password" id="apiKey" value="ab4dca0a-7176-4611-8d5b-58dc8a502705">
+      </div>
+      <div class="cred-field">
+        <label>Username</label>
+        <input type="text" id="aimUser" value="DEFAULT">
+      </div>
+      <div class="cred-field">
+        <label>Password</label>
+        <input type="password" id="aimPass" value="PASSWORD">
+      </div>
+      <button class="connect-btn" onclick="connectToAIM()" id="connectBtn">Connect to AIM</button>
+      <div class="token-info" id="tokenInfo">✓ Connected</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="sidebar-label">Browse Data</div>
+    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'All Customers', {})" id="nav-customers">
+      <span class="sidebar-icon">👥</span> All Customers
+    </button>
+    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'Active Rentals', {HasRentals: true})" >
+      <span class="sidebar-icon">🎷</span> Active Rentals
+    </button>
+    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'Open Invoices', {HasOpenInvoices: true})">
+      <span class="sidebar-icon">📄</span> Open Invoices
+    </button>
+    <button class="sidebar-btn" onclick="quickSearch('SearchContactManagement', 'Recent CMs', {})">
+      <span class="sidebar-icon">📝</span> Recent CMs
+    </button>
+    <button class="sidebar-btn" onclick="quickSearch('SearchInventory', 'Inventory', {})">
+      <span class="sidebar-icon">📦</span> Inventory
+    </button>
+    <button class="sidebar-btn" onclick="quickSearch('GetSchoolList', 'Schools', {})">
+      <span class="sidebar-icon">🏫</span> Schools
+    </button>
+
+    <div class="sidebar-label">Actions</div>
+    <button class="sidebar-btn" onclick="showCMForm()">
+      <span class="sidebar-icon">✏️</span> New CM Entry
+    </button>
+    <button class="sidebar-btn" onclick="showAIHelp()">
+      <span class="sidebar-icon">🤖</span> AI Assistant
+    </button>
+  </aside>
+
+  <main>
+    <!-- AI Input -->
+    <div class="ai-panel">
+      <div class="ai-header">
+        <div class="ai-badge">AI</div>
+        <div class="ai-title">Ask anything about your AIM data</div>
+      </div>
+      <div class="ai-input-row">
+        <textarea class="ai-input" id="aiInput" placeholder="e.g. Search for Jones Jr High School... or Show me customers with open rentals... or Create a CM for customer 203..." rows="1" onkeydown="handleKey(event)"></textarea>
+        <button class="ai-send" onclick="handleAIQuery()" id="sendBtn">Ask AI ↵</button>
+      </div>
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="setQuery('Find all customers with active rentals')">Active rentals</button>
+        <button class="quick-btn" onclick="setQuery('Search for schools in the database')">Find schools</button>
+        <button class="quick-btn" onclick="setQuery('Show customers with open invoices')">Open invoices</button>
+        <button class="quick-btn" onclick="setQuery('Search for a customer named Anderson')">Find Anderson</button>
+        <button class="quick-btn" onclick="setQuery('Show me recent contact management entries')">Recent CMs</button>
+        <button class="quick-btn" onclick="setQuery('Search inventory for trumpet')">Find trumpets</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-area" id="resultsArea">
+      <div class="welcome">
+        <div class="welcome-title">AIM <span>INTELLIGENCE</span></div>
+        <div class="welcome-sub">Your AI-powered interface to PM Music Center's AIM data. Connect, ask questions, manage CMs — all in one place.</div>
+        <div class="welcome-steps">
+          <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-text">Connect to AIM using your credentials in the sidebar</div>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-text">Ask AI anything about customers, repairs, CMs, inventory</div>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-text">Create and update CMs directly without opening AIM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const PROXY = 'https://aim-proxy-production.up.railway.app';
+const APP_ID = 'PMMusic-AI-v1';
+
+let auth = { apiKey: '', oauthToken: '', token: '', endpointDomain: 'https://sandbox.active-e.net', connected: false };
+
+// ── Auth ──────────────────────────────────────────────
+async function connectToAIM() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const user = document.getElementById('aimUser').value.trim();
+  const pass = document.getElementById('aimPass').value.trim();
+
+  const btn = document.getElementById('connectBtn');
+  btn.textContent = 'Connecting...';
+  btn.disabled = true;
+
+  setStatus('', 'Connecting...');
+
+  try {
+    // Step 1: GetEndPoint
+    const r1 = await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
+    const d1 = await r1.json();
+    if (!d1.OAuthToken) throw new Error('No OAuth token returned');
+
+    const oauthToken = d1.OAuthToken;
+    const endpointDomain = d1.NewEndpointDomain?.replace(/\/$/, '') || 'https://sandbox.active-e.net';
+
+    // Step 2: Security
+    const r2 = await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(oauthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(endpointDomain)}`);
+    const d2 = await r2.json();
+    if (!d2.Token) throw new Error(d2.Status?.ErrorMessage || 'Auth failed');
+
+    auth = { apiKey, oauthToken, token: d2.Token, endpointDomain, connected: true };
+
+    setStatus('on', `Connected · ${d2.UserDetails?.Firstname || 'User'}`);
+    document.getElementById('tokenInfo').textContent = `✓ Logged in as ${d2.UserDetails?.Firstname} ${d2.UserDetails?.LastName}`;
+    document.getElementById('tokenInfo').classList.add('show');
+    btn.textContent = 'Reconnect';
+    btn.disabled = false;
+
+    addResult(`<div class="ai-response">✓ Connected to AIM sandbox as <strong>${d2.UserDetails?.Firstname} ${d2.UserDetails?.LastName}</strong>. You can now ask questions or browse your data.</div>`);
+
+  } catch (err) {
+    setStatus('off', 'Connection failed');
+    btn.textContent = 'Connect to AIM';
+    btn.disabled = false;
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ Connection failed: ${err.message}</div>`);
+  }
+}
+
+// ── AIM API Call ──────────────────────────────────────
+async function callAIM(path, params = {}) {
+  if (!auth.connected) throw new Error('Not connected to AIM. Please connect first.');
+  const qs = new URLSearchParams({
+    apikey: auth.apiKey,
+    appid: APP_ID,
+    oauthtoken: auth.oauthToken,
+    token: auth.token,
+    endpointdomain: auth.endpointDomain,
+    path,
+    ...params
+  }).toString();
+  const r = await fetch(`${PROXY}/api?${qs}`);
+  const data = await r.json();
+  if (data.Status?.StatusCode === 'Error') throw new Error(data.Status.ErrorMessage);
+  return data;
+}
+
+// ── AI Query Handler ──────────────────────────────────
+async function handleAIQuery() {
+  const input = document.getElementById('aiInput').value.trim();
+  if (!input) return;
+
+  document.getElementById('aiInput').value = '';
+  document.getElementById('sendBtn').disabled = true;
+
+  // Show thinking
+  const thinkId = 'think-' + Date.now();
+  addResult(`<div class="ai-response thinking" id="${thinkId}"><span class="spinner"></span>AI is thinking about: "${input}"</div>`);
+
+  try {
+    // Call Claude AI to interpret the query
+    const aiResp = await fetch(`${PROXY}/ai`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are an AI assistant for PM Music Center, a music instrument rental company. You help interpret natural language queries and convert them into AIM API actions.
+
+Available AIM API endpoints (use exact names):
+- SearchCustomers: search customers. Params: LastName, FirstName, Email, Phone
+- SearchContactManagement: search CM notes. Params: CustomerID
+- SearchInventory: search inventory. Params: Description, Category
+- GetSchoolList: get list of schools. No params needed.
+- GetSchoolDistrictList: get school districts. No params needed.
+- CustomerInfoRequest: get customer details. Params: Pk (customer primary key)
+
+Respond ONLY with a JSON object like:
+{
+  "action": "search" | "create_cm" | "explain" | "not_connected",
+  "endpoint": "SearchCustomers",
+  "params": {"LastName": "Jones"},
+  "display_title": "Customer Search: Jones",
+  "explanation": "Short explanation of what you're doing"
+}
+
+If the user wants to create a CM, set action to "create_cm".
+If you cannot determine an API call, set action to "explain" and put a helpful message in explanation.
+If not connected, set action to "not_connected".`,
+        messages: [{ role: 'user', content: input }]
+      })
+    });
+
+    const aiData = await aiResp.json();
+    const rawText = aiData.content?.[0]?.text || '{}';
+
+    let parsed;
+    try {
+      const clean = rawText.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      parsed = { action: 'explain', explanation: rawText };
+    }
+
+    // Remove thinking bubble
+    document.getElementById(thinkId)?.remove();
+
+    if (parsed.action === 'not_connected' || !auth.connected) {
+      addResult(`<div class="ai-response" style="border-left-color:var(--accent2);">⚡ Please connect to AIM first using the sidebar on the left.</div>`);
+    } else if (parsed.action === 'explain') {
+      addResult(`<div class="ai-response">🤖 ${parsed.explanation}</div>`);
+    } else if (parsed.action === 'create_cm') {
+      addResult(`<div class="ai-response" style="border-left-color:var(--green);">📝 Opening CM form... ${parsed.explanation || ''}</div>`);
+      showCMForm(parsed.params?.CustomerID);
+    } else if (parsed.action === 'search') {
+      addResult(`<div class="ai-response">🔍 ${parsed.explanation || 'Searching AIM...'}</div>`);
+      const data = await callAIM(parsed.endpoint, parsed.params || {});
+      renderResults(data, parsed.display_title || parsed.endpoint, parsed.endpoint);
+    }
+
+  } catch (err) {
+    document.getElementById(thinkId)?.remove();
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
+  } finally {
+    document.getElementById('sendBtn').disabled = false;
+  }
+}
+
+// ── Quick Search ──────────────────────────────────────
+async function quickSearch(endpoint, title, params) {
+  if (!auth.connected) {
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent2);">⚡ Please connect to AIM first.</div>`);
+    return;
+  }
+  const loadId = 'load-' + Date.now();
+  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Loading ${title}...</div>`);
+  try {
+    const data = await callAIM(endpoint, params);
+    document.getElementById(loadId)?.remove();
+    renderResults(data, title, endpoint);
+  } catch (err) {
+    document.getElementById(loadId)?.remove();
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
+  }
+}
+
+// ── Render Results ────────────────────────────────────
+function renderResults(data, title, endpoint) {
+  // Detect data array
+  const records = data.Customers || data.ContactRecords || data.Inventory || data.Schools || data.Districts || data.Records || [];
+
+  if (records.length === 0) {
+    addResult(`<div class="ai-response">No records found for "${title}".</div>`);
+    return;
+  }
+
+  // Determine columns based on endpoint
+  let html = '';
+
+  if (endpoint === 'SearchCustomers' || endpoint.includes('Customer')) {
+    html = renderCustomerTable(records, title, data.TotalRecords || records.length);
+  } else if (endpoint === 'SearchContactManagement') {
+    html = renderCMTable(records, title);
+  } else if (endpoint === 'SearchInventory') {
+    html = renderInventoryTable(records, title);
+  } else if (endpoint === 'GetSchoolList') {
+    html = renderSchoolTable(records, title);
+  } else {
+    html = renderGenericTable(records, title);
+  }
+
+  addResult(html);
+}
+
+function renderCustomerTable(records, title, total) {
+  const rows = records.slice(0, 50).map(c => `
+    <tr>
+      <td><strong>${c.Name || '—'}</strong></td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${c.Acct || '—'}</td>
+      <td>${c.City || '—'}${c.St ? ', ' + c.St : ''}</td>
+      <td>${c.Phone || '—'}</td>
+      <td>${c.Email && c.Email !== 'Ask for Email' ? `<a href="mailto:${c.Email}" style="color:var(--blue);text-decoration:none;">${c.Email}</a>` : '<span style="color:var(--muted)">—</span>'}</td>
+      <td>${c.RentalActivity ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">None</span>'}</td>
+      <td>${c.OpenInvoices ? '<span class="badge badge-red">Open</span>' : '<span class="badge badge-gray">Clear</span>'}</td>
+      <td><button class="action-btn" onclick="loadCustomerCMs(${c.Pk}, '${(c.Name||'').replace(/'/g,"\\'")}')">CMs</button></td>
+    </tr>`).join('');
+
+  return `<div class="data-table-wrap">
+    <div class="table-header">
+      <div class="table-title">CUSTOMERS</div>
+      <div class="table-count">${records.length} shown${total > records.length ? ' of ' + total : ''}</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr>
+        <th>Name</th><th>Acct#</th><th>Location</th><th>Phone</th><th>Email</th><th>Rentals</th><th>Invoices</th><th>Actions</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderCMTable(records, title) {
+  const rows = records.slice(0, 50).map(cm => `
+    <tr>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${cm.Date || cm.EntryDate || '—'}</td>
+      <td><strong>${cm.CustomerName || cm.Name || '—'}</strong></td>
+      <td>${cm.Subject || cm.Topic || '—'}</td>
+      <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cm.Notes || cm.Body || '—'}</td>
+      <td>${cm.Employee || cm.CreatedBy || '—'}</td>
+    </tr>`).join('');
+
+  return `<div class="data-table-wrap">
+    <div class="table-header">
+      <div class="table-title">CONTACT MANAGEMENT</div>
+      <div class="table-count">${records.length} records</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Customer</th><th>Subject</th><th>Notes</th><th>Employee</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderInventoryTable(records, title) {
+  const rows = records.slice(0, 50).map(i => `
+    <tr>
+      <td><strong>${i.Description || i.Name || '—'}</strong></td>
+      <td style="font-family:var(--mono);font-size:11px">${i.Sku || i.Model || '—'}</td>
+      <td>${i.Manufacturer || i.Brand || '—'}</td>
+      <td>${i.Category || '—'}</td>
+      <td style="font-family:var(--mono)">${i.Price != null ? '$' + Number(i.Price).toFixed(2) : '—'}</td>
+      <td>${i.Qty != null ? i.Qty : '—'}</td>
+    </tr>`).join('');
+
+  return `<div class="data-table-wrap">
+    <div class="table-header">
+      <div class="table-title">INVENTORY</div>
+      <div class="table-count">${records.length} items</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th>Description</th><th>SKU/Model</th><th>Brand</th><th>Category</th><th>Price</th><th>Qty</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderSchoolTable(records, title) {
+  const rows = records.slice(0, 50).map(s => `
+    <tr>
+      <td><strong>${s.Name || s.SchoolName || '—'}</strong></td>
+      <td>${s.District || s.DistrictName || '—'}</td>
+      <td>${s.City || '—'}${s.State ? ', ' + s.State : ''}</td>
+      <td>${s.Phone || '—'}</td>
+      <td><button class="action-btn" onclick="setQuery('Show customers from school ${(s.Name||'').replace(/'/g,"\\'")}')">Search</button></td>
+    </tr>`).join('');
+
+  return `<div class="data-table-wrap">
+    <div class="table-header">
+      <div class="table-title">SCHOOLS</div>
+      <div class="table-count">${records.length} schools</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th>School Name</th><th>District</th><th>Location</th><th>Phone</th><th>Actions</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderGenericTable(records, title) {
+  if (records.length === 0) return `<div class="ai-response">No data returned.</div>`;
+  const keys = Object.keys(records[0]).slice(0, 8);
+  const headers = keys.map(k => `<th>${k}</th>`).join('');
+  const rows = records.slice(0, 30).map(r =>
+    `<tr>${keys.map(k => `<td>${r[k] ?? '—'}</td>`).join('')}</tr>`
+  ).join('');
+
+  return `<div class="data-table-wrap">
+    <div class="table-header">
+      <div class="table-title">${title.toUpperCase()}</div>
+      <div class="table-count">${records.length} records</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr>${headers}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+// ── Load CMs for a customer ───────────────────────────
+async function loadCustomerCMs(pk, name) {
+  const loadId = 'load-' + Date.now();
+  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Loading CMs for ${name}...</div>`);
+  try {
+    const data = await callAIM('SearchContactManagement', { CustomerID: pk });
+    document.getElementById(loadId)?.remove();
+    renderResults(data, `CMs for ${name}`, 'SearchContactManagement');
+  } catch (err) {
+    document.getElementById(loadId)?.remove();
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
+  }
+}
+
+// ── CM Form ───────────────────────────────────────────
+function showCMForm(customerID = '') {
+  const form = `<div class="cm-form">
+    <div class="cm-form-title">New Contact Management Entry</div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Customer ID / Account #</label>
+        <input type="text" id="cmCustomerID" placeholder="e.g. 203" value="${customerID}">
+      </div>
+      <div class="form-field">
+        <label>Subject</label>
+        <input type="text" id="cmSubject" placeholder="e.g. School Visit - Repair Pickup">
+      </div>
+      <div class="form-field full">
+        <label>Notes</label>
+        <textarea id="cmNotes" placeholder="e.g. Picked up 3 repairs from Director Johnson. Left 2 loaners. Follow up next Tuesday re: Yamaha flute estimate."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-submit" onclick="submitCM()">Save CM to AIM</button>
+      <button class="btn-cancel" onclick="this.closest('.cm-form').remove()">Cancel</button>
+    </div>
+  </div>`;
+  addResult(form);
+  document.getElementById('cmNotes')?.focus();
+}
+
+async function submitCM() {
+  const customerID = document.getElementById('cmCustomerID')?.value.trim();
+  const subject = document.getElementById('cmSubject')?.value.trim();
+  const notes = document.getElementById('cmNotes')?.value.trim();
+
+  if (!customerID || !notes) {
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);">⚠ Customer ID and Notes are required.</div>`);
+    return;
+  }
+
+  const loadId = 'load-' + Date.now();
+  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Saving CM to AIM...</div>`);
+
+  try {
+    const data = await callAIM('AddContactRecord', { CustomerID: customerID, Subject: subject, Notes: notes });
+    document.getElementById(loadId)?.remove();
+    addResult(`<div class="ai-response" style="border-left-color:var(--green);">✓ CM saved successfully for customer ${customerID}!</div>`);
+    document.querySelector('.cm-form')?.remove();
+  } catch (err) {
+    document.getElementById(loadId)?.remove();
+    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ Could not save CM: ${err.message}</div>`);
+  }
+}
+
+function showAIHelp() {
+  addResult(`<div class="ai-response">
+    <strong>🤖 What can I help you with?</strong><br><br>
+    Try asking me things like:<br>
+    • <em>"Find customer named Johnson"</em><br>
+    • <em>"Show all students with active rentals"</em><br>
+    • <em>"Search for schools in Aurora"</em><br>
+    • <em>"Create a CM for customer 203"</em><br>
+    • <em>"Find inventory for saxophone"</em><br>
+    • <em>"Show me recent contact management entries"</em><br><br>
+    I'll translate your plain English into AIM API calls and show you the results.
+  </div>`);
+}
+
+// ── Helpers ───────────────────────────────────────────
+function addResult(html) {
+  const area = document.getElementById('resultsArea');
+  const welcome = area.querySelector('.welcome');
+  if (welcome) welcome.remove();
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function setQuery(text) {
+  document.getElementById('aiInput').value = text;
+  document.getElementById('aiInput').focus();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    handleAIQuery();
+  }
+}
+
+function setStatus(type, text) {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot' + (type ? ' ' + type : '');
+  document.getElementById('statusText').textContent = text;
+}
+</script>
+</body>
+</html>
