@@ -1,12 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const AIM_STATIC_BASE = 'https://active-ewebservice.biz/aeServices30/api';
+
+// Serve the frontend app
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Step 1: GetEndPoint
 app.get('/getendpoint', async (req, res) => {
@@ -51,10 +57,10 @@ app.all('/security', async (req, res) => {
 
 // All secured AIM API calls
 app.all('/api', async (req, res) => {
-  const { apikey, appid, oauthtoken, token, endpointdomain, path, ...rest } = req.query;
+  const { apikey, appid, oauthtoken, token, endpointdomain, path: apiPath, ...rest } = req.query;
   const baseUrl = (endpointdomain || 'https://sandbox.active-e.net').replace(/\/$/, '');
   const queryParams = new URLSearchParams(rest).toString();
-  const url = `${baseUrl}/Api/${path}${queryParams ? '?' + queryParams : ''}`;
+  const url = `${baseUrl}/Api/${apiPath}${queryParams ? '?' + queryParams : ''}`;
   console.log('API call:', req.method, url);
   try {
     const response = await fetch(url, {
@@ -107,7 +113,7 @@ app.get('/metadata', async (req, res) => {
   }
 });
 
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'AIM Proxy v4' }));
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'AIM Proxy v5' }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`AIM Proxy v4 running on port ${PORT}`));
+app.listen(PORT, () => console.log(`AIM Proxy v5 running on port ${PORT}`));
