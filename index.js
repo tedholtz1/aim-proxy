@@ -37,13 +37,12 @@ app.get('/getendpoint', async (req, res) => {
   }
 });
 
-// Step 4: Security/Login — POST to NewEndpointDomain/Api/Security
-// AppId, UserName, Password as query params; APIKey + OAuthToken as headers
+// Step 4: Security/Login
 app.all('/security', async (req, res) => {
   const { apikey, appid, oauthtoken, username, password, endpointdomain } = req.query;
   
-  const baseUrl = endpointdomain || AIM_STATIC_BASE;
-  const url = `${baseUrl}/Api/Security?AppId=${encodeURIComponent(appid)}&UserName=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`;
+  const baseUrl = (endpointdomain || AIM_STATIC_BASE).replace(/\/$/, '');
+  const url = `${baseUrl}/api/SecurityRequest?AppId=${encodeURIComponent(appid)}&UserName=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`;
 
   console.log('Security call:', url);
 
@@ -69,15 +68,13 @@ app.all('/security', async (req, res) => {
   }
 });
 
-// Step 6: All other secured API calls
-// APIKey, OAuthToken, AppId, Token as headers
-// endpointdomain + path passed as query params
+// All secured API calls
 app.all('/api', async (req, res) => {
   const { apikey, appid, oauthtoken, token, endpointdomain, path, ...rest } = req.query;
 
-  const baseUrl = endpointdomain || AIM_STATIC_BASE;
+  const baseUrl = (endpointdomain || 'https://sandbox.active-e.net').replace(/\/$/, '');
   const queryParams = new URLSearchParams(rest).toString();
-  const url = `${baseUrl}/Api/${path}${queryParams ? '?' + queryParams : ''}`;
+  const url = `${baseUrl}/api/${path}${queryParams ? '?' + queryParams : ''}`;
 
   console.log('API call:', req.method, url);
 
