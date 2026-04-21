@@ -14,7 +14,6 @@ app.get('/getendpoint', async (req, res) => {
   const url = `${AIM_STATIC_BASE}/GetEndPoint`;
 
   console.log('GetEndPoint call:', url);
-  console.log('APIKey:', apikey, 'AppId:', appid);
 
   try {
     const response = await fetch(url, {
@@ -37,12 +36,12 @@ app.get('/getendpoint', async (req, res) => {
   }
 });
 
-// Step 4: Security/Login
+// Step 4: Security/Login — uses capital Api/Security which is what works
 app.all('/security', async (req, res) => {
   const { apikey, appid, oauthtoken, username, password, endpointdomain } = req.query;
   
   const baseUrl = (endpointdomain || AIM_STATIC_BASE).replace(/\/$/, '');
-  const url = `${baseUrl}/api/SecurityRequest?AppId=${encodeURIComponent(appid)}&UserName=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`;
+  const url = `${baseUrl}/Api/Security?AppId=${encodeURIComponent(appid)}&UserName=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`;
 
   console.log('Security call:', url);
 
@@ -74,7 +73,7 @@ app.all('/api', async (req, res) => {
 
   const baseUrl = (endpointdomain || 'https://sandbox.active-e.net').replace(/\/$/, '');
   const queryParams = new URLSearchParams(rest).toString();
-  const url = `${baseUrl}/api/${path}${queryParams ? '?' + queryParams : ''}`;
+  const url = `${baseUrl}/Api/${path}${queryParams ? '?' + queryParams : ''}`;
 
   console.log('API call:', req.method, url);
 
@@ -118,7 +117,7 @@ app.get('/metadata', async (req, res) => {
   }
 });
 
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'AIM Proxy v2' }));
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'AIM Proxy v3' }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`AIM Proxy v2 running on port ${PORT}`));
+app.listen(PORT, () => console.log(`AIM Proxy v3 running on port ${PORT}`));
