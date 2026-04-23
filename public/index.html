@@ -11,23 +11,23 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg: #0f1117;
-  --card: #181c26;
-  --card2: #1e2330;
-  --border: #252a38;
-  --accent: #ff5c2b;
-  --accent2: #ffb800;
-  --green: #00c87a;
-  --blue: #4d9fff;
-  --red: #ff4444;
-  --text: #f0f2f8;
-  --muted: #6b7490;
+  --bg: #f0f4ff;
+  --card: #ffffff;
+  --card2: #e8eef8;
+  --border: #c8d4e8;
+  --accent: #1a4a9f;
+  --accent2: #2e6dd4;
+  --green: #1a7a4a;
+  --blue: #2e6dd4;
+  --red: #cc2222;
+  --text: #0d1b3e;
+  --muted: #5a6a8a;
   --sans: 'Archivo', sans-serif;
   --display: 'Archivo Black', sans-serif;
 }
 
 html, body {
-  background: var(--bg);
+  background: #ffffff;
   color: var(--text);
   font-family: var(--sans);
   min-height: 100vh;
@@ -40,7 +40,7 @@ html, body {
 
 /* ── HEADER ── */
 .app-header {
-  background: var(--bg);
+  background: #ffffff;
   padding: 16px 20px 12px;
   display: flex;
   align-items: center;
@@ -97,7 +97,7 @@ html, body {
 
 /* ── DAY HEADER ── */
 .day-banner {
-  background: linear-gradient(135deg, var(--accent) 0%, #c4340a 100%);
+  background: linear-gradient(135deg, #1a4a9f 0%, #0d2d6e 100%);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 16px;
@@ -211,7 +211,7 @@ html, body {
 .school-num {
   width: 36px; height: 36px;
   border-radius: 10px;
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -278,7 +278,7 @@ html, body {
 }
 
 .back-btn {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 10px;
   width: 36px; height: 36px;
@@ -454,7 +454,7 @@ html, body {
 }
 
 .form-input, .form-textarea, .form-select {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
@@ -481,7 +481,7 @@ html, body {
 }
 
 .template-btn {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 6px 12px;
@@ -552,7 +552,7 @@ html, body {
 
 .scan-input {
   flex: 1;
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
@@ -577,7 +577,7 @@ html, body {
 }
 
 .instrument-result {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -737,7 +737,7 @@ html, body {
 }
 
 .modal-input {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
@@ -800,7 +800,7 @@ html, body {
 <!-- ── DASHBOARD SCREEN ── -->
 <div class="screen active" id="screen-dashboard">
   <div class="app-header">
-    <div class="app-logo">PM <span>MUSIC</span></div>
+    <img src="data:image/png;base64,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" style="height:32px;width:auto;">
     <div class="header-right">
       <div class="conn-badge" onclick="showConnectModal()">
         <div class="conn-dot" id="connDot"></div>
@@ -833,7 +833,7 @@ html, body {
 <div class="screen" id="screen-newcm">
   <div class="app-header">
     <button class="back-btn" onclick="showScreen('dashboard')" style="background:none;border:none;font-size:18px;color:var(--text);cursor:pointer;">←</button>
-    <div class="app-logo" style="font-size:16px;">New CM Entry</div>
+    <div class="app-logo" style="font-size:16px;font-family:var(--display);">New CM Entry</div>
     <div style="width:36px"></div>
   </div>
   <div class="content">
@@ -877,7 +877,7 @@ html, body {
 <div class="screen" id="screen-lookup">
   <div class="app-header">
     <button class="back-btn" onclick="showScreen('dashboard')" style="background:none;border:none;font-size:18px;color:var(--text);cursor:pointer;">←</button>
-    <div class="app-logo" style="font-size:16px;">Instrument Lookup</div>
+    <div class="app-logo" style="font-size:16px;font-family:var(--display);">Instrument Lookup</div>
     <div style="width:36px"></div>
   </div>
   <div class="content">
