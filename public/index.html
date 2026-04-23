@@ -1,771 +1,1448 @@
-bash
-
-cat /mnt/user-data/outputs/pm-music-ai.html
-Output
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PM Music — AIM Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PM Music — Field Rep</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg: #f5f2eb;
-  --surface: #fff;
-  --surface2: #f0ece3;
-  --border: #e0d9cc;
-  --ink: #1a1612;
-  --muted: #8a7f72;
-  --accent: #c8430a;
-  --accent2: #e8a020;
-  --green: #2a7a4b;
-  --blue: #1a4a8a;
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'IBM Plex Sans', sans-serif;
-  --display: 'Bebas Neue', sans-serif;
+  --bg: #0f1117;
+  --card: #181c26;
+  --card2: #1e2330;
+  --border: #252a38;
+  --accent: #ff5c2b;
+  --accent2: #ffb800;
+  --green: #00c87a;
+  --blue: #4d9fff;
+  --red: #ff4444;
+  --text: #f0f2f8;
+  --muted: #6b7490;
+  --sans: 'Archivo', sans-serif;
+  --display: 'Archivo Black', sans-serif;
 }
 
-body {
+html, body {
   background: var(--bg);
-  color: var(--ink);
+  color: var(--text);
   font-family: var(--sans);
   min-height: 100vh;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(200,67,10,0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(232,160,32,0.05) 0%, transparent 50%);
+  overflow-x: hidden;
 }
 
-/* Header */
-header {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  height: 56px;
-  gap: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 3px solid var(--accent);
-}
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
 
-.logo {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.05em;
-  color: var(--bg);
-  line-height: 1;
-}
-
-.logo span { color: var(--accent2); }
-
-.header-sub {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: rgba(245,242,235,0.4);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  border-left: 1px solid rgba(245,242,235,0.15);
-  padding-left: 20px;
-}
-
-.auth-status {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: rgba(245,242,235,0.5);
-}
-
-.status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #555;
-  transition: all 0.3s;
-}
-.status-dot.on { background: #4caf50; box-shadow: 0 0 8px #4caf50; }
-.status-dot.off { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
-/* Layout */
-.app { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100vh - 56px); }
-
-/* Sidebar */
-aside {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-  border-right: 1px solid #2a2520;
-}
-
-.sidebar-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: rgba(245,242,235,0.3);
-  padding: 12px 8px 4px;
-  margin-top: 4px;
-}
-
-.sidebar-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: rgba(245,242,235,0.7);
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 400;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  transition: all 0.15s;
-}
-.sidebar-btn:hover { background: rgba(245,242,235,0.06); color: var(--bg); }
-.sidebar-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-.sidebar-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
-
-/* Credentials panel in sidebar */
-.creds-panel {
-  background: rgba(245,242,235,0.04);
-  border: 1px solid rgba(245,242,235,0.1);
-  border-radius: 6px;
-  padding: 14px;
-  margin-bottom: 8px;
-}
-
-.creds-title {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent2);
-  margin-bottom: 10px;
-}
-
-.cred-field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-bottom: 8px;
-}
-
-.cred-field label {
-  font-family: var(--mono);
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(245,242,235,0.35);
-}
-
-.cred-field input {
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(245,242,235,0.1);
-  border-radius: 3px;
-  padding: 6px 8px;
-  color: var(--bg);
-  font-family: var(--mono);
-  font-size: 11px;
-  outline: none;
-  width: 100%;
-  transition: border-color 0.2s;
-}
-.cred-field input:focus { border-color: var(--accent2); }
-
-.connect-btn {
-  width: 100%;
-  padding: 8px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-  margin-top: 4px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.connect-btn:hover { background: #e05510; }
-.connect-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.token-info {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: #4caf50;
-  margin-top: 8px;
-  display: none;
-  word-break: break-all;
-  line-height: 1.4;
-}
-.token-info.show { display: block; }
-
-/* Main area */
-main {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* AI Chat area */
-.ai-panel {
-  border-bottom: 2px solid var(--border);
-  background: var(--surface);
-  padding: 20px 24px;
-}
-
-.ai-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.ai-badge {
-  background: var(--ink);
-  color: var(--accent2);
-  font-family: var(--display);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  padding: 3px 10px;
-  border-radius: 2px;
-}
-
-.ai-title {
-  font-size: 13px;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-.ai-input-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
-}
-
-.ai-input {
-  flex: 1;
+/* ── HEADER ── */
+.app-header {
   background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: 6px;
-  padding: 12px 16px;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--ink);
-  outline: none;
-  resize: none;
-  transition: border-color 0.2s;
-  min-height: 48px;
-  max-height: 120px;
-}
-.ai-input:focus { border-color: var(--accent); }
-.ai-input::placeholder { color: var(--muted); }
-
-.ai-send {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px 20px;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-  height: 48px;
-}
-.ai-send:hover { background: #e05510; transform: translateY(-1px); }
-.ai-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-/* Quick actions */
-.quick-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.quick-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 5px 12px;
-  font-size: 12px;
-  font-family: var(--mono);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.quick-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-
-/* Results area */
-.results-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* AI response bubble */
-.ai-response {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  font-size: 14px;
-  line-height: 1.7;
-  animation: fadeIn 0.3s ease;
-}
-
-.ai-response.thinking {
-  border-left-color: var(--accent2);
-  color: var(--muted);
-  font-style: italic;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-
-/* Data table */
-.data-table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  animation: fadeIn 0.3s ease;
-}
-
-.table-header {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 12px 20px;
+  padding: 16px 20px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.table-title {
-  font-family: var(--display);
-  font-size: 16px;
-  letter-spacing: 0.05em;
-}
-
-.table-count {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent2);
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.data-table th {
-  background: var(--surface2);
-  padding: 10px 16px;
-  text-align: left;
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+  position: sticky;
+  top: 0;
+  z-index: 50;
   border-bottom: 1px solid var(--border);
+}
+
+.app-logo {
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.app-logo span { color: var(--accent); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.conn-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.conn-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: all 0.3s;
+}
+.conn-dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.conn-dot.off { background: var(--red); }
+
+/* ── CONTENT ── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 100px;
+}
+
+/* ── DAY HEADER ── */
+.day-banner {
+  background: linear-gradient(135deg, var(--accent) 0%, #c4340a 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.day-banner::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+
+.day-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 4px;
+}
+
+.day-name {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 1;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.day-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.day-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-stat-num {
+  font-family: var(--display);
+  font-size: 24px;
+  color: white;
+  line-height: 1;
+}
+
+.day-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+}
+
+/* ── SECTION HEADER ── */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section-action {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ── SCHOOL CARD ── */
+.school-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: slideUp 0.3s ease both;
+}
+
+.school-card:hover, .school-card:active { 
+  background: var(--card2); 
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.school-num {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 14px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.school-info { flex: 1; min-width: 0; }
+
+.school-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.school-district {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.school-badges {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
   white-space: nowrap;
 }
 
-.data-table td {
-  padding: 10px 16px;
+.badge-cm { background: rgba(77,159,255,0.15); color: var(--blue); }
+.badge-repair { background: rgba(255,184,0,0.15); color: var(--accent2); }
+.badge-ok { background: rgba(0,200,122,0.12); color: var(--green); }
+.badge-district { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+.chevron {
+  color: var(--muted);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── SCHOOL DETAIL SCREEN ── */
+.detail-header {
+  background: var(--card);
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border);
-  color: var(--ink);
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: var(--surface2); }
-
-.badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
+.back-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text);
+  flex-shrink: 0;
 }
-.badge-green { background: rgba(42,122,75,0.12); color: var(--green); }
-.badge-red { background: rgba(200,67,10,0.1); color: var(--accent); }
-.badge-blue { background: rgba(26,74,138,0.1); color: var(--blue); }
-.badge-gray { background: var(--surface2); color: var(--muted); }
+
+.detail-school-name {
+  font-family: var(--display);
+  font-size: 18px;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.detail-district {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── ACTION BUTTONS ── */
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
 
 .action-btn {
-  background: none;
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 3px 8px;
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--muted);
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.15s;
+  text-align: center;
 }
-.action-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* Empty / welcome state */
-.welcome {
+.action-btn:active { transform: scale(0.97); }
+.action-btn.primary { background: var(--accent); border-color: var(--accent); }
+.action-btn.green { background: rgba(0,200,122,0.1); border-color: rgba(0,200,122,0.3); }
+.action-btn.blue { background: rgba(77,159,255,0.1); border-color: rgba(77,159,255,0.3); }
+.action-btn.yellow { background: rgba(255,184,0,0.1); border-color: rgba(255,184,0,0.3); }
+
+.action-icon { font-size: 22px; }
+.action-label { font-size: 12px; font-weight: 600; color: var(--text); }
+
+/* ── CM LIST ── */
+.cm-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  animation: slideUp 0.2s ease both;
+}
+
+.cm-item.open { border-left-color: var(--accent2); }
+.cm-item.urgent { border-left-color: var(--red); }
+.cm-item.closed { border-left-color: var(--muted); opacity: 0.6; }
+
+.cm-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.cm-subject {
+  font-weight: 600;
+  font-size: 14px;
+  flex: 1;
+}
+
+.cm-status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.status-open { background: rgba(255,184,0,0.15); color: var(--accent2); }
+.status-closed { background: var(--bg); color: var(--muted); }
+.status-new { background: rgba(255,92,43,0.15); color: var(--accent); }
+
+.cm-notes {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.cm-meta {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  gap: 10px;
+}
+
+/* ── REPAIR ITEM ── */
+.repair-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  animation: slideUp 0.2s ease both;
+}
+
+.repair-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.repair-detail { font-size: 12px; color: var(--muted); margin-bottom: 6px; line-height: 1.5; }
+
+.repair-status-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.repair-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.rb-pending { background: rgba(255,184,0,0.15); color: var(--accent2); }
+.rb-estimate { background: rgba(77,159,255,0.15); color: var(--blue); }
+.rb-ready { background: rgba(0,200,122,0.15); color: var(--green); }
+.rb-days { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+/* ── NEW CM FORM ── */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.form-title {
+  font-family: var(--display);
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--green);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.form-input, .form-textarea, .form-select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--accent);
+}
+
+.form-textarea { min-height: 100px; resize: none; }
+
+.template-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.template-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.15s;
+}
+
+.template-btn:active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--display);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+
+.submit-btn:active { transform: scale(0.98); background: #00a863; }
+.submit-btn:disabled { opacity: 0.5; }
+
+.cancel-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ── INSTRUMENT LOOKUP ── */
+.lookup-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.lookup-title {
+  font-family: var(--display);
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--accent2);
+}
+
+.scan-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.scan-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  outline: none;
+}
+
+.scan-input:focus { border-color: var(--accent2); }
+
+.scan-btn {
+  background: var(--accent2);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: var(--display);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.instrument-result {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.instrument-name {
+  font-family: var(--display);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.instrument-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.inst-field { display: flex; flex-direction: column; gap: 2px; }
+.inst-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.inst-value { font-size: 13px; font-weight: 600; }
+
+.instrument-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.inst-action-btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.inst-action-btn.pickup { border-color: var(--accent2); color: var(--accent2); background: rgba(255,184,0,0.08); }
+.inst-action-btn.deliver { border-color: var(--green); color: var(--green); background: rgba(0,200,122,0.08); }
+.inst-action-btn.repair { border-color: var(--accent); color: var(--accent); background: rgba(255,92,43,0.08); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 0 20px;
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+}
+
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: 0.05em; }
+.nav-item.active .nav-label { color: var(--accent); }
+.nav-item.active .nav-icon { filter: none; }
+
+/* ── LOADING ── */
+.loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  gap: 16px;
-  text-align: center;
-  padding: 40px;
+  padding: 40px 20px;
+  gap: 12px;
   color: var(--muted);
 }
 
-.welcome-title {
-  font-family: var(--display);
-  font-size: 48px;
-  letter-spacing: 0.05em;
-  color: var(--ink);
-  line-height: 1;
-}
-
-.welcome-title span { color: var(--accent); }
-
-.welcome-sub {
-  font-family: var(--mono);
-  font-size: 12px;
-  max-width: 400px;
-  line-height: 1.8;
-}
-
-.welcome-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 600px;
-  margin-top: 8px;
-}
-
-.step {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
-  text-align: left;
-}
-
-.step-num {
-  font-family: var(--display);
-  font-size: 32px;
-  color: var(--border);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.step-text {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-/* CM Form */
-.cm-form {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--green);
-  border-radius: 0 8px 8px 0;
-  padding: 20px;
-  animation: fadeIn 0.3s ease;
-}
-
-.cm-form-title {
-  font-family: var(--display);
-  font-size: 20px;
-  letter-spacing: 0.05em;
-  margin-bottom: 14px;
-  color: var(--green);
-}
-
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-
-.form-field { display: flex; flex-direction: column; gap: 4px; }
-.form-field.full { grid-column: 1 / -1; }
-
-.form-field label {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-
-.form-field input, .form-field textarea, .form-field select {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 8px 10px;
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--ink);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.form-field input:focus, .form-field textarea:focus, .form-field select:focus {
-  border-color: var(--green);
-}
-
-.form-field textarea { min-height: 80px; resize: vertical; }
-
-.form-actions { display: flex; gap: 10px; }
-
-.btn-submit {
-  background: var(--green);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-submit:hover { background: #1f5c38; }
-
-.btn-cancel {
-  background: var(--surface2);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-family: var(--sans);
-  font-size: 13px;
-  cursor: pointer;
-}
-.btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-/* Loading spinner */
 .spinner {
-  width: 16px; height: 16px;
+  width: 24px; height: 24px;
   border: 2px solid var(--border);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 8px;
 }
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .app { grid-template-columns: 1fr; }
-  aside { display: none; }
-  .welcome-steps { grid-template-columns: 1fr; }
-  .form-grid { grid-template-columns: 1fr; }
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--muted);
 }
+
+.empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.4; }
+.empty-text { font-size: 14px; }
+
+/* ── CONNECT MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-sheet {
+  background: var(--card);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 40px;
+  width: 100%;
+  max-width: 500px;
+  animation: slideSheet 0.3s ease;
+}
+
+@keyframes slideSheet {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+.modal-title {
+  font-family: var(--display);
+  font-size: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.modal-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.modal-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+}
+
+.modal-input:focus { border-color: var(--accent); }
+
+.modal-connect-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--display);
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 300;
+  white-space: nowrap;
+  animation: toastIn 0.2s ease;
+  display: none;
+}
+
+.toast.show { display: block; }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error { border-color: var(--red); color: var(--red); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">PM <span>MUSIC</span></div>
-  <div class="header-sub">AIM Intelligence Platform</div>
-  <div class="auth-status">
-    <div class="status-dot" id="statusDot"></div>
-    <span id="statusText">Not connected</span>
+<!-- ── DASHBOARD SCREEN ── -->
+<div class="screen active" id="screen-dashboard">
+  <div class="app-header">
+    <div class="app-logo">PM <span>MUSIC</span></div>
+    <div class="header-right">
+      <div class="conn-badge" onclick="showConnectModal()">
+        <div class="conn-dot" id="connDot"></div>
+        <span id="connText">Connect</span>
+      </div>
+    </div>
   </div>
-</header>
 
-<div class="app">
-  <aside>
-    <!-- Credentials -->
-    <div class="creds-panel">
-      <div class="creds-title">⚡ AIM Connection</div>
-      <div class="cred-field">
-        <label>API Key</label>
-        <input type="password" id="apiKey" value="ab4dca0a-7176-4611-8d5b-58dc8a502705">
-      </div>
-      <div class="cred-field">
-        <label>Username</label>
-        <input type="text" id="aimUser" value="DEFAULT">
-      </div>
-      <div class="cred-field">
-        <label>Password</label>
-        <input type="password" id="aimPass" value="PASSWORD">
-      </div>
-      <button class="connect-btn" onclick="connectToAIM()" id="connectBtn">Connect to AIM</button>
-      <div class="token-info" id="tokenInfo">✓ Connected</div>
+  <div class="content" id="dashContent">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <div>Loading your route...</div>
     </div>
-
-    <!-- Navigation -->
-    <div class="sidebar-label">Browse Data</div>
-    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'All Customers', {})" id="nav-customers">
-      <span class="sidebar-icon">👥</span> All Customers
-    </button>
-    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'Active Rentals', {HasRentals: true})" >
-      <span class="sidebar-icon">🎷</span> Active Rentals
-    </button>
-    <button class="sidebar-btn" onclick="quickSearch('SearchCustomers', 'Open Invoices', {HasOpenInvoices: true})">
-      <span class="sidebar-icon">📄</span> Open Invoices
-    </button>
-    <button class="sidebar-btn" onclick="quickSearch('SearchContactManagement', 'Recent CMs', {})">
-      <span class="sidebar-icon">📝</span> Recent CMs
-    </button>
-    <button class="sidebar-btn" onclick="quickSearch('SearchInventory', 'Inventory', {})">
-      <span class="sidebar-icon">📦</span> Inventory
-    </button>
-    <button class="sidebar-btn" onclick="quickSearch('GetSchoolList', 'Schools', {})">
-      <span class="sidebar-icon">🏫</span> Schools
-    </button>
-
-    <div class="sidebar-label">Actions</div>
-    <button class="sidebar-btn" onclick="showCMForm()">
-      <span class="sidebar-icon">✏️</span> New CM Entry
-    </button>
-    <button class="sidebar-btn" onclick="showAIHelp()">
-      <span class="sidebar-icon">🤖</span> AI Assistant
-    </button>
-  </aside>
-
-  <main>
-    <!-- AI Input -->
-    <div class="ai-panel">
-      <div class="ai-header">
-        <div class="ai-badge">AI</div>
-        <div class="ai-title">Ask anything about your AIM data</div>
-      </div>
-      <div class="ai-input-row">
-        <textarea class="ai-input" id="aiInput" placeholder="e.g. Search for Jones Jr High School... or Show me customers with open rentals... or Create a CM for customer 203..." rows="1" onkeydown="handleKey(event)"></textarea>
-        <button class="ai-send" onclick="handleAIQuery()" id="sendBtn">Ask AI ↵</button>
-      </div>
-      <div class="quick-actions">
-        <button class="quick-btn" onclick="setQuery('Find all customers with active rentals')">Active rentals</button>
-        <button class="quick-btn" onclick="setQuery('Search for schools in the database')">Find schools</button>
-        <button class="quick-btn" onclick="setQuery('Show customers with open invoices')">Open invoices</button>
-        <button class="quick-btn" onclick="setQuery('Search for a customer named Anderson')">Find Anderson</button>
-        <button class="quick-btn" onclick="setQuery('Show me recent contact management entries')">Recent CMs</button>
-        <button class="quick-btn" onclick="setQuery('Search inventory for trumpet')">Find trumpets</button>
-      </div>
-    </div>
-
-    <!-- Results -->
-    <div class="results-area" id="resultsArea">
-      <div class="welcome">
-        <div class="welcome-title">AIM <span>INTELLIGENCE</span></div>
-        <div class="welcome-sub">Your AI-powered interface to PM Music Center's AIM data. Connect, ask questions, manage CMs — all in one place.</div>
-        <div class="welcome-steps">
-          <div class="step">
-            <div class="step-num">01</div>
-            <div class="step-text">Connect to AIM using your credentials in the sidebar</div>
-          </div>
-          <div class="step">
-            <div class="step-num">02</div>
-            <div class="step-text">Ask AI anything about customers, repairs, CMs, inventory</div>
-          </div>
-          <div class="step">
-            <div class="step-num">03</div>
-            <div class="step-text">Create and update CMs directly without opening AIM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+  </div>
 </div>
+
+<!-- ── SCHOOL DETAIL SCREEN ── -->
+<div class="screen" id="screen-school">
+  <div class="detail-header">
+    <button class="back-btn" onclick="showScreen('dashboard')">←</button>
+    <div>
+      <div class="detail-school-name" id="detailSchoolName">School</div>
+      <div class="detail-district" id="detailDistrict">District</div>
+    </div>
+  </div>
+  <div class="content" id="schoolContent"></div>
+</div>
+
+<!-- ── NEW CM SCREEN ── -->
+<div class="screen" id="screen-newcm">
+  <div class="app-header">
+    <button class="back-btn" onclick="showScreen('dashboard')" style="background:none;border:none;font-size:18px;color:var(--text);cursor:pointer;">←</button>
+    <div class="app-logo" style="font-size:16px;">New CM Entry</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="content">
+    <div class="form-card">
+      <div class="form-title">📝 Log Contact Management</div>
+
+      <div class="form-field">
+        <div class="form-label">School</div>
+        <select class="form-select" id="cmSchool">
+          <option value="">Select school...</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Subject</div>
+        <input type="text" class="form-input" id="cmSubject" placeholder="e.g. School visit — repair pickup">
+      </div>
+
+      <div class="form-label" style="margin-bottom:8px;">Quick Templates</div>
+      <div class="template-btns">
+        <button class="template-btn" onclick="setTemplate('Delivered loaner, picked up repair for service.')">🔄 Loaner out / Repair in</button>
+        <button class="template-btn" onclick="setTemplate('Delivered repaired instrument, picked up loaner. Closing.')">✅ Repair delivered / Closing</button>
+        <button class="template-btn" onclick="setTemplate('Picked up repair. Loaner not yet available.')">🔧 Repair in / No loaner</button>
+        <button class="template-btn" onclick="setTemplate('Delivered supply order as requested. Closing.')">📦 Supply order delivered</button>
+        <button class="template-btn" onclick="setTemplate('Spoke with director. ')">🎼 Director communication</button>
+        <button class="template-btn" onclick="setTemplate('Student rental inquiry: ')">🎷 Rental inquiry</button>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Notes</div>
+        <textarea class="form-textarea" id="cmNotes" placeholder="Describe what happened, what was picked up/delivered, any follow-up needed..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitNewCM()" id="cmSubmitBtn">Save CM to AIM</button>
+      <button class="cancel-btn" onclick="showScreen('dashboard')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── INSTRUMENT LOOKUP SCREEN ── -->
+<div class="screen" id="screen-lookup">
+  <div class="app-header">
+    <button class="back-btn" onclick="showScreen('dashboard')" style="background:none;border:none;font-size:18px;color:var(--text);cursor:pointer;">←</button>
+    <div class="app-logo" style="font-size:16px;">Instrument Lookup</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="content">
+    <div class="lookup-card">
+      <div class="lookup-title">🔍 Find Instrument</div>
+      <div class="scan-row">
+        <input type="text" class="scan-input" id="serialInput" placeholder="Enter serial number or invoice #" inputmode="numeric">
+        <button class="scan-btn" onclick="lookupInstrument()">Look Up</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);">Enter the instrument's serial number or invoice number to pull up full history and status.</div>
+    </div>
+    <div id="lookupResult"></div>
+  </div>
+</div>
+
+<!-- ── SEARCH SCREEN ── -->
+<div class="screen" id="screen-search">
+  <div class="app-header">
+    <div class="app-logo">Search AIM</div>
+  </div>
+  <div class="content">
+    <div class="lookup-card">
+      <div class="lookup-title">👥 Customer / Student Lookup</div>
+      <div class="scan-row">
+        <input type="text" class="scan-input" id="customerSearch" placeholder="Name, account #, or school...">
+        <button class="scan-btn" onclick="searchCustomers()" style="background:var(--blue);color:white;">Search</button>
+      </div>
+    </div>
+    <div id="searchResult"></div>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<div class="bottom-nav">
+  <button class="nav-item active" id="nav-dashboard" onclick="navTo('dashboard')">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">TODAY</div>
+  </button>
+  <button class="nav-item" id="nav-newcm" onclick="navTo('newcm')">
+    <div class="nav-icon">📝</div>
+    <div class="nav-label">NEW CM</div>
+  </button>
+  <button class="nav-item" id="nav-lookup" onclick="navTo('lookup')">
+    <div class="nav-icon">🔍</div>
+    <div class="nav-label">LOOKUP</div>
+  </button>
+  <button class="nav-item" id="nav-search" onclick="navTo('search')">
+    <div class="nav-icon">👥</div>
+    <div class="nav-label">SEARCH</div>
+  </button>
+</div>
+
+<!-- ── CONNECT MODAL ── -->
+<div class="modal-overlay" id="connectModal" onclick="hideConnectModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-title">⚡ Connect to AIM</div>
+    <div class="modal-field">
+      <div class="modal-label">API Key</div>
+      <input type="password" class="modal-input" id="modalApiKey" value="ab4dca0a-7176-4611-8d5b-58dc8a502705">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Username</div>
+      <input type="text" class="modal-input" id="modalUser" value="DEFAULT">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Password</div>
+      <input type="password" class="modal-input" id="modalPass" value="PASSWORD">
+    </div>
+    <button class="modal-connect-btn" onclick="connectAIM()" id="modalConnectBtn">Connect</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 const PROXY = 'https://aim-proxy-production.up.railway.app';
-const APP_ID = 'PMMusic-AI-v1';
+const APP_ID = 'PMMusic-Rep-v1';
 
-let auth = { apiKey: '', oauthToken: '', token: '', endpointDomain: 'https://sandbox.active-e.net', connected: false };
+let auth = { connected: false, apiKey: '', oauthToken: '', token: '', endpointDomain: 'https://sandbox.active-e.net' };
+let routeData = null;
+let currentSchool = null;
 
-// ── Auth ──────────────────────────────────────────────
-async function connectToAIM() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  const user = document.getElementById('aimUser').value.trim();
-  const pass = document.getElementById('aimPass').value.trim();
+// ── INIT ──────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadRoute();
+  populateSchoolSelect();
+});
 
-  const btn = document.getElementById('connectBtn');
-  btn.textContent = 'Connecting...';
-  btn.disabled = true;
-
-  setStatus('', 'Connecting...');
-
+async function loadRoute() {
   try {
-    // Step 1: GetEndPoint
-    const r1 = await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
-    const d1 = await r1.json();
-    if (!d1.OAuthToken) throw new Error('No OAuth token returned');
-
-    const oauthToken = d1.OAuthToken;
-    const endpointDomain = d1.NewEndpointDomain?.replace(/\/$/, '') || 'https://sandbox.active-e.net';
-
-    // Step 2: Security
-    const r2 = await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(oauthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(endpointDomain)}`);
-    const d2 = await r2.json();
-    if (!d2.Token) throw new Error(d2.Status?.ErrorMessage || 'Auth failed');
-
-    auth = { apiKey, oauthToken, token: d2.Token, endpointDomain, connected: true };
-
-    setStatus('on', `Connected · ${d2.UserDetails?.Firstname || 'User'}`);
-    document.getElementById('tokenInfo').textContent = `✓ Logged in as ${d2.UserDetails?.Firstname} ${d2.UserDetails?.LastName}`;
-    document.getElementById('tokenInfo').classList.add('show');
-    btn.textContent = 'Reconnect';
-    btn.disabled = false;
-
-    addResult(`<div class="ai-response">✓ Connected to AIM sandbox as <strong>${d2.UserDetails?.Firstname} ${d2.UserDetails?.LastName}</strong>. You can now ask questions or browse your data.</div>`);
-
+    const r = await fetch(`${PROXY}/route`);
+    routeData = await r.json();
+    renderDashboard();
   } catch (err) {
-    setStatus('off', 'Connection failed');
-    btn.textContent = 'Connect to AIM';
-    btn.disabled = false;
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ Connection failed: ${err.message}</div>`);
+    document.getElementById('dashContent').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-text">Could not load route. Check connection.</div>
+      </div>`;
   }
 }
 
-// ── AIM API Call ──────────────────────────────────────
+// ── DASHBOARD ────────────────────────────────────────
+function renderDashboard() {
+  if (!routeData) return;
+  const { today, schools } = routeData;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+  let html = `
+    <div class="day-banner">
+      <div class="day-label">Today's Route · ${timeStr}</div>
+      <div class="day-name">${today}</div>
+      <div class="day-stats">
+        <div class="day-stat">
+          <div class="day-stat-num">${schools.length}</div>
+          <div class="day-stat-label">Schools</div>
+        </div>
+        <div class="day-stat">
+          <div class="day-stat-num" id="openCMCount">—</div>
+          <div class="day-stat-label">Open CMs</div>
+        </div>
+        <div class="day-stat">
+          <div class="day-stat-num" id="repairCount">—</div>
+          <div class="day-stat-label">Repairs</div>
+        </div>
+      </div>
+    </div>`;
+
+  if (!auth.connected) {
+    html += `
+      <div style="background:rgba(255,92,43,0.08);border:1px solid rgba(255,92,43,0.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:20px;">🔌</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:2px;">Not connected to AIM</div>
+          <div style="font-size:12px;color:var(--muted);">Tap Connect to load CMs and repairs</div>
+        </div>
+        <button onclick="showConnectModal()" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:8px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;margin-left:auto;white-space:nowrap;">Connect</button>
+      </div>`;
+  }
+
+  html += `<div class="section-head"><div class="section-title">Your Schools Today</div></div>`;
+
+  if (schools.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-text">No schools scheduled today!</div></div>`;
+  } else {
+    schools.forEach((school, i) => {
+      html += `
+        <div class="school-card" onclick="openSchool('${escHtml(school.name)}', '${escHtml(school.district)}')" style="animation-delay:${i * 0.05}s">
+          <div class="school-num">${i + 1}</div>
+          <div class="school-info">
+            <div class="school-name">${escHtml(school.name)}</div>
+            <div class="school-district">District ${escHtml(school.district)}</div>
+          </div>
+          <div class="school-badges">
+            <span class="badge badge-district">${escHtml(school.district)}</span>
+          </div>
+          <div class="chevron">›</div>
+        </div>`;
+    });
+  }
+
+  // All schools section
+  html += `<div class="section-head" style="margin-top:24px;"><div class="section-title">All Schools</div></div>`;
+  const days = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri'];
+  const dayNames = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thur: 'Thursday', Fri: 'Friday' };
+
+  days.forEach(day => {
+    const daySchools = routeData.allSchools.filter(s => s.visitDay.split(',').map(d => d.trim()).includes(day));
+    if (daySchools.length === 0) return;
+    html += `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:12px 0 6px;">${dayNames[day]}</div>`;
+    daySchools.forEach(school => {
+      html += `
+        <div class="school-card" onclick="openSchool('${escHtml(school.name)}', '${escHtml(school.district)}')" style="padding:12px 14px;">
+          <div class="school-info">
+            <div class="school-name" style="font-size:14px;">${escHtml(school.name)}</div>
+            <div class="school-district">District ${escHtml(school.district)}</div>
+          </div>
+          <div class="chevron">›</div>
+        </div>`;
+    });
+  });
+
+  document.getElementById('dashContent').innerHTML = html;
+}
+
+// ── SCHOOL DETAIL ────────────────────────────────────
+async function openSchool(name, district) {
+  currentSchool = { name, district };
+  document.getElementById('detailSchoolName').textContent = name;
+  document.getElementById('detailDistrict').textContent = `District ${district}`;
+
+  showScreen('school');
+
+  const content = document.getElementById('schoolContent');
+  content.innerHTML = `
+    <div class="action-row" style="margin-bottom:16px;">
+      <div class="action-btn green" onclick="navTo('newcm');prefillSchool('${escHtml(name)}')">
+        <div class="action-icon">📝</div>
+        <div class="action-label">New CM</div>
+      </div>
+      <div class="action-btn blue" onclick="navTo('lookup')">
+        <div class="action-icon">🔍</div>
+        <div class="action-label">Instrument Lookup</div>
+      </div>
+      <div class="action-btn yellow" onclick="searchBySchool('${escHtml(name)}')">
+        <div class="action-icon">👥</div>
+        <div class="action-label">Students</div>
+      </div>
+      <div class="action-btn" onclick="searchRepairs('${escHtml(name)}')">
+        <div class="action-icon">🔧</div>
+        <div class="action-label">Repairs</div>
+      </div>
+    </div>`;
+
+  if (!auth.connected) {
+    content.innerHTML += `
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Connect to AIM to see CMs and repairs</div>
+        <button onclick="showConnectModal()" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:10px 20px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;">Connect to AIM</button>
+      </div>`;
+    return;
+  }
+
+  // Load CMs for this school
+  content.innerHTML += `
+    <div class="section-head"><div class="section-title">Open CMs</div></div>
+    <div id="schoolCMs"><div class="loading-state"><div class="spinner"></div></div></div>
+    <div class="section-head" style="margin-top:20px;"><div class="section-title">Repairs</div></div>
+    <div id="schoolRepairs"><div class="loading-state"><div class="spinner"></div></div></div>`;
+
+  loadSchoolCMs(name);
+}
+
+async function loadSchoolCMs(schoolName) {
+  try {
+    // Search for school as customer first
+    const customers = await callAIM('SearchCustomers', { LastName: schoolName.split(' ')[0] });
+    const school = (customers.Customers || []).find(c =>
+      c.Name?.toLowerCase().includes(schoolName.toLowerCase().split(' ')[0])
+    );
+
+    if (!school) {
+      document.getElementById('schoolCMs').innerHTML = `<div class="empty-state"><div class="empty-text">School not found in AIM</div></div>`;
+      document.getElementById('schoolRepairs').innerHTML = `<div class="empty-state"><div class="empty-text">—</div></div>`;
+      return;
+    }
+
+    // Load CMs
+    const cmData = await callAIM('SearchContactManagement', { CustomerID: school.Pk });
+    const cms = cmData.ContactRecords || cmData.Records || [];
+
+    if (cms.length === 0) {
+      document.getElementById('schoolCMs').innerHTML = `<div class="empty-state"><div class="empty-icon">✓</div><div class="empty-text">No open CMs</div></div>`;
+    } else {
+      let cmHtml = '';
+      cms.slice(0, 10).forEach(cm => {
+        const isOpen = !cm.Closed && !cm.IsClosed;
+        cmHtml += `
+          <div class="cm-item ${isOpen ? 'open' : 'closed'}">
+            <div class="cm-header">
+              <div class="cm-subject">${escHtml(cm.Subject || cm.Topic || 'Contact Record')}</div>
+              <div class="cm-status ${isOpen ? 'status-open' : 'status-closed'}">${isOpen ? 'OPEN' : 'CLOSED'}</div>
+            </div>
+            <div class="cm-notes">${escHtml((cm.Notes || cm.Body || '—').substring(0, 120))}${(cm.Notes || '').length > 120 ? '...' : ''}</div>
+            <div class="cm-meta">
+              <span>${cm.Date || cm.EntryDate || ''}</span>
+              <span>${cm.Employee || cm.CreatedBy || ''}</span>
+            </div>
+          </div>`;
+      });
+      document.getElementById('schoolCMs').innerHTML = cmHtml;
+    }
+
+    // Show school info in repairs section
+    document.getElementById('schoolRepairs').innerHTML = `
+      <div class="instrument-result">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">AIM Customer Record</div>
+        <div class="instrument-detail">
+          <div class="inst-field"><div class="inst-label">Account #</div><div class="inst-value">${school.Acct}</div></div>
+          <div class="inst-field"><div class="inst-label">Phone</div><div class="inst-value">${school.Phone || '—'}</div></div>
+          <div class="inst-field"><div class="inst-label">Rentals</div><div class="inst-value" style="color:${school.RentalActivity ? 'var(--green)' : 'var(--muted)'}">${school.RentalActivity ? 'Active' : 'None'}</div></div>
+          <div class="inst-field"><div class="inst-label">Invoices</div><div class="inst-value" style="color:${school.OpenInvoices ? 'var(--accent)' : 'var(--green)'}">${school.OpenInvoices ? 'Open' : 'Clear'}</div></div>
+        </div>
+        <button onclick="searchBySchool('${escHtml(school.Name)}')" style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;">View All Students →</button>
+      </div>`;
+
+  } catch (err) {
+    document.getElementById('schoolCMs').innerHTML = `<div class="empty-state"><div class="empty-text">Error: ${err.message}</div></div>`;
+    document.getElementById('schoolRepairs').innerHTML = '';
+  }
+}
+
+// ── INSTRUMENT LOOKUP ────────────────────────────────
+async function lookupInstrument() {
+  const serial = document.getElementById('serialInput').value.trim();
+  if (!serial) return;
+
+  const result = document.getElementById('lookupResult');
+  result.innerHTML = `<div class="loading-state"><div class="spinner"></div><div>Looking up instrument...</div></div>`;
+
+  if (!auth.connected) {
+    result.innerHTML = `<div class="empty-state"><div class="empty-text">Please connect to AIM first</div></div>`;
+    return;
+  }
+
+  try {
+    const data = await callAIM('SerialDetail', { SerialNumber: serial });
+    const inst = data.SerialInfo || data.Instrument || data;
+
+    if (data.Status?.StatusCode === 'Error') {
+      // Try inventory search
+      const inv = await callAIM('SearchInventory', { Description: serial });
+      const items = inv.Inventory || inv.Records || [];
+      if (items.length === 0) {
+        result.innerHTML = `<div class="empty-state"><div class="empty-icon">❓</div><div class="empty-text">No instrument found for "${serial}"</div></div>`;
+        return;
+      }
+      renderInstrumentResult(items[0], result);
+      return;
+    }
+
+    renderInstrumentResult(inst, result);
+  } catch (err) {
+    result.innerHTML = `<div class="empty-state"><div class="empty-text">Error: ${err.message}</div></div>`;
+  }
+}
+
+function renderInstrumentResult(inst, container) {
+  container.innerHTML = `
+    <div class="instrument-result">
+      <div class="instrument-name">${escHtml(inst.Description || inst.Name || 'Instrument')}</div>
+      <div class="instrument-detail">
+        <div class="inst-field"><div class="inst-label">Serial #</div><div class="inst-value">${escHtml(inst.SerialNumber || inst.Serial || '—')}</div></div>
+        <div class="inst-field"><div class="inst-label">Status</div><div class="inst-value">${escHtml(inst.Status || inst.Condition || '—')}</div></div>
+        <div class="inst-field"><div class="inst-label">Brand</div><div class="inst-value">${escHtml(inst.Manufacturer || inst.Brand || '—')}</div></div>
+        <div class="inst-field"><div class="inst-label">Model</div><div class="inst-value">${escHtml(inst.Model || '—')}</div></div>
+        <div class="inst-field"><div class="inst-label">Customer</div><div class="inst-value">${escHtml(inst.CustomerName || inst.Customer || '—')}</div></div>
+        <div class="inst-field"><div class="inst-label">Location</div><div class="inst-value">${escHtml(inst.Location || inst.StLoc || '—')}</div></div>
+      </div>
+      <div class="instrument-actions">
+        <button class="inst-action-btn pickup" onclick="logPickup('${escHtml(inst.SerialNumber || inst.Serial || '')}')">📤 Pick Up</button>
+        <button class="inst-action-btn deliver" onclick="logDelivery('${escHtml(inst.SerialNumber || inst.Serial || '')}')">📥 Deliver</button>
+        <button class="inst-action-btn repair" onclick="createRepairNote('${escHtml(inst.Description || '')}', '${escHtml(inst.SerialNumber || '')}')">🔧 Repair Ticket</button>
+        <button class="inst-action-btn" onclick="navTo('newcm')" style="border-color:var(--blue);color:var(--blue);background:rgba(77,159,255,0.08);">📝 Log CM</button>
+      </div>
+    </div>`;
+}
+
+// ── CUSTOMER SEARCH ───────────────────────────────────
+async function searchCustomers() {
+  const query = document.getElementById('customerSearch').value.trim();
+  if (!query) return;
+
+  if (!auth.connected) { showToast('Connect to AIM first', 'error'); return; }
+
+  const result = document.getElementById('searchResult');
+  result.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
+
+  try {
+    const data = await callAIM('SearchCustomers', { LastName: query });
+    const customers = data.Customers || [];
+
+    if (customers.length === 0) {
+      result.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No customers found for "${query}"</div></div>`;
+      return;
+    }
+
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:10px;">${customers.length} results</div>`;
+    customers.slice(0, 20).forEach(c => {
+      html += `
+        <div class="school-card" style="margin-bottom:8px;" onclick="viewCustomer(${c.Pk}, '${escHtml(c.Name)}')">
+          <div class="school-info">
+            <div class="school-name">${escHtml(c.Name)}</div>
+            <div class="school-district">Acct #${c.Acct} · ${escHtml(c.City || '')}${c.St ? ', ' + c.St : ''}</div>
+          </div>
+          <div class="school-badges">
+            ${c.RentalActivity ? '<span class="badge badge-ok">Rental</span>' : ''}
+            ${c.OpenInvoices ? '<span class="badge badge-repair">Invoice</span>' : ''}
+          </div>
+          <div class="chevron">›</div>
+        </div>`;
+    });
+    result.innerHTML = html;
+  } catch (err) {
+    result.innerHTML = `<div class="empty-state"><div class="empty-text">Error: ${err.message}</div></div>`;
+  }
+}
+
+async function searchBySchool(schoolName) {
+  navTo('search');
+  document.getElementById('customerSearch').value = schoolName;
+  await searchCustomers();
+}
+
+async function searchRepairs(schoolName) {
+  navTo('search');
+  document.getElementById('customerSearch').value = schoolName;
+  await searchCustomers();
+}
+
+async function viewCustomer(pk, name) {
+  if (!auth.connected) return;
+  const result = document.getElementById('searchResult');
+  result.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
+
+  try {
+    const cmData = await callAIM('SearchContactManagement', { CustomerID: pk });
+    const cms = cmData.ContactRecords || cmData.Records || [];
+
+    let html = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <button onclick="searchCustomers()" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--sans);font-size:13px;cursor:pointer;">← Back</button>
+        <div style="font-family:var(--display);font-size:18px;">${escHtml(name)}</div>
+      </div>
+      <div class="section-head"><div class="section-title">Contact Management (${cms.length})</div></div>`;
+
+    if (cms.length === 0) {
+      html += `<div class="empty-state"><div class="empty-text">No CMs found</div></div>`;
+    } else {
+      cms.slice(0, 15).forEach(cm => {
+        const isOpen = !cm.Closed && !cm.IsClosed;
+        html += `
+          <div class="cm-item ${isOpen ? 'open' : 'closed'}">
+            <div class="cm-header">
+              <div class="cm-subject">${escHtml(cm.Subject || cm.Topic || 'Record')}</div>
+              <div class="cm-status ${isOpen ? 'status-open' : 'status-closed'}">${isOpen ? 'OPEN' : 'CLOSED'}</div>
+            </div>
+            <div class="cm-notes">${escHtml((cm.Notes || cm.Body || '—').substring(0, 150))}</div>
+            <div class="cm-meta"><span>${cm.Date || ''}</span><span>${cm.Employee || ''}</span></div>
+          </div>`;
+      });
+    }
+    result.innerHTML = html;
+  } catch (err) {
+    result.innerHTML = `<div class="empty-state"><div class="empty-text">Error: ${err.message}</div></div>`;
+  }
+}
+
+// ── NEW CM ────────────────────────────────────────────
+function populateSchoolSelect() {
+  // Will be populated after route loads
+  setTimeout(() => {
+    if (!routeData) return;
+    const sel = document.getElementById('cmSchool');
+    routeData.allSchools.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.name;
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    });
+  }, 1000);
+}
+
+function prefillSchool(name) {
+  const sel = document.getElementById('cmSchool');
+  if (sel) sel.value = name;
+}
+
+function setTemplate(text) {
+  document.getElementById('cmNotes').value = text;
+  document.getElementById('cmNotes').focus();
+}
+
+async function submitNewCM() {
+  const school = document.getElementById('cmSchool').value;
+  const subject = document.getElementById('cmSubject').value.trim();
+  const notes = document.getElementById('cmNotes').value.trim();
+
+  if (!school || !notes) { showToast('School and notes required', 'error'); return; }
+  if (!auth.connected) { showToast('Connect to AIM first', 'error'); return; }
+
+  const btn = document.getElementById('cmSubmitBtn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    // Find school customer ID
+    const customers = await callAIM('SearchCustomers', { LastName: school.split(' ')[0] });
+    const schoolRecord = (customers.Customers || []).find(c =>
+      c.Name?.toLowerCase().includes(school.toLowerCase().split(' ')[0])
+    );
+
+    if (!schoolRecord) throw new Error('School not found in AIM');
+
+    await callAIM('AddContactRecord', {
+      CustomerID: schoolRecord.Pk,
+      Subject: subject || 'Field Rep Visit',
+      Notes: notes
+    });
+
+    showToast('CM saved to AIM ✓', 'success');
+    document.getElementById('cmNotes').value = '';
+    document.getElementById('cmSubject').value = '';
+    setTimeout(() => navTo('dashboard'), 1200);
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    btn.textContent = 'Save CM to AIM';
+    btn.disabled = false;
+  }
+}
+
+function logPickup(serial) {
+  navTo('newcm');
+  document.getElementById('cmSubject').value = `Instrument pickup`;
+  document.getElementById('cmNotes').value = `Picked up instrument S/N: ${serial}. `;
+}
+
+function logDelivery(serial) {
+  navTo('newcm');
+  document.getElementById('cmSubject').value = `Instrument delivery`;
+  document.getElementById('cmNotes').value = `Delivered instrument S/N: ${serial}. `;
+}
+
+function createRepairNote(desc, serial) {
+  navTo('newcm');
+  document.getElementById('cmSubject').value = `Repair intake`;
+  document.getElementById('cmNotes').value = `Picked up ${desc} (S/N: ${serial}) for repair. `;
+}
+
+// ── AIM AUTH ──────────────────────────────────────────
+async function connectAIM() {
+  const apiKey = document.getElementById('modalApiKey').value.trim();
+  const user = document.getElementById('modalUser').value.trim();
+  const pass = document.getElementById('modalPass').value.trim();
+
+  const btn = document.getElementById('modalConnectBtn');
+  btn.textContent = 'Connecting...';
+  btn.disabled = true;
+
+  try {
+    const r1 = await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
+    const d1 = await r1.json();
+    if (!d1.OAuthToken) throw new Error('No OAuth token');
+
+    const endpointDomain = d1.NewEndpointDomain?.replace(/\/$/, '') || 'https://sandbox.active-e.net';
+
+    const r2 = await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(endpointDomain)}`);
+    const d2 = await r2.json();
+    if (!d2.Token) throw new Error(d2.Status?.ErrorMessage || 'Auth failed');
+
+    auth = { connected: true, apiKey, oauthToken: d1.OAuthToken, token: d2.Token, endpointDomain };
+
+    document.getElementById('connDot').className = 'conn-dot on';
+    document.getElementById('connText').textContent = d2.UserDetails?.Firstname || 'Connected';
+    hideConnectModal();
+    showToast('Connected to AIM ✓', 'success');
+    renderDashboard();
+
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    btn.textContent = 'Connect';
+    btn.disabled = false;
+  }
+}
+
 async function callAIM(path, params = {}) {
-  if (!auth.connected) throw new Error('Not connected to AIM. Please connect first.');
+  if (!auth.connected) throw new Error('Not connected to AIM');
   const qs = new URLSearchParams({
-    apikey: auth.apiKey,
-    appid: APP_ID,
-    oauthtoken: auth.oauthToken,
-    token: auth.token,
-    endpointdomain: auth.endpointDomain,
-    path,
-    ...params
+    apikey: auth.apiKey, appid: APP_ID,
+    oauthtoken: auth.oauthToken, token: auth.token,
+    endpointdomain: auth.endpointDomain, path, ...params
   }).toString();
   const r = await fetch(`${PROXY}/api?${qs}`);
   const data = await r.json();
@@ -773,363 +1450,38 @@ async function callAIM(path, params = {}) {
   return data;
 }
 
-// ── AI Query Handler ──────────────────────────────────
-async function handleAIQuery() {
-  const input = document.getElementById('aiInput').value.trim();
-  if (!input) return;
-
-  document.getElementById('aiInput').value = '';
-  document.getElementById('sendBtn').disabled = true;
-
-  // Show thinking
-  const thinkId = 'think-' + Date.now();
-  addResult(`<div class="ai-response thinking" id="${thinkId}"><span class="spinner"></span>AI is thinking about: "${input}"</div>`);
-
-  try {
-    // Call Claude AI to interpret the query
-    const aiResp = await fetch(`${PROXY}/ai`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are an AI assistant for PM Music Center, a music instrument rental company. You help interpret natural language queries and convert them into AIM API actions.
-
-Available AIM API endpoints (use exact names):
-- SearchCustomers: search customers. Params: LastName, FirstName, Email, Phone
-- SearchContactManagement: search CM notes. Params: CustomerID
-- SearchInventory: search inventory. Params: Description, Category
-- GetSchoolList: get list of schools. No params needed.
-- GetSchoolDistrictList: get school districts. No params needed.
-- CustomerInfoRequest: get customer details. Params: Pk (customer primary key)
-
-Respond ONLY with a JSON object like:
-{
-  "action": "search" | "create_cm" | "explain" | "not_connected",
-  "endpoint": "SearchCustomers",
-  "params": {"LastName": "Jones"},
-  "display_title": "Customer Search: Jones",
-  "explanation": "Short explanation of what you're doing"
+// ── UI HELPERS ────────────────────────────────────────
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`)?.classList.add('active');
 }
 
-If the user wants to create a CM, set action to "create_cm".
-If you cannot determine an API call, set action to "explain" and put a helpful message in explanation.
-If not connected, set action to "not_connected".`,
-        messages: [{ role: 'user', content: input }]
-      })
-    });
+function navTo(name) {
+  showScreen(name);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`nav-${name}`)?.classList.add('active');
+}
 
-    const aiData = await aiResp.json();
-    const rawText = aiData.content?.[0]?.text || '{}';
+function showConnectModal() {
+  document.getElementById('connectModal').classList.add('show');
+}
 
-    let parsed;
-    try {
-      const clean = rawText.replace(/```json|```/g, '').trim();
-      parsed = JSON.parse(clean);
-    } catch {
-      parsed = { action: 'explain', explanation: rawText };
-    }
-
-    // Remove thinking bubble
-    document.getElementById(thinkId)?.remove();
-
-    if (parsed.action === 'not_connected' || !auth.connected) {
-      addResult(`<div class="ai-response" style="border-left-color:var(--accent2);">⚡ Please connect to AIM first using the sidebar on the left.</div>`);
-    } else if (parsed.action === 'explain') {
-      addResult(`<div class="ai-response">🤖 ${parsed.explanation}</div>`);
-    } else if (parsed.action === 'create_cm') {
-      addResult(`<div class="ai-response" style="border-left-color:var(--green);">📝 Opening CM form... ${parsed.explanation || ''}</div>`);
-      showCMForm(parsed.params?.CustomerID);
-    } else if (parsed.action === 'search') {
-      addResult(`<div class="ai-response">🔍 ${parsed.explanation || 'Searching AIM...'}</div>`);
-      const data = await callAIM(parsed.endpoint, parsed.params || {});
-      renderResults(data, parsed.display_title || parsed.endpoint, parsed.endpoint);
-    }
-
-  } catch (err) {
-    document.getElementById(thinkId)?.remove();
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
-  } finally {
-    document.getElementById('sendBtn').disabled = false;
+function hideConnectModal(e) {
+  if (!e || e.target === document.getElementById('connectModal')) {
+    document.getElementById('connectModal').classList.remove('show');
   }
 }
 
-// ── Quick Search ──────────────────────────────────────
-async function quickSearch(endpoint, title, params) {
-  if (!auth.connected) {
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent2);">⚡ Please connect to AIM first.</div>`);
-    return;
-  }
-  const loadId = 'load-' + Date.now();
-  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Loading ${title}...</div>`);
-  try {
-    const data = await callAIM(endpoint, params);
-    document.getElementById(loadId)?.remove();
-    renderResults(data, title, endpoint);
-  } catch (err) {
-    document.getElementById(loadId)?.remove();
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
-  }
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ── Render Results ────────────────────────────────────
-function renderResults(data, title, endpoint) {
-  // Detect data array
-  const records = data.Customers || data.ContactRecords || data.Inventory || data.Schools || data.Districts || data.Records || [];
-
-  if (records.length === 0) {
-    addResult(`<div class="ai-response">No records found for "${title}".</div>`);
-    return;
-  }
-
-  // Determine columns based on endpoint
-  let html = '';
-
-  if (endpoint === 'SearchCustomers' || endpoint.includes('Customer')) {
-    html = renderCustomerTable(records, title, data.TotalRecords || records.length);
-  } else if (endpoint === 'SearchContactManagement') {
-    html = renderCMTable(records, title);
-  } else if (endpoint === 'SearchInventory') {
-    html = renderInventoryTable(records, title);
-  } else if (endpoint === 'GetSchoolList') {
-    html = renderSchoolTable(records, title);
-  } else {
-    html = renderGenericTable(records, title);
-  }
-
-  addResult(html);
-}
-
-function renderCustomerTable(records, title, total) {
-  const rows = records.slice(0, 50).map(c => `
-    <tr>
-      <td><strong>${c.Name || '—'}</strong></td>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${c.Acct || '—'}</td>
-      <td>${c.City || '—'}${c.St ? ', ' + c.St : ''}</td>
-      <td>${c.Phone || '—'}</td>
-      <td>${c.Email && c.Email !== 'Ask for Email' ? `<a href="mailto:${c.Email}" style="color:var(--blue);text-decoration:none;">${c.Email}</a>` : '<span style="color:var(--muted)">—</span>'}</td>
-      <td>${c.RentalActivity ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">None</span>'}</td>
-      <td>${c.OpenInvoices ? '<span class="badge badge-red">Open</span>' : '<span class="badge badge-gray">Clear</span>'}</td>
-      <td><button class="action-btn" onclick="loadCustomerCMs(${c.Pk}, '${(c.Name||'').replace(/'/g,"\\'")}')">CMs</button></td>
-    </tr>`).join('');
-
-  return `<div class="data-table-wrap">
-    <div class="table-header">
-      <div class="table-title">CUSTOMERS</div>
-      <div class="table-count">${records.length} shown${total > records.length ? ' of ' + total : ''}</div>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="data-table">
-      <thead><tr>
-        <th>Name</th><th>Acct#</th><th>Location</th><th>Phone</th><th>Email</th><th>Rentals</th><th>Invoices</th><th>Actions</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-function renderCMTable(records, title) {
-  const rows = records.slice(0, 50).map(cm => `
-    <tr>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${cm.Date || cm.EntryDate || '—'}</td>
-      <td><strong>${cm.CustomerName || cm.Name || '—'}</strong></td>
-      <td>${cm.Subject || cm.Topic || '—'}</td>
-      <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cm.Notes || cm.Body || '—'}</td>
-      <td>${cm.Employee || cm.CreatedBy || '—'}</td>
-    </tr>`).join('');
-
-  return `<div class="data-table-wrap">
-    <div class="table-header">
-      <div class="table-title">CONTACT MANAGEMENT</div>
-      <div class="table-count">${records.length} records</div>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="data-table">
-      <thead><tr><th>Date</th><th>Customer</th><th>Subject</th><th>Notes</th><th>Employee</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-function renderInventoryTable(records, title) {
-  const rows = records.slice(0, 50).map(i => `
-    <tr>
-      <td><strong>${i.Description || i.Name || '—'}</strong></td>
-      <td style="font-family:var(--mono);font-size:11px">${i.Sku || i.Model || '—'}</td>
-      <td>${i.Manufacturer || i.Brand || '—'}</td>
-      <td>${i.Category || '—'}</td>
-      <td style="font-family:var(--mono)">${i.Price != null ? '$' + Number(i.Price).toFixed(2) : '—'}</td>
-      <td>${i.Qty != null ? i.Qty : '—'}</td>
-    </tr>`).join('');
-
-  return `<div class="data-table-wrap">
-    <div class="table-header">
-      <div class="table-title">INVENTORY</div>
-      <div class="table-count">${records.length} items</div>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="data-table">
-      <thead><tr><th>Description</th><th>SKU/Model</th><th>Brand</th><th>Category</th><th>Price</th><th>Qty</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-function renderSchoolTable(records, title) {
-  const rows = records.slice(0, 50).map(s => `
-    <tr>
-      <td><strong>${s.Name || s.SchoolName || '—'}</strong></td>
-      <td>${s.District || s.DistrictName || '—'}</td>
-      <td>${s.City || '—'}${s.State ? ', ' + s.State : ''}</td>
-      <td>${s.Phone || '—'}</td>
-      <td><button class="action-btn" onclick="setQuery('Show customers from school ${(s.Name||'').replace(/'/g,"\\'")}')">Search</button></td>
-    </tr>`).join('');
-
-  return `<div class="data-table-wrap">
-    <div class="table-header">
-      <div class="table-title">SCHOOLS</div>
-      <div class="table-count">${records.length} schools</div>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="data-table">
-      <thead><tr><th>School Name</th><th>District</th><th>Location</th><th>Phone</th><th>Actions</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-function renderGenericTable(records, title) {
-  if (records.length === 0) return `<div class="ai-response">No data returned.</div>`;
-  const keys = Object.keys(records[0]).slice(0, 8);
-  const headers = keys.map(k => `<th>${k}</th>`).join('');
-  const rows = records.slice(0, 30).map(r =>
-    `<tr>${keys.map(k => `<td>${r[k] ?? '—'}</td>`).join('')}</tr>`
-  ).join('');
-
-  return `<div class="data-table-wrap">
-    <div class="table-header">
-      <div class="table-title">${title.toUpperCase()}</div>
-      <div class="table-count">${records.length} records</div>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="data-table">
-      <thead><tr>${headers}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-// ── Load CMs for a customer ───────────────────────────
-async function loadCustomerCMs(pk, name) {
-  const loadId = 'load-' + Date.now();
-  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Loading CMs for ${name}...</div>`);
-  try {
-    const data = await callAIM('SearchContactManagement', { CustomerID: pk });
-    document.getElementById(loadId)?.remove();
-    renderResults(data, `CMs for ${name}`, 'SearchContactManagement');
-  } catch (err) {
-    document.getElementById(loadId)?.remove();
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ ${err.message}</div>`);
-  }
-}
-
-// ── CM Form ───────────────────────────────────────────
-function showCMForm(customerID = '') {
-  const form = `<div class="cm-form">
-    <div class="cm-form-title">New Contact Management Entry</div>
-    <div class="form-grid">
-      <div class="form-field">
-        <label>Customer ID / Account #</label>
-        <input type="text" id="cmCustomerID" placeholder="e.g. 203" value="${customerID}">
-      </div>
-      <div class="form-field">
-        <label>Subject</label>
-        <input type="text" id="cmSubject" placeholder="e.g. School Visit - Repair Pickup">
-      </div>
-      <div class="form-field full">
-        <label>Notes</label>
-        <textarea id="cmNotes" placeholder="e.g. Picked up 3 repairs from Director Johnson. Left 2 loaners. Follow up next Tuesday re: Yamaha flute estimate."></textarea>
-      </div>
-    </div>
-    <div class="form-actions">
-      <button class="btn-submit" onclick="submitCM()">Save CM to AIM</button>
-      <button class="btn-cancel" onclick="this.closest('.cm-form').remove()">Cancel</button>
-    </div>
-  </div>`;
-  addResult(form);
-  document.getElementById('cmNotes')?.focus();
-}
-
-async function submitCM() {
-  const customerID = document.getElementById('cmCustomerID')?.value.trim();
-  const subject = document.getElementById('cmSubject')?.value.trim();
-  const notes = document.getElementById('cmNotes')?.value.trim();
-
-  if (!customerID || !notes) {
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);">⚠ Customer ID and Notes are required.</div>`);
-    return;
-  }
-
-  const loadId = 'load-' + Date.now();
-  addResult(`<div class="ai-response thinking" id="${loadId}"><span class="spinner"></span>Saving CM to AIM...</div>`);
-
-  try {
-    const data = await callAIM('AddContactRecord', { CustomerID: customerID, Subject: subject, Notes: notes });
-    document.getElementById(loadId)?.remove();
-    addResult(`<div class="ai-response" style="border-left-color:var(--green);">✓ CM saved successfully for customer ${customerID}!</div>`);
-    document.querySelector('.cm-form')?.remove();
-  } catch (err) {
-    document.getElementById(loadId)?.remove();
-    addResult(`<div class="ai-response" style="border-left-color:var(--accent);color:var(--accent);">⚠ Could not save CM: ${err.message}</div>`);
-  }
-}
-
-function showAIHelp() {
-  addResult(`<div class="ai-response">
-    <strong>🤖 What can I help you with?</strong><br><br>
-    Try asking me things like:<br>
-    • <em>"Find customer named Johnson"</em><br>
-    • <em>"Show all students with active rentals"</em><br>
-    • <em>"Search for schools in Aurora"</em><br>
-    • <em>"Create a CM for customer 203"</em><br>
-    • <em>"Find inventory for saxophone"</em><br>
-    • <em>"Show me recent contact management entries"</em><br><br>
-    I'll translate your plain English into AIM API calls and show you the results.
-  </div>`);
-}
-
-// ── Helpers ───────────────────────────────────────────
-function addResult(html) {
-  const area = document.getElementById('resultsArea');
-  const welcome = area.querySelector('.welcome');
-  if (welcome) welcome.remove();
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  area.appendChild(div);
-  area.scrollTop = area.scrollHeight;
-}
-
-function setQuery(text) {
-  document.getElementById('aiInput').value = text;
-  document.getElementById('aiInput').focus();
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    handleAIQuery();
-  }
-}
-
-function setStatus(type, text) {
-  const dot = document.getElementById('statusDot');
-  dot.className = 'status-dot' + (type ? ' ' + type : '');
-  document.getElementById('statusText').textContent = text;
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 </script>
 </body>
