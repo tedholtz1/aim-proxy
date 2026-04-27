@@ -804,7 +804,7 @@ async function saveCMUpdate(cmId, customerPk, timestamp) {
     const existing = await callAIM('SearchContactManagement', { CustomerID: customerPk });
     const cms = existing.ContactRecords||existing.Records||[];
     const cm = cms.find(c => String(c.Pk||c.ID||c.RefNum)===String(cmId));
-    const existingNotes = cm?(cm.Comments||cm.Notes||')':'';
+    const existingNotes = cm?(cm.Comments||cm.Notes||''):'';
     await callAIM('EditContactRecord', { Pk:cmId, CustomerID:customerPk, Comments:existingNotes+newNote });
     showToast('CM updated ✓','success');
     document.getElementById(`edit-${cmId}`).innerHTML='';
