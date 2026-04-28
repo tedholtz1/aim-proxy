@@ -597,7 +597,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- BOTTOM NAV -->
-<div class="bnav">
+<div class="bnav" id="mainNav">
   <button class="nbtn active" id="nav-home" onclick="navTo('home')"><div class="nicon">🏠</div><div class="nlbl">Home</div></button>
   <button class="nbtn" id="nav-today" onclick="navTo('today')"><div class="nicon">📍</div><div class="nlbl">Today</div></button>
   <button class="nbtn" id="nav-directory" onclick="navTo('directory');loadDirectory()"><div class="nicon">📒</div><div class="nlbl">Director-y</div></button>
@@ -663,7 +663,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
         <div class="mlbl">Scan / Photo Instrument Tag or Enter Serial #</div>
         <div style="display:flex;gap:8px;margin-bottom:8px">
           <input type="text" class="minput" id="rtSerial" placeholder="Serial number" style="flex:1;font-family:var(--mono)" oninput="if(this.value.length>4)lookupSerialForRepair()">
-          <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('rtSerial').value=v;lookupSerialForRepair();})">📷 Scan</button>
+          <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="openRepairScanner()">📷 Scan</button>
           <button style="background:var(--pm-blue2);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="lookupSerialForRepair()">Lookup</button>
         </div>
         <div style="display:flex;gap:8px">
@@ -975,9 +975,12 @@ function renderToday(){
     html+=`<div class="slbl">Today's Schools</div>`;
     orderedSchools.forEach((s,i)=>{
       const isCPS=CPS_SCHOOLS.some(c=>s.name.toLowerCase().includes(c.toLowerCase()));
-      html+=`<div class="scard" onclick="openSchool(${JSON.stringify(s).replace(/"/g,'&quot;')})" style="animation-delay:${i*.04}s">
+      const isGula=s.name.toLowerCase().includes('daniel')||s.name.toLowerCase().includes('gula');
+      const displayName=isGula?'Gula':s.name;
+      const displaySchool=isGula?{name:'Gula',district:'GULA'}:s;
+      html+=`<div class="scard" onclick="openSchool(${JSON.stringify(displaySchool).replace(/"/g,'&quot;')})" style="animation-delay:${i*.04}s">
         <div class="snum">${i+1}</div>
-        <div class="sinfo"><div class="sname">${esc(s.name)}</div><div class="smeta">District ${esc(s.district)}</div></div>
+        <div class="sinfo"><div class="sname">${esc(displayName)}</div><div class="smeta">${isGula?'Gula Schools':'District '+esc(s.district)}</div></div>
         ${isCPS?'<span class="badge b-orange" style="margin-right:4px">CPS</span>':''}
         <div class="chev">›</div></div>`;
     });
@@ -1439,6 +1442,30 @@ function setRepairSearchMode(mode,btn){
   document.getElementById('repairSearchInput').placeholder=placeholder[mode]||'Enter search term...';
 }
 
+function openRepairScanner(){
+  if(typeof ZXing !== 'undefined'){
+    startScanner(function(v){
+      document.getElementById('rtSerial').value=v;
+      lookupSerialForRepair();
+    });
+  } else {
+    // ZXing not loaded - use file input fallback
+    document.getElementById('rtTagPhoto').click();
+  }
+}
+
+function openRepairScanner(){
+  if(typeof ZXing !== 'undefined'){
+    startScanner(function(v){
+      document.getElementById('rtSerial').value=v;
+      lookupSerialForRepair();
+    });
+  } else {
+    // ZXing not loaded - use file input fallback
+    document.getElementById('rtTagPhoto').click();
+  }
+}
+
 async function readTagPhoto(event){
   const file=event.target.files?.[0];if(!file)return;
   showToast('Reading tag...','');
@@ -1746,21 +1773,35 @@ function renderDirectoryList(dirs){
     });
 
   } else if(dirSort==='day'){
-    // By Visit Day - Mon through Fri
     var dayOrder=['Mon','Tue','Wed','Thur','Fri'];
     var dayNames2={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thur:'Thursday',Fri:'Friday'};
+    var dayRouteOrder={
+      Mon:['Park Junior High','Gurrie Middle','Hillside Elementary','Timothy Christian'],
+      Tue:['Gula','Stagg High School','Carl Sandburg High School','Hamlin Upper Grade Center','Meadow Lane','Proviso East High School','Walther Christian Academy','Ridgewood High School','Medinah'],
+      Wed:['Komarek School','McClure Junior High','Lace Elementary','Westview Hills Middle','Maercker Intermediate','Eisenhower Junior High'],
+      Thur:['Aurora Christian','Huntley Middle School','Kaneland High School','Park Junior High'],
+      Fri:['Cary-Grove High','Fox River Grove Middle','Chicago Math & Science (CMSA)','DePaul College Prep','Whitney Young High School','Jones College Prep','Mark Twain Elementary']
+    };
     dayOrder.forEach(function(day){
       var dayDirs=dirs.filter(function(d){return d.day.indexOf(day)>=0;});
       if(dayDirs.length===0)return;
       html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:8px 2px 4px;border-bottom:2px solid var(--pm-sky);margin-bottom:8px">'+dayNames2[day]+'</div>';
-      // Group by school within day
       var daySchoolMap={};
       dayDirs.forEach(function(d){
         var key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
         if(!daySchoolMap[key])daySchoolMap[key]={school:key,dirs:[]};
         daySchoolMap[key].dirs.push(d);
       });
-      Object.values(daySchoolMap).sort(function(a,b){return a.school.localeCompare(b.school);}).forEach(function(s){
+      // Sort schools by route order for this day
+      var routeOrder=dayRouteOrder[day]||[];
+      var schoolList=Object.values(daySchoolMap);
+      schoolList.sort(function(a,b){
+        var ai=routeOrder.findIndex(function(r){return a.school.toLowerCase().includes(r.toLowerCase().split(' ')[0]);});
+        var bi=routeOrder.findIndex(function(r){return b.school.toLowerCase().includes(r.toLowerCase().split(' ')[0]);});
+        if(ai===-1)ai=999;if(bi===-1)bi=999;
+        return ai-bi;
+      });
+      schoolList.forEach(function(s){
         html+='<div class="dcard" style="margin-bottom:8px">';
         html+='<div class="dcard-school">'+esc(s.school)+'</div>';
         s.dirs.forEach(function(d){
