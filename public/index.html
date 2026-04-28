@@ -1012,16 +1012,17 @@ function showGulaDetail(){
   navTo('school');
   var GULA_SCHOOLS=['St. Daniel the Prophet','St. John Fisher','St. Mary Star of the Sea','Our Lady of the Snows','St. Symphorosa','St. Walter/St. Benedict','Infant Jesus of Prague','Sts. Cyril & Methodius','St. Alphonsus/St. Patrick','St. Michael','St. George','St. Catherine','Most Holy Redeemer','St. Barnabas','St. Damian'];
   var cnt=document.getElementById('schoolContent');
-  cnt.innerHTML='<div class="agrid">'
-    +'<div class="acard blue" onclick="openSchoolCMs('Gula')"><div class="aicon">📝</div><div class="albl">CMs</div></div>'
-    +'<div class="acard green" onclick="showContactDirector('Gula')"><div class="aicon">📞</div><div class="albl">Contact Bill Gula</div></div>'
-    +'<div class="acard yellow" onclick="showScanDelivery('Gula')"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>'
-    +'<div class="acard orange" onclick="showRepairStatus('Gula')"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>'
-    +'<div class="acard purple" onclick="openVisitNote('Gula')"><div class="aicon">📋</div><div class="albl">Notes</div></div>'
-    +'</div>'
-    +'<div class="slbl" style="margin-top:10px">Gula Schools</div>'
-    +GULA_SCHOOLS.map(function(s){return '<div class="card" style="padding:11px 14px;margin-bottom:6px;font-size:13px;font-weight:500">'+esc(s)+'</div>';}).join('')
-    +'<div id="schoolDetail"></div>';
+  var gulaHTML='<div class="agrid">';
+  gulaHTML+='<div class="acard blue" onclick="openSchoolCMs(&quot;Gula&quot;)"><div class="aicon">📝</div><div class="albl">CMs</div></div>';
+  gulaHTML+='<div class="acard green" onclick="showContactDirector(&quot;Gula&quot;)"><div class="aicon">📞</div><div class="albl">Contact Bill Gula</div></div>';
+  gulaHTML+='<div class="acard yellow" onclick="showScanDelivery(&quot;Gula&quot;)"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>';
+  gulaHTML+='<div class="acard orange" onclick="showRepairStatus(&quot;Gula&quot;)"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>';
+  gulaHTML+='<div class="acard purple" onclick="openVisitNote(&quot;Gula&quot;)"><div class="aicon">📋</div><div class="albl">Notes</div></div>';
+  gulaHTML+='</div>';
+  gulaHTML+='<div class="slbl" style="margin-top:10px">Gula Schools</div>';
+  gulaHTML+=GULA_SCHOOLS.map(function(s){return '<div class="card" style="padding:11px 14px;margin-bottom:6px;font-size:13px;font-weight:500">'+esc(s)+'</div>';}).join('');
+  gulaHTML+='<div id="schoolDetail"></div>';
+  cnt.innerHTML=gulaHTML;
 }
 
 async function openSchool(school){
