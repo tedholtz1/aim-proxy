@@ -3,13 +3,15 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 const path = require('path');
 const { google } = require('googleapis');
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 const AIM_BASE = 'https://active-ewebservice.biz/aeServices30/api';
-const SHEET_ID = '1TPlzM5rPkI2HPKJxkC7zAdkzHxw1bqoOninfb0SS4Xg';
+const ROUTE_SHEET_ID = '1TPlzM5rPkI2HPKJxkC7zAdkzHxw1bqoOninfb0SS4Xg';
+const CALENDAR_SHEET_ID = '11IJRzcBu6yuTcS7Adv308LtK3Pfnkiv-';
 
 async function getSheets() {
   const creds = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
@@ -25,14 +27,14 @@ app.get('/', function(req, res) {
 });
 
 app.get('/health', function(req, res) {
-  res.json({ status: 'ok', version: 'v7' });
+  res.json({ status: 'ok', version: 'v8' });
 });
 
 app.get('/route', async function(req, res) {
   try {
     const sheets = await getSheets();
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: SHEET_ID,
+      spreadsheetId: ROUTE_SHEET_ID,
       range: 'Sheet1!A:C'
     });
     const rows = response.data.values || [];
@@ -61,15 +63,15 @@ app.get('/route', async function(req, res) {
 app.get('/calendar', async function(req, res) {
   try {
     const sheets = await getSheets();
-    const meta = await sheets.spreadsheets.get({ spreadsheetId: SHEET_ID });
+    const meta = await sheets.spreadsheets.get({ spreadsheetId: CALENDAR_SHEET_ID });
     const sheetNames = meta.data.sheets.map(function(s) { return s.properties.title; });
     const yearTab = sheetNames.find(function(n) { return /20\d\d/.test(n); }) || sheetNames[0];
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: SHEET_ID,
+      spreadsheetId: CALENDAR_SHEET_ID,
       range: yearTab + '!A:P'
     });
     const rows = response.data.values || [];
-    if (rows.length === 0) { res.json({ events: [] }); return; }
+    if (rows.length === 0) { res.json({ events: [], deliveries: [] }); return; }
     const headers = rows[0].map(function(h) {
       return (h || '').toLowerCase().trim().replace(/\s+/g, '_');
     });
@@ -82,7 +84,7 @@ app.get('/calendar', async function(req, res) {
     const delivTab = sheetNames.find(function(n) { return n.toLowerCase().indexOf('deliver') >= 0; });
     if (delivTab) {
       const dr = await sheets.spreadsheets.values.get({
-        spreadsheetId: SHEET_ID,
+        spreadsheetId: CALENDAR_SHEET_ID,
         range: delivTab + '!A:Z'
       });
       const drows = dr.data.values || [];
@@ -96,6 +98,49 @@ app.get('/calendar', async function(req, res) {
       }
     }
     res.json({ events: events, deliveries: deliveries, tab: yearTab, allTabs: sheetNames });
+  } catch (err) {
+    res.status(500).json({ error: err.message, sheetId: CALENDAR_SHEET_ID });
+  }
+});
+
+// Email with attachment endpoint
+app.post('/email', async function(req, res) {
+  try {
+    var to = req.body.to;
+    var subject = req.body.subject;
+    var body = req.body.body || '';
+    var attachments = req.body.attachments || [];
+
+    var gmailUser = process.env.GMAIL_USER;
+    var gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+    if (!gmailUser || !gmailPass) {
+      res.status(500).json({ error: 'Email not configured. Add GMAIL_USER and GMAIL_APP_PASSWORD to Railway environment variables.' });
+      return;
+    }
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: gmailUser, pass: gmailPass }
+    });
+
+    var mailOptions = {
+      from: gmailUser,
+      to: to,
+      subject: subject,
+      text: body,
+      attachments: attachments.map(function(a) {
+        return {
+          filename: a.filename,
+          content: a.data,
+          encoding: 'base64',
+          contentType: a.contentType || 'application/octet-stream'
+        };
+      })
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -181,5 +226,5 @@ app.post('/ai', async function(req, res) {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {
-  console.log('AIM Proxy v7 running on port ' + PORT);
+  console.log('AIM Proxy v8 running on port ' + PORT);
 });
