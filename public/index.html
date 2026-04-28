@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>PM Music — Field Rep</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -398,13 +399,12 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
   <div class="hdr"><div class="hdr-title">Director-y</div></div>
   <div class="cnt">
     <div class="search-bar">
-      <input type="text" class="search-input" id="dirSearch" placeholder="Search name, school, or district..." oninput="filterDirectors()">
+      <input type="text" class="search-input" id="dirSearch" placeholder="Search name, school, or visit day..." oninput="filterDirectors()">
     </div>
     <div style="display:flex;gap:6px">
       <button class="dtab active" id="sortName" onclick="sortDirectors('name',this)">A–Z</button>
-      <button class="dtab" id="sortSchool" onclick="sortDirectors('school',this)">School</button>
-      <button class="dtab" id="sortDistrict" onclick="sortDirectors('district',this)">District</button>
-      <button class="dtab" id="sortDay" onclick="sortDirectors('day',this)">Visit Day</button>
+      <button class="dtab" id="sortSchool" onclick="sortDirectors('school',this)">By School</button>
+      <button class="dtab" id="sortDay" onclick="sortDirectors('day',this)">By Visit Day</button>
     </div>
     <div id="directoryList"><div class="loading-state"><div class="spinner"></div></div></div>
   </div>
@@ -490,7 +490,8 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px">For deliveries not connected to a regular school visit</div>
       <div style="display:flex;gap:8px">
         <input type="text" class="finput" id="standaloneScanInput" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan()">📥 Log</button>
+        <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('standaloneScanInput').value=v;})">📷</button>
+        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan()">📥 Log</button>
       </div>
     </div>
     <div style="display:flex;gap:8px">
@@ -619,6 +620,24 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
   </div>
 </div>
 
+<!-- BARCODE SCANNER MODAL -->
+<div class="mbg" id="scannerModal" onclick="hideMBG(event,'scannerModal')">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mtitle">📷 Scan Barcode</div>
+    <div style="position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px">
+      <video id="scannerVideo" style="width:100%;display:block" autoplay muted playsinline></video>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:100px;border:2px solid #4ade80;border-radius:8px;pointer-events:none"></div>
+    </div>
+    <div id="scannerStatus" style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:12px">Point camera at barcode</div>
+    <div id="scannerResult" style="display:none;background:var(--green-bg);border:1px solid var(--green-border);border-radius:10px;padding:12px;margin-bottom:12px">
+      <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Scanned</div>
+      <div id="scannerResultText" style="font-size:16px;font-weight:700;color:var(--green);font-family:var(--mono)"></div>
+    </div>
+    <button class="mcbtn" id="scannerUseBtn" style="display:none" onclick="useScanResult()">Use This Value</button>
+    <button class="btn-s" onclick="stopScanner()">Cancel</button>
+  </div>
+</div>
 <!-- TRANSFER MODAL -->
 <div class="mbg" id="transferModal" onclick="hideMBG(event,'transferModal')">
   <div class="msheet">
@@ -644,7 +663,8 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
         <div class="mlbl">Scan / Photo Instrument Tag or Enter Serial #</div>
         <div style="display:flex;gap:8px;margin-bottom:8px">
           <input type="text" class="minput" id="rtSerial" placeholder="Serial number" style="flex:1;font-family:var(--mono)" oninput="if(this.value.length>4)lookupSerialForRepair()">
-          <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="lookupSerialForRepair()">Lookup</button>
+          <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('rtSerial').value=v;lookupSerialForRepair();})">📷 Scan</button>
+          <button style="background:var(--pm-blue2);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="lookupSerialForRepair()">Lookup</button>
         </div>
         <div style="display:flex;gap:8px">
           <button style="flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:10px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer" onclick="document.getElementById('rtTagPhoto').click()">📷 Photo Tag</button>
@@ -751,7 +771,7 @@ const REPS={
 // Route order per day
 const ROUTE_ORDER={
   Mon:['Park Junior High','Gurrie Middle','Hillside Elementary','Timothy Christian'],
-  Tue:['St. Daniel the Prophet','Stagg High School','Carl Sandburg High School','Hamlin Upper Grade Center','Meadow Lane','Proviso East High School','Walther Christian Academy','Ridgewood High School','Medinah Intermediate','Medinah Middle'],
+  Tue:['Gula','Stagg High School','Carl Sandburg High School','Hamlin Upper Grade Center','Meadow Lane','Proviso East High School','Walther Christian Academy','Ridgewood High School','Medinah'],
   Wed:['Komarek School','McClure Junior High','Lace Elementary','Westview Hills Middle','Maercker Intermediate','Eisenhower Junior High'],
   Thur:['Aurora Christian','Huntley Middle School','Kaneland High School','Park Junior High'],
   Fri:['Cary-Grove High','Fox River Grove Middle','Chicago Math & Science (CMSA)','DePaul College Prep','Whitney Young High School','Jones College Prep','Mark Twain Elementary']
@@ -985,6 +1005,25 @@ function orderSchools(schools,dayKey){
 }
 
 // ── SCHOOL DETAIL ─────────────────────────────────────────
+function showGulaDetail(){
+  currentSchool={name:'Gula Schools',district:'GULA'};
+  document.getElementById('detailName').textContent='Gula Schools';
+  document.getElementById('detailDist').textContent='Bill Gula — Multiple Schools';
+  navTo('school');
+  var GULA_SCHOOLS=['St. Daniel the Prophet','St. John Fisher','St. Mary Star of the Sea','Our Lady of the Snows','St. Symphorosa','St. Walter/St. Benedict','Infant Jesus of Prague','Sts. Cyril & Methodius','St. Alphonsus/St. Patrick','St. Michael','St. George','St. Catherine','Most Holy Redeemer','St. Barnabas','St. Damian'];
+  var cnt=document.getElementById('schoolContent');
+  cnt.innerHTML='<div class="agrid">'
+    +'<div class="acard blue" onclick="openSchoolCMs('Gula')"><div class="aicon">📝</div><div class="albl">CMs</div></div>'
+    +'<div class="acard green" onclick="showContactDirector('Gula')"><div class="aicon">📞</div><div class="albl">Contact Bill Gula</div></div>'
+    +'<div class="acard yellow" onclick="showScanDelivery('Gula')"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>'
+    +'<div class="acard orange" onclick="showRepairStatus('Gula')"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>'
+    +'<div class="acard purple" onclick="openVisitNote('Gula')"><div class="aicon">📋</div><div class="albl">Notes</div></div>'
+    +'</div>'
+    +'<div class="slbl" style="margin-top:10px">Gula Schools</div>'
+    +GULA_SCHOOLS.map(function(s){return '<div class="card" style="padding:11px 14px;margin-bottom:6px;font-size:13px;font-weight:500">'+esc(s)+'</div>';}).join('')
+    +'<div id="schoolDetail"></div>';
+}
+
 async function openSchool(school){
   currentSchool=school;
   document.getElementById('detailName').textContent=school.name;
@@ -1049,8 +1088,9 @@ function showScanDelivery(schoolName){
     <div class="fcard">
       <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Enter serial # or invoice # for each item being delivered or picked up.</div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input type="text" class="finput" id="scanSerial" placeholder="Serial # or Invoice #" style="font-family:var(--mono)" autocomplete="off">
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Log Delivery</button>
+        <input type="text" class="finput" id="scanSerial" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
+        <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('scanSerial').value=v;})">📷</button>
+        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Log</button>
       </div>
       ${isCPS?'<div style="font-size:11px;color:var(--orange);font-weight:600;padding:6px 10px;background:var(--orange-bg);border-radius:8px">CPS — scans will go to office email</div>':''}
     </div>
@@ -1512,16 +1552,51 @@ function renderScans(filter='all'){
   el.innerHTML=html;
 }
 
-function emailScans(recipient){
-  const today=new Date().toLocaleDateString();
-  const isOffice=recipient==='office';
-  const scans=isOffice?scanLog.filter(s=>s.isCPS&&s.date===today):scanLog.filter(s=>s.date===today);
+async function emailScans(recipient){
+  var today=new Date().toLocaleDateString();
+  var isOffice=recipient==='office';
+  var scans=isOffice?scanLog.filter(function(s){return s.isCPS&&s.date===today;}):scanLog.filter(function(s){return s.date===today;});
   if(scans.length===0){showToast('No scans to send','error');return;}
-  const lines=scans.map(s=>`${s.action==='deliver'?'DELIVERY':'PICKUP'} — ${s.serial} — ${s.school} — ${s.time||''}`).join('\n');
-  const body=`Scan log for ${today}:\n\n${lines}\n\nSent from PM Music Field Rep App`;
-  const email=isOffice?OFFICE:RICKY;
-  window.location.href=`mailto:${email}?subject=${encodeURIComponent('Scan Log — '+today)}&body=${encodeURIComponent(body)}`;
-  showToast('Email app opened ✓','success');
+
+  // Build CSV content for Excel
+  var csvLines=['Action,Serial/Invoice,School,Time,CPS,Date'];
+  scans.forEach(function(s){
+    csvLines.push([
+      s.action==='deliver'?'Delivery':'Pickup',
+      s.serial,
+      s.school,
+      s.time||'',
+      s.isCPS?'Yes':'No',
+      s.date
+    ].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(','));
+  });
+  var csvContent=csvLines.join('\n');
+  var csvB64=btoa(unescape(encodeURIComponent(csvContent)));
+
+  var emailAddr=isOffice?OFFICE:RICKY;
+  var subject='Scan Log — '+today+(isOffice?' (CPS)':'');
+
+  try{
+    var resp=await fetch(PROXY+'/email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        to:emailAddr,
+        subject:subject,
+        body:'Scan log for '+today+' attached as CSV (opens in Excel).\n\nSent from PM Music Field Rep App.',
+        attachments:[{filename:'scan-log-'+today.replace(/\//g,'-')+'.csv',data:csvB64,contentType:'text/csv'}]
+      })
+    });
+    var data=await resp.json();
+    if(data.error)throw new Error(data.error);
+    showToast('Scan log sent ✓','success');
+  }catch(err){
+    // Fallback to mailto with text
+    var lines=scans.map(function(s){return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+s.serial+' — '+s.school+' — '+(s.time||'');}).join('\n');
+    var body2='Scan log for '+today+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
+    window.location.href='mailto:'+emailAddr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body2);
+    showToast('Email app opened','');
+  }
 }
 
 // ── SHELVES ───────────────────────────────────────────────
@@ -1593,48 +1668,110 @@ function loadDirectory(){
 
 function sortDirectors(by,btn){
   dirSort=by;
-  document.querySelectorAll('#screen-directory .dtab').forEach(b=>b.classList.remove('active'));
-  btn?.classList.add('active');
+  document.querySelectorAll('#screen-directory .dtab').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
   filterDirectors();
 }
 
 function filterDirectors(){
-  const q=document.getElementById('dirSearch')?.value.toLowerCase()||'';
-  let dirs=[...DIRECTORS];
-  if(q)dirs=dirs.filter(d=>
-    d.name.toLowerCase().includes(q)||
-    d.school.toLowerCase().includes(q)||
-    d.district.toLowerCase().includes(q)||
-    d.day.toLowerCase().includes(q)
-  );
-  if(dirSort==='name')dirs.sort((a,b)=>a.name.localeCompare(b.name));
-  else if(dirSort==='school')dirs.sort((a,b)=>a.school.localeCompare(b.school));
-  else if(dirSort==='district')dirs.sort((a,b)=>a.district.localeCompare(b.district));
-  else if(dirSort==='day')dirs.sort((a,b)=>a.day.localeCompare(b.day));
+  var q=document.getElementById('dirSearch')?document.getElementById('dirSearch').value.toLowerCase():'';
+  var dirs=DIRECTORS.slice();
+  if(q)dirs=dirs.filter(function(d){
+    return d.name.toLowerCase().indexOf(q)>=0||
+      d.school.toLowerCase().indexOf(q)>=0||
+      d.day.toLowerCase().indexOf(q)>=0;
+  });
   renderDirectoryList(dirs);
 }
 
+function getLastName(fullName){
+  var parts=fullName.trim().split(' ');
+  return parts[parts.length-1];
+}
+
+function dirContactHTML(d){
+  var html='';
+  if(d.email&&d.email!=='N/A')html+='<a class="dact email" href="mailto:'+d.email+'">✉️ Email</a>';
+  if(d.phone)html+='<a class="dact text" href="sms:'+d.phone+'">💬 Text</a>';
+  if(d.phone)html+='<a class="dact" href="tel:'+d.phone+'" style="border-color:var(--border)">📞 Call</a>';
+  return html;
+}
+
 function renderDirectoryList(dirs){
-  const el=document.getElementById('directoryList');if(!el)return;
-  if(dirs.length===0){el.innerHTML=`<div class="empty-state"><div class="etxt">No directors found</div></div>`;return;}
-  // Group by school (strip B/O suffix for grouping)
-  const schoolMap={};
-  dirs.forEach(d=>{
-    const key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
-    if(!schoolMap[key])schoolMap[key]={school:key,district:d.district,day:d.day,directors:[]};
-    schoolMap[key].directors.push(d);
-  });
-  const schools=Object.values(schoolMap);
-  el.innerHTML=schools.map((s,i)=>`<div class="dcard" style="animation-delay:${Math.min(i,.2)*0.03}s">
-    <div class="dcard-school">${esc(s.school)}</div>
-    <div class="dcard-name">District ${esc(s.district)} · ${esc(s.day)}</div>
-    ${s.directors.map(d=>`<div style="margin:6px 0 4px;font-size:13px;font-weight:600;color:var(--text2)">${esc(d.name)} <span class="badge b-gray">${d.role||'B'}</span></div>
-    <div class="dcard-acts">
-      ${d.email&&d.email!=='N/A'?`<a class="dact email" href="mailto:${d.email}">✉️ Email</a>`:''}
-      ${d.phone?`<a class="dact text" href="sms:${d.phone}">💬 Text</a>`:''}
-      ${d.phone?`<a class="dact" href="tel:${d.phone}" style="border-color:var(--border)">📞 Call</a>`:''}
-    </div>`).join('')}
-  </div>`).join('');
+  var el=document.getElementById('directoryList');if(!el)return;
+  if(dirs.length===0){el.innerHTML='<div class="empty-state"><div class="etxt">No directors found</div></div>';return;}
+  var html='';
+
+  if(dirSort==='name'){
+    // A-Z by last name - simple flat list
+    var sorted=dirs.slice().sort(function(a,b){return getLastName(a.name).localeCompare(getLastName(b.name));});
+    sorted.forEach(function(d,i){
+      html+='<div class="dcard" style="animation-delay:'+Math.min(i,20)*0.02+'s">';
+      html+='<div class="dcard-school">'+esc(d.name)+' <span class="badge b-gray">'+esc(d.role||'B')+'</span></div>';
+      html+='<div class="dcard-name">'+esc(d.school)+' · '+esc(d.day)+'</div>';
+      html+='<div class="dcard-acts">'+dirContactHTML(d)+'</div>';
+      html+='</div>';
+    });
+
+  } else if(dirSort==='school'){
+    // By School - grouped, B before O, schools alpha
+    var schoolMap={};
+    dirs.forEach(function(d){
+      var key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
+      if(!schoolMap[key])schoolMap[key]={school:key,district:d.district,day:d.day,band:[],orch:[]};
+      if(d.role==='O')schoolMap[key].orch.push(d);
+      else schoolMap[key].band.push(d);
+    });
+    var schools=Object.values(schoolMap).sort(function(a,b){return a.school.localeCompare(b.school);});
+    schools.forEach(function(s,i){
+      html+='<div class="dcard" style="animation-delay:'+Math.min(i,20)*0.02+'s">';
+      html+='<div class="dcard-school">'+esc(s.school)+'</div>';
+      html+='<div class="dcard-name" style="margin-bottom:8px">District '+esc(s.district)+' · '+esc(s.day)+'</div>';
+      if(s.band.length>0){
+        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm-blue2);margin-bottom:5px">Band</div>';
+        s.band.forEach(function(d){
+          html+='<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px">'+esc(d.name)+'</div>';
+          html+='<div class="dcard-acts" style="margin-bottom:8px">'+dirContactHTML(d)+'</div>';
+        });
+      }
+      if(s.orch.length>0){
+        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm-blue2);margin-bottom:5px;margin-top:4px">Orchestra</div>';
+        s.orch.forEach(function(d){
+          html+='<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px">'+esc(d.name)+'</div>';
+          html+='<div class="dcard-acts" style="margin-bottom:8px">'+dirContactHTML(d)+'</div>';
+        });
+      }
+      html+='</div>';
+    });
+
+  } else if(dirSort==='day'){
+    // By Visit Day - Mon through Fri
+    var dayOrder=['Mon','Tue','Wed','Thur','Fri'];
+    var dayNames2={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thur:'Thursday',Fri:'Friday'};
+    dayOrder.forEach(function(day){
+      var dayDirs=dirs.filter(function(d){return d.day.indexOf(day)>=0;});
+      if(dayDirs.length===0)return;
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:8px 2px 4px;border-bottom:2px solid var(--pm-sky);margin-bottom:8px">'+dayNames2[day]+'</div>';
+      // Group by school within day
+      var daySchoolMap={};
+      dayDirs.forEach(function(d){
+        var key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
+        if(!daySchoolMap[key])daySchoolMap[key]={school:key,dirs:[]};
+        daySchoolMap[key].dirs.push(d);
+      });
+      Object.values(daySchoolMap).sort(function(a,b){return a.school.localeCompare(b.school);}).forEach(function(s){
+        html+='<div class="dcard" style="margin-bottom:8px">';
+        html+='<div class="dcard-school">'+esc(s.school)+'</div>';
+        s.dirs.forEach(function(d){
+          html+='<div style="font-size:13px;font-weight:600;color:var(--text2);margin:5px 0 3px">'+esc(d.name)+' <span class="badge b-gray">'+esc(d.role||'B')+'</span></div>';
+          html+='<div class="dcard-acts">'+dirContactHTML(d)+'</div>';
+        });
+        html+='</div>';
+      });
+    });
+  }
+
+  el.innerHTML=html||'<div class="empty-state"><div class="etxt">No directors found</div></div>';
 }
 
 // ── RECEIPT ───────────────────────────────────────────────
@@ -1834,6 +1971,47 @@ function toggleMic(){
   micRec.onend=()=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';};
   micRec.onerror=(e)=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';showToast('Voice error: '+e.error,'error');};
   micRec.start();
+}
+
+// ── BARCODE SCANNER ──────────────────────────────────────
+var scannerActive=false;
+var scannerCallback=null;
+var codeReader=null;
+
+function startScanner(callback){
+  scannerCallback=callback;
+  document.getElementById('scannerModal').classList.add('show');
+  document.getElementById('scannerResult').style.display='none';
+  document.getElementById('scannerUseBtn').style.display='none';
+  document.getElementById('scannerStatus').textContent='Point camera at barcode';
+  try{
+    codeReader=new ZXing.BrowserMultiFormatReader();
+    codeReader.decodeFromVideoDevice(null,'scannerVideo',function(result,err){
+      if(result){
+        var text=result.getText();
+        document.getElementById('scannerResultText').textContent=text;
+        document.getElementById('scannerResult').style.display='block';
+        document.getElementById('scannerUseBtn').style.display='block';
+        document.getElementById('scannerStatus').textContent='Barcode detected!';
+        codeReader.reset();
+      }
+    });
+    scannerActive=true;
+  }catch(e){
+    document.getElementById('scannerStatus').textContent='Camera not available. Enter manually.';
+  }
+}
+
+function useScanResult(){
+  var text=document.getElementById('scannerResultText').textContent;
+  stopScanner();
+  if(scannerCallback)scannerCallback(text);
+}
+
+function stopScanner(){
+  if(codeReader)try{codeReader.reset();}catch(e){}
+  scannerActive=false;
+  document.getElementById('scannerModal').classList.remove('show');
 }
 
 // ── AIM AUTH ──────────────────────────────────────────────
