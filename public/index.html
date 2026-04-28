@@ -601,14 +601,17 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
   <button class="nbtn active" id="nav-home" onclick="navTo('home')"><div class="nicon">🏠</div><div class="nlbl">Home</div></button>
   <button class="nbtn" id="nav-today" onclick="navTo('today')"><div class="nicon">📍</div><div class="nlbl">Today</div></button>
   <button class="nbtn" id="nav-directory" onclick="navTo('directory');loadDirectory()"><div class="nicon">📒</div><div class="nlbl">Director-y</div></button>
-  <button class="nbtn" id="nav-ai" onclick="navTo('ai')"><div class="nicon">🤖</div><div class="nlbl">AI</div></button>
+  <button class="nbtn" id="nav-ai" onclick="navTo('ai')"><div class="nicon">🤖</div><div class="nlbl">AIM AI</div></button>
   <button class="nbtn" id="nav-calendar" onclick="navTo('calendar');loadCalendar()"><div class="nicon">📅</div><div class="nlbl">Calendar</div></button>
 </div>
 
 <!-- CONNECT MODAL -->
 <div class="mbg" id="connectModal" onclick="hideMBG(event,'connectModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">⚡ Connect to AIM</div>
     <div class="mfield"><div class="mlbl">API Key</div><input type="password" class="minput" id="mApiKey"></div>
     <div class="mfield"><div class="mlbl">Username</div><input type="text" class="minput" id="mUser"></div>
@@ -623,11 +626,15 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- BARCODE SCANNER MODAL -->
 <div class="mbg" id="scannerModal" onclick="hideMBG(event,'scannerModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">📷 Scan Barcode</div>
-    <div style="position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px">
-      <video id="scannerVideo" style="width:100%;display:block" autoplay muted playsinline></video>
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:100px;border:2px solid #4ade80;border-radius:8px;pointer-events:none"></div>
+    <div style="position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px;min-height:240px">
+      <video id="scannerVideo" style="width:100%;min-height:240px;display:block;object-fit:cover" autoplay muted playsinline></video>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:80px;border:3px solid #4ade80;border-radius:8px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,0.4)"></div>
+      <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.8);font-size:12px;font-weight:600">Align barcode within green box</div>
     </div>
     <div id="scannerStatus" style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:12px">Point camera at barcode</div>
     <div id="scannerResult" style="display:none;background:var(--green-bg);border:1px solid var(--green-border);border-radius:10px;padding:12px;margin-bottom:12px">
@@ -641,7 +648,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- TRANSFER MODAL -->
 <div class="mbg" id="transferModal" onclick="hideMBG(event,'transferModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">↗ Transfer CM</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Change day or assign to another rep</div>
     <div class="transfer-list" id="transferList"></div>
@@ -652,7 +662,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- REPAIR MODAL -->
 <div class="mbg" id="repairModal" onclick="hideMBG(event,'repairModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">🔧 Repair Ticket</div>
     <div style="display:flex;gap:7px;margin-bottom:16px">
       <button class="dtab active" id="rtNew" onclick="showRepairTab('new')">New Ticket</button>
@@ -704,7 +717,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- RECEIPT MODAL -->
 <div class="mbg" id="receiptModal" onclick="hideMBG(event,'receiptModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">📷 Log Receipt</div>
     <div style="border:2px dashed var(--border2);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;background:var(--bg)" onclick="document.getElementById('receiptInput').click()">
       <div style="font-size:36px;margin-bottom:8px">📸</div>
@@ -730,7 +746,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- REP SWITCHER MODAL -->
 <div class="mbg" id="repModal" onclick="hideMBG(event,'repModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">👤 Switch Rep View</div>
     <div style="display:flex;flex-direction:column;gap:8px">
       <div class="topt" onclick="switchRep('ted')">Ted Holtz (You) <span style="color:var(--muted2)">›</span></div>
@@ -744,7 +763,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 <!-- PIN CHANGE MODAL -->
 <div class="mbg" id="pinModal" onclick="hideMBG(event,'pinModal')">
   <div class="msheet">
-    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;margin-bottom:18px">
+    <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+  </div>
     <div class="mtitle">🔒 Change PIN</div>
     <div class="mfield"><div class="mlbl">New PIN</div><input type="password" class="minput" id="newPIN" placeholder="4 digits" inputmode="numeric" maxlength="4"></div>
     <div class="mfield"><div class="mlbl">Confirm PIN</div><input type="password" class="minput" id="confirmPIN" placeholder="4 digits" inputmode="numeric" maxlength="4"></div>
@@ -2028,19 +2050,41 @@ function startScanner(callback){
   document.getElementById('scannerStatus').textContent='Point camera at barcode';
   try{
     codeReader=new ZXing.BrowserMultiFormatReader();
-    codeReader.decodeFromVideoDevice(null,'scannerVideo',function(result,err){
-      if(result){
-        var text=result.getText();
-        document.getElementById('scannerResultText').textContent=text;
-        document.getElementById('scannerResult').style.display='block';
-        document.getElementById('scannerUseBtn').style.display='block';
-        document.getElementById('scannerStatus').textContent='Barcode detected!';
-        codeReader.reset();
-      }
+    // Get available cameras first
+    codeReader.listVideoInputDevices().then(function(devices){
+      var deviceId=undefined;
+      // Prefer rear camera on mobile
+      var rear=devices.find(function(d){return d.label.toLowerCase().includes('back')||d.label.toLowerCase().includes('rear')||d.label.toLowerCase().includes('environment');});
+      if(rear)deviceId=rear.deviceId;
+      codeReader.decodeFromVideoDevice(deviceId,'scannerVideo',function(result,err){
+        if(result){
+          var text=result.getText();
+          document.getElementById('scannerResultText').textContent=text;
+          document.getElementById('scannerResult').style.display='block';
+          document.getElementById('scannerUseBtn').style.display='block';
+          document.getElementById('scannerStatus').textContent='Barcode detected! ✓';
+          codeReader.reset();
+        }
+      });
+      scannerActive=true;
+      document.getElementById('scannerStatus').textContent='Point camera at barcode';
+    }).catch(function(e){
+      // Fallback - try without device selection
+      codeReader.decodeFromVideoDevice(undefined,'scannerVideo',function(result,err){
+        if(result){
+          var text=result.getText();
+          document.getElementById('scannerResultText').textContent=text;
+          document.getElementById('scannerResult').style.display='block';
+          document.getElementById('scannerUseBtn').style.display='block';
+          document.getElementById('scannerStatus').textContent='Barcode detected! ✓';
+          codeReader.reset();
+        }
+      });
+      scannerActive=true;
     });
-    scannerActive=true;
   }catch(e){
-    document.getElementById('scannerStatus').textContent='Camera not available. Enter manually.';
+    document.getElementById('scannerStatus').textContent='Scanner error: '+e.message+'. Enter manually.';
+    console.error('Scanner error:',e);
   }
 }
 
