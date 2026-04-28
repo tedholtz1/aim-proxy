@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -28,7 +27,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 .screen.active{display:flex}
 
 /* HEADER */
-.hdr{background:var(–pm-blue);padding:10px 15px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(30,58,110,.3);min-height:54px}
+.hdr{background:var(--pm-blue);padding:10px 15px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(30,58,110,.3);min-height:54px}
 .hdr-logo{height:32px;width:auto;display:block}
 .hdr-title{font-size:15px;font-weight:600;color:#fff;flex:1}
 .hdr-back{background:rgba(255,255,255,.15);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;cursor:pointer;flex-shrink:0}
@@ -40,11 +39,11 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 .cnt{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 
 /* CARDS */
-.card{background:var(–white);border:1px solid var(–border);border-radius:var(–r);padding:15px;box-shadow:var(–sh)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:15px;box-shadow:var(--sh)}
 
 /* DAY BANNER */
-.day-banner{background:linear-gradient(135deg,var(–pm-blue),var(–pm-blue2));border-radius:var(–r);padding:18px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:var(–shm)}
-.day-banner::after{content:’’;position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05)}
+.day-banner{background:linear-gradient(135deg,var(--pm-blue),var(--pm-blue2));border-radius:var(--r);padding:18px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shm)}
+.day-banner::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05)}
 .day-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px}
 .day-name{font-size:26px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1}
 .day-stats{display:flex;gap:20px}
@@ -52,178 +51,178 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 .ds-lbl{font-size:11px;color:rgba(255,255,255,.55);font-weight:500;margin-top:2px}
 
 /* CONNECT BANNER */
-.conn-banner{background:var(–orange-bg);border:1px solid #fed7aa;border-radius:var(–r);padding:13px 15px;display:flex;align-items:center;gap:12px}
+.conn-banner{background:var(--orange-bg);border:1px solid #fed7aa;border-radius:var(--r);padding:13px 15px;display:flex;align-items:center;gap:12px}
 .conn-banner-text{flex:1}
-.conn-banner-title{font-weight:600;font-size:14px;color:var(–orange)}
+.conn-banner-title{font-weight:600;font-size:14px;color:var(--orange)}
 .conn-banner-sub{font-size:12px;color:#c2410c;margin-top:1px}
-.conn-banner-btn{background:var(–pm-blue);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:var(–sans);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.conn-banner-btn{background:var(--pm-blue);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 
 /* SECTION LABEL */
-.slbl{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(–muted);padding:0 2px}
+.slbl{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 2px}
 
 /* SCHOOL CARD */
-.scard{background:var(–white);border:1px solid var(–border);border-radius:var(–r);padding:13px 15px;display:flex;align-items:center;gap:11px;cursor:pointer;box-shadow:var(–sh);transition:all .12s;animation:fadeUp .25s ease both}
-.scard:active{transform:scale(.98);background:var(–bg)}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;display:flex;align-items:center;gap:11px;cursor:pointer;box-shadow:var(--sh);transition:all .12s;animation:fadeUp .25s ease both}
+.scard:active{transform:scale(.98);background:var(--bg)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.snum{width:32px;height:32px;border-radius:9px;background:var(–pm-sky);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(–pm-blue2);flex-shrink:0}
+.snum{width:32px;height:32px;border-radius:9px;background:var(--pm-sky);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--pm-blue2);flex-shrink:0}
 .sinfo{flex:1;min-width:0}
-.sname{font-weight:600;font-size:14px;color:var(–text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.smeta{font-size:12px;color:var(–muted);margin-top:1px}
-.chev{color:var(–muted2);font-size:16px;flex-shrink:0}
+.sname{font-weight:600;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smeta{font-size:12px;color:var(--muted);margin-top:1px}
+.chev{color:var(--muted2);font-size:16px;flex-shrink:0}
 
 /* BADGES */
 .badge{font-size:10px;font-weight:600;padding:3px 7px;border-radius:6px;white-space:nowrap}
-.b-blue{background:var(–pm-sky);color:var(–pm-blue2)}
-.b-green{background:var(–green-bg);color:var(–green);border:1px solid var(–green-border)}
-.b-red{background:var(–red-bg);color:var(–red);border:1px solid var(–red-border)}
-.b-yellow{background:var(–yellow-bg);color:var(–yellow);border:1px solid var(–yellow-border)}
-.b-gray{background:var(–bg);color:var(–muted);border:1px solid var(–border)}
-.b-orange{background:var(–orange-bg);color:var(–orange);border:1px solid #fed7aa}
+.b-blue{background:var(--pm-sky);color:var(--pm-blue2)}
+.b-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.b-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.b-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.b-gray{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.b-orange{background:var(--orange-bg);color:var(--orange);border:1px solid #fed7aa}
 
 /* HOME MENU */
 .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.home-btn{background:var(–white);border:1px solid var(–border);border-radius:var(–r);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;box-shadow:var(–sh);transition:all .12s;text-align:center}
+.home-btn{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;box-shadow:var(--sh);transition:all .12s;text-align:center}
 .home-btn:active{transform:scale(.97)}
 .home-icon{font-size:26px}
-.home-label{font-size:13px;font-weight:700;color:var(–text)}
-.home-sub{font-size:11px;color:var(–muted);line-height:1.3}
+.home-label{font-size:13px;font-weight:700;color:var(--text)}
+.home-sub{font-size:11px;color:var(--muted);line-height:1.3}
 
 /* ACTION GRID */
 .agrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.acard{background:var(–white);border:1px solid var(–border);border-radius:var(–r);padding:13px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;box-shadow:var(–sh);transition:all .12s;text-align:center}
+.acard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:13px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;box-shadow:var(--sh);transition:all .12s;text-align:center}
 .acard:active{transform:scale(.97)}
 .acard.blue{border-color:#bfdbfe;background:#eff6ff}
-.acard.green{border-color:var(–green-border);background:var(–green-bg)}
-.acard.yellow{border-color:var(–yellow-border);background:var(–yellow-bg)}
-.acard.orange{border-color:#fed7aa;background:var(–orange-bg)}
-.acard.red{border-color:var(–red-border);background:var(–red-bg)}
+.acard.green{border-color:var(--green-border);background:var(--green-bg)}
+.acard.yellow{border-color:var(--yellow-border);background:var(--yellow-bg)}
+.acard.orange{border-color:#fed7aa;background:var(--orange-bg)}
+.acard.red{border-color:var(--red-border);background:var(--red-bg)}
 .acard.purple{border-color:#d8b4fe;background:#faf5ff}
 .aicon{font-size:20px}
-.albl{font-size:11px;font-weight:600;color:var(–text2);line-height:1.2}
+.albl{font-size:11px;font-weight:600;color:var(--text2);line-height:1.2}
 
 /* CM ITEMS */
-.cmi{background:var(–white);border:1px solid var(–border);border-left:3px solid var(–pm-light);border-radius:0 var(–r) var(–r) 0;padding:13px 15px;box-shadow:var(–sh);animation:fadeUp .2s ease both}
+.cmi{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--pm-light);border-radius:0 var(--r) var(--r) 0;padding:13px 15px;box-shadow:var(--sh);animation:fadeUp .2s ease both}
 .cmi.open{border-left-color:#f59e0b}
-.cmi.closed{border-left-color:var(–muted2);opacity:.6}
+.cmi.closed{border-left-color:var(--muted2);opacity:.6}
 .cmi-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
-.cmi-subj{font-weight:600;font-size:14px;color:var(–text);flex:1;line-height:1.3}
+.cmi-subj{font-weight:600;font-size:14px;color:var(--text);flex:1;line-height:1.3}
 .cmi-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0}
-.pill-open{background:var(–yellow-bg);color:var(–yellow)}
-.pill-closed{background:var(–bg);color:var(–muted)}
-.cmi-notes{font-size:12px;color:var(–text2);line-height:1.55;margin-bottom:7px;font-family:var(–mono);white-space:pre-wrap;word-break:break-word}
-.cmi-meta{display:flex;gap:10px;font-size:11px;color:var(–muted);flex-wrap:wrap}
+.pill-open{background:var(--yellow-bg);color:var(--yellow)}
+.pill-closed{background:var(--bg);color:var(--muted)}
+.cmi-notes{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:7px;font-family:var(--mono);white-space:pre-wrap;word-break:break-word}
+.cmi-meta{display:flex;gap:10px;font-size:11px;color:var(--muted);flex-wrap:wrap}
 .cmi-acts{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
-.cmbtn{padding:6px 11px;border-radius:7px;border:1px solid var(–border);background:var(–bg);color:var(–text2);font-family:var(–sans);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.cmbtn{padding:6px 11px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text2);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
 .cmbtn:active{transform:scale(.97)}
-.cmbtn.primary{background:var(–pm-blue);color:#fff;border-color:var(–pm-blue)}
-.cmbtn.green{background:var(–green-bg);color:var(–green);border-color:var(–green-border)}
-.cmbtn.red{background:var(–red-bg);color:var(–red);border-color:var(–red-border)}
+.cmbtn.primary{background:var(--pm-blue);color:#fff;border-color:var(--pm-blue)}
+.cmbtn.green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.cmbtn.red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
 
 /* CM EDIT */
-.cmedit{background:var(–pm-sky);border:1px solid #bfdbfe;border-radius:var(–r);padding:13px;margin-top:9px}
-.cmedit-lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(–pm-blue2);margin-bottom:7px}
-.cmedit-ta{width:100%;background:#fff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;font-family:var(–mono);font-size:13px;color:var(–text);outline:none;resize:none;min-height:80px;line-height:1.5}
-.cmedit-ta:focus{border-color:var(–pm-blue)}
+.cmedit{background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:var(--r);padding:13px;margin-top:9px}
+.cmedit-lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--pm-blue2);margin-bottom:7px}
+.cmedit-ta{width:100%;background:#fff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:13px;color:var(--text);outline:none;resize:none;min-height:80px;line-height:1.5}
+.cmedit-ta:focus{border-color:var(--pm-blue)}
 .sh-row{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
-.sh-btn{background:#fff;border:1px solid #bfdbfe;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(–pm-blue2);cursor:pointer;font-family:var(–mono);transition:all .12s}
-.sh-btn:active{background:var(–pm-blue);color:#fff}
+.sh-btn{background:#fff;border:1px solid #bfdbfe;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--pm-blue2);cursor:pointer;font-family:var(--mono);transition:all .12s}
+.sh-btn:active{background:var(--pm-blue);color:#fff}
 .cmedit-acts{display:flex;gap:8px;margin-top:9px}
 
 /* FORMS */
-.fcard{background:var(–white);border:1px solid var(–border);border-radius:var(–r);padding:17px;box-shadow:var(–sh)}
-.ftitle{font-size:16px;font-weight:700;color:var(–pm-blue);margin-bottom:15px}
+.fcard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:17px;box-shadow:var(--sh)}
+.ftitle{font-size:16px;font-weight:700;color:var(--pm-blue);margin-bottom:15px}
 .ff{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.flbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
-.finput,.ftarea,.fsel{background:var(–bg);border:1px solid var(–border2);border-radius:9px;padding:11px 13px;font-family:var(–sans);font-size:15px;color:var(–text);outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none}
-.finput:focus,.ftarea:focus,.fsel:focus{border-color:var(–pm-blue);background:#fff}
-.ftarea{min-height:90px;resize:none;font-family:var(–mono);font-size:13px}
+.flbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.finput,.ftarea,.fsel{background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:11px 13px;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none}
+.finput:focus,.ftarea:focus,.fsel:focus{border-color:var(--pm-blue);background:#fff}
+.ftarea{min-height:90px;resize:none;font-family:var(--mono);font-size:13px}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.tbtn{background:var(–bg);border:1px solid var(–border);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:500;color:var(–text2);cursor:pointer;font-family:var(–sans);text-align:left;line-height:1.3;transition:all .12s}
-.tbtn:active{background:var(–pm-sky);border-color:var(–pm-light);color:var(–pm-blue)}
-.btn-p{width:100%;padding:13px;background:var(–pm-blue);color:#fff;border:none;border-radius:10px;font-family:var(–sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .12s}
+.tbtn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;font-family:var(--sans);text-align:left;line-height:1.3;transition:all .12s}
+.tbtn:active{background:var(--pm-sky);border-color:var(--pm-light);color:var(--pm-blue)}
+.btn-p{width:100%;padding:13px;background:var(--pm-blue);color:#fff;border:none;border-radius:10px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .12s}
 .btn-p:active{transform:scale(.98)}
 .btn-p:disabled{opacity:.5}
-.btn-s{width:100%;padding:12px;background:transparent;color:var(–muted);border:1px solid var(–border);border-radius:10px;font-family:var(–sans);font-size:14px;cursor:pointer;margin-top:8px}
-.btn-save{flex:1;padding:11px;background:var(–pm-blue);color:#fff;border:none;border-radius:9px;font-family:var(–sans);font-size:14px;font-weight:600;cursor:pointer}
+.btn-s{width:100%;padding:12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:var(--sans);font-size:14px;cursor:pointer;margin-top:8px}
+.btn-save{flex:1;padding:11px;background:var(--pm-blue);color:#fff;border:none;border-radius:9px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer}
 .btn-save:disabled{opacity:.5}
-.btn-ce{padding:11px 15px;background:#fff;color:var(–muted);border:1px solid var(–border);border-radius:9px;font-family:var(–sans);font-size:14px;cursor:pointer}
+.btn-ce{padding:11px 15px;background:#fff;color:var(--muted);border:1px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:14px;cursor:pointer}
 
 /* DAY TABS */
 .dtabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .dtabs::-webkit-scrollbar{display:none}
-.dtab{background:#fff;border:1px solid var(–border);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;color:var(–muted);cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0}
-.dtab.active{background:var(–pm-blue);border-color:var(–pm-blue);color:#fff}
+.dtab{background:#fff;border:1px solid var(--border);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0}
+.dtab.active{background:var(--pm-blue);border-color:var(--pm-blue);color:#fff}
 
 /* INFO ROW */
-.irow{background:#fff;border:1px solid var(–border);border-radius:var(–r);overflow:hidden;box-shadow:var(–sh)}
-.iitem{display:flex;align-items:center;padding:12px 15px;border-bottom:1px solid var(–border);gap:10px}
+.irow{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.iitem{display:flex;align-items:center;padding:12px 15px;border-bottom:1px solid var(--border);gap:10px}
 .iitem:last-child{border-bottom:none}
-.ilbl{font-size:12px;color:var(–muted);width:76px;flex-shrink:0;font-weight:500}
-.ival{font-size:14px;font-weight:600;color:var(–text);flex:1}
-.iact{font-size:12px;color:var(–pm-blue2);font-weight:600;cursor:pointer;text-decoration:none}
+.ilbl{font-size:12px;color:var(--muted);width:76px;flex-shrink:0;font-weight:500}
+.ival{font-size:14px;font-weight:600;color:var(--text);flex:1}
+.iact{font-size:12px;color:var(--pm-blue2);font-weight:600;cursor:pointer;text-decoration:none}
 
 /* REPAIR STATUS */
-.repair-item{background:#fff;border:1px solid var(–border);border-radius:var(–r);padding:13px 15px;box-shadow:var(–sh);animation:fadeUp .2s ease both}
+.repair-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;box-shadow:var(--sh);animation:fadeUp .2s ease both}
 .repair-item.estimate{border-left:3px solid #f59e0b}
-.repair-item.workorder{border-left:3px solid var(–pm-light)}
-.repair-item.invoice{border-left:3px solid var(–green)}
+.repair-item.workorder{border-left:3px solid var(--pm-light)}
+.repair-item.invoice{border-left:3px solid var(--green)}
 .ri-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
 .ri-name{font-weight:600;font-size:14px;flex:1}
-.ri-inst{font-size:13px;color:var(–text2);margin-bottom:4px}
-.ri-meta{font-size:11px;color:var(–muted)}
+.ri-inst{font-size:13px;color:var(--text2);margin-bottom:4px}
+.ri-meta{font-size:11px;color:var(--muted)}
 
 /* DIRECTOR CARD */
-.dcard{background:#fff;border:1px solid var(–border);border-radius:var(–r);padding:14px 15px;box-shadow:var(–sh);animation:fadeUp .2s ease both}
-.dcard-school{font-weight:700;font-size:14px;color:var(–pm-blue);margin-bottom:2px}
-.dcard-name{font-size:13px;color:var(–text2);margin-bottom:6px}
+.dcard{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 15px;box-shadow:var(--sh);animation:fadeUp .2s ease both}
+.dcard-school{font-weight:700;font-size:14px;color:var(--pm-blue);margin-bottom:2px}
+.dcard-name{font-size:13px;color:var(--text2);margin-bottom:6px}
 .dcard-acts{display:flex;gap:7px;flex-wrap:wrap}
-.dact{padding:7px 12px;border-radius:8px;border:1px solid var(–border);background:var(–bg);font-family:var(–sans);font-size:12px;font-weight:600;color:var(–text2);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .12s}
+.dact{padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .12s}
 .dact:active{transform:scale(.97)}
-.dact.email{border-color:#bfdbfe;background:var(–pm-sky);color:var(–pm-blue2)}
-.dact.text{border-color:var(–green-border);background:var(–green-bg);color:var(–green)}
+.dact.email{border-color:#bfdbfe;background:var(--pm-sky);color:var(--pm-blue2)}
+.dact.text{border-color:var(--green-border);background:var(--green-bg);color:var(--green)}
 
 /* SCAN ITEM */
-.scan-item{background:#fff;border:1px solid var(–border);border-radius:var(–r);padding:12px 15px;box-shadow:var(–sh);animation:fadeUp .15s ease both}
+.scan-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px 15px;box-shadow:var(--sh);animation:fadeUp .15s ease both}
 .si-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .si-action{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.si-action.deliver{background:var(–green-bg)}
-.si-action.pickup{background:var(–yellow-bg)}
+.si-action.deliver{background:var(--green-bg)}
+.si-action.pickup{background:var(--yellow-bg)}
 .si-name{font-weight:600;font-size:13px;flex:1}
-.si-meta{font-size:11px;color:var(–muted)}
+.si-meta{font-size:11px;color:var(--muted)}
 
 /* AI CHAT */
 .chat-wrap{display:flex;flex-direction:column;gap:10px;flex:1}
 .chat-msgs{flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:200px}
-.cbub{padding:12px 15px;border-radius:var(–r);font-size:14px;line-height:1.6;animation:fadeUp .2s ease;max-width:100%}
-.cbub.ai{background:#fff;border:1px solid var(–border);border-left:3px solid var(–pm-blue);box-shadow:var(–sh)}
-.cbub.user{background:var(–pm-blue);color:#fff;align-self:flex-end;max-width:85%}
-.cbub.thinking{background:var(–pm-sky);border:1px solid #bfdbfe;color:var(–pm-blue2);font-style:italic;font-size:13px}
-.chat-input-area{background:#fff;border:1px solid var(–border2);border-radius:var(–r);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;box-shadow:var(–sh)}
-.chat-ta{flex:1;border:none;background:none;font-family:var(–sans);font-size:14px;color:var(–text);outline:none;resize:none;min-height:24px;max-height:100px;line-height:1.5}
-.chat-ta::placeholder{color:var(–muted2)}
-.chat-mic{background:var(–bg);border:1px solid var(–border);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
-.chat-mic.recording{background:var(–red-bg);border-color:var(–red-border);animation:pulse 1s infinite}
-.chat-send{background:var(–pm-blue);color:#fff;border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.cbub{padding:12px 15px;border-radius:var(--r);font-size:14px;line-height:1.6;animation:fadeUp .2s ease;max-width:100%}
+.cbub.ai{background:#fff;border:1px solid var(--border);border-left:3px solid var(--pm-blue);box-shadow:var(--sh)}
+.cbub.user{background:var(--pm-blue);color:#fff;align-self:flex-end;max-width:85%}
+.cbub.thinking{background:var(--pm-sky);border:1px solid #bfdbfe;color:var(--pm-blue2);font-style:italic;font-size:13px}
+.chat-input-area{background:#fff;border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;box-shadow:var(--sh)}
+.chat-ta{flex:1;border:none;background:none;font-family:var(--sans);font-size:14px;color:var(--text);outline:none;resize:none;min-height:24px;max-height:100px;line-height:1.5}
+.chat-ta::placeholder{color:var(--muted2)}
+.chat-mic{background:var(--bg);border:1px solid var(--border);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.chat-mic.recording{background:var(--red-bg);border-color:var(--red-border);animation:pulse 1s infinite}
+.chat-send{background:var(--pm-blue);color:#fff;border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
 /* NOTES */
-.note-item{background:#fff;border:1px solid var(–border);border-radius:var(–r);padding:13px 15px;box-shadow:var(–sh);animation:fadeUp .2s ease both}
-.note-school{font-weight:700;font-size:13px;color:var(–pm-blue);margin-bottom:2px}
-.note-date{font-size:11px;color:var(–muted);margin-bottom:6px}
-.note-text{font-size:13px;color:var(–text2);line-height:1.55}
+.note-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;box-shadow:var(--sh);animation:fadeUp .2s ease both}
+.note-school{font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:2px}
+.note-date{font-size:11px;color:var(--muted);margin-bottom:6px}
+.note-text{font-size:13px;color:var(--text2);line-height:1.55}
 
 /* SEARCH BAR */
-.search-bar{display:flex;gap:8px;background:#fff;border:1px solid var(–border2);border-radius:10px;padding:4px 4px 4px 14px;box-shadow:var(–sh);align-items:center}
-.search-input{flex:1;border:none;background:none;font-family:var(–sans);font-size:15px;color:var(–text);outline:none;padding:8px 0}
-.search-input::placeholder{color:var(–muted2)}
-.search-go{background:var(–pm-blue);color:#fff;border:none;border-radius:7px;padding:9px 14px;font-family:var(–sans);font-size:13px;font-weight:600;cursor:pointer}
+.search-bar{display:flex;gap:8px;background:#fff;border:1px solid var(--border2);border-radius:10px;padding:4px 4px 4px 14px;box-shadow:var(--sh);align-items:center}
+.search-input{flex:1;border:none;background:none;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;padding:8px 0}
+.search-input::placeholder{color:var(--muted2)}
+.search-go{background:var(--pm-blue);color:#fff;border:none;border-radius:7px;padding:9px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer}
 
 /* BOTTOM NAV */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(–border);display:flex;padding:5px 0 16px;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;padding:5px 0 16px;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.06)}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;cursor:pointer;background:none;border:none;transition:all .12s}
 .nicon{font-size:19px}
-.nlbl{font-size:9px;font-weight:700;color:var(–muted2);letter-spacing:.06em;text-transform:uppercase}
-.nbtn.active .nlbl{color:var(–pm-blue)}
+.nlbl{font-size:9px;font-weight:700;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase}
+.nbtn.active .nlbl{color:var(--pm-blue)}
 .nbtn.active .nicon{transform:scale(1.1)}
 
 /* MODALS */
@@ -231,51 +230,49 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 .mbg.show{display:flex}
 .msheet{background:#fff;border-radius:20px 20px 0 0;padding:22px 20px 36px;width:100%;animation:sheetUp .25s ease;max-height:92vh;overflow-y:auto}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
-.mhandle{width:36px;height:4px;background:var(–border2);border-radius:2px;margin:0 auto 18px}
-.mtitle{font-size:18px;font-weight:700;color:var(–pm-blue);margin-bottom:16px}
+.mhandle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
+.mtitle{font-size:18px;font-weight:700;color:var(--pm-blue);margin-bottom:16px}
 .mfield{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.mlbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
-.minput{background:var(–bg);border:1px solid var(–border2);border-radius:9px;padding:12px 14px;font-family:var(–sans);font-size:15px;color:var(–text);outline:none;width:100%}
-.minput:focus{border-color:var(–pm-blue);background:#fff}
-.mcbtn{width:100%;padding:14px;background:var(–pm-blue);color:#fff;border:none;border-radius:11px;font-family:var(–sans);font-size:16px;font-weight:700;cursor:pointer;margin-top:6px}
+.mlbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.minput{background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;width:100%}
+.minput:focus{border-color:var(--pm-blue);background:#fff}
+.mcbtn{width:100%;padding:14px;background:var(--pm-blue);color:#fff;border:none;border-radius:11px;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;margin-top:6px}
 .transfer-list{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto}
-.topt{background:var(–bg);border:1px solid var(–border);border-radius:9px;padding:12px 14px;cursor:pointer;font-size:14px;font-weight:500;color:var(–text);display:flex;align-items:center;justify-content:space-between}
-.topt:active{background:var(–pm-sky);border-color:var(–pm-light)}
-.popup-check{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(–text2)}
-.popup-check input{width:16px;height:16px;accent-color:var(–pm-blue)}
+.topt{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.topt:active{background:var(--pm-sky);border-color:var(--pm-light)}
+.popup-check{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text2)}
+.popup-check input{width:16px;height:16px;accent-color:var(--pm-blue)}
 
 /* PIN */
-.pin-screen{position:fixed;inset:0;background:var(–pm-blue);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:40px 24px}
+.pin-screen{position:fixed;inset:0;background:var(--pm-blue);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:40px 24px}
 .pin-screen.hidden{display:none}
 .pin-title{font-size:17px;font-weight:600;color:rgba(255,255,255,.8)}
 .pin-dots{display:flex;gap:16px}
 .pdot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:transparent;transition:all .15s}
 .pdot.filled{background:#fff;border-color:#fff}
 .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:280px;width:100%}
-.pkey{aspect-ratio:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;cursor:pointer;font-family:var(–sans);user-select:none;transition:all .1s}
+.pkey{aspect-ratio:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;cursor:pointer;font-family:var(--sans);user-select:none;transition:all .1s}
 .pkey:active{background:rgba(255,255,255,.25);transform:scale(.95)}
 .pkey.empty{background:transparent;border:none;cursor:default}
 .pin-err{color:#fca5a5;font-size:13px;font-weight:500;min-height:20px}
 
 /* UTIL */
-.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;gap:10px;color:var(–muted)}
-.spinner{width:22px;height:22px;border:2px solid var(–border);border-top-color:var(–pm-blue);border-radius:50%;animation:spin .7s linear infinite}
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;gap:10px;color:var(--muted)}
+.spinner{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--pm-blue);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.empty-state{text-align:center;padding:30px 20px;color:var(–muted)}
+.empty-state{text-align:center;padding:30px 20px;color:var(--muted)}
 .eicon{font-size:34px;margin-bottom:8px;opacity:.4}
 .etxt{font-size:13px}
-.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);background:var(–text);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:300;white-space:nowrap;display:none;box-shadow:var(–shm)}
+.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:300;white-space:nowrap;display:none;box-shadow:var(--shm)}
 .toast.show{display:block;animation:toastPop .2s ease}
-.toast.success{background:var(–green)}
-.toast.error{background:var(–red)}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
 @keyframes toastPop{from{opacity:0;transform:translateX(-50%) scale(.9)}to{opacity:1;transform:translateX(-50%) scale(1)}}
 </style>
-
 </head>
 <body>
 
 <!-- PIN -->
-
 <div class="pin-screen" id="pinScreen">
   <div class="pin-title">PM Music Center</div>
   <div class="pin-dots">
@@ -292,7 +289,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- HOME -->
-
 <div class="screen active" id="screen-home">
   <div class="hdr">
     <img class="hdr-logo" id="hdrLogo" src="" alt="PM Music">
@@ -320,7 +316,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- TODAY -->
-
 <div class="screen" id="screen-today">
   <div class="hdr">
     <img class="hdr-logo" id="hdrLogo2" src="" alt="PM Music">
@@ -331,7 +326,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- SCHOOL DETAIL -->
-
 <div class="screen" id="screen-school">
   <div class="hdr">
     <button class="hdr-back" onclick="navTo('today')">←</button>
@@ -344,7 +338,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- CMs -->
-
 <div class="screen" id="screen-cms">
   <div class="hdr">
     <div class="hdr-title">Contact Management</div>
@@ -401,7 +394,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- DIRECTOR-Y -->
-
 <div class="screen" id="screen-directory">
   <div class="hdr"><div class="hdr-title">Director-y</div></div>
   <div class="cnt">
@@ -419,7 +411,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- AI -->
-
 <div class="screen" id="screen-ai">
   <div class="hdr">
     <div class="hdr-title">AI Assistant</div>
@@ -453,14 +444,12 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- CALENDAR -->
-
 <div class="screen" id="screen-calendar">
   <div class="hdr"><div class="hdr-title">Recruiting Calendar</div></div>
   <div class="cnt" id="calContent"><div class="loading-state"><div class="spinner"></div></div></div>
 </div>
 
 <!-- SHELVES -->
-
 <div class="screen" id="screen-shelves">
   <div class="hdr">
     <button class="hdr-back" onclick="navTo('home')">←</button>
@@ -484,7 +473,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- SCANS -->
-
 <div class="screen" id="screen-scans">
   <div class="hdr">
     <button class="hdr-back" onclick="navTo('home')">←</button>
@@ -514,7 +502,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- NOTES -->
-
 <div class="screen" id="screen-notes">
   <div class="hdr">
     <button class="hdr-back" onclick="navTo('home')">←</button>
@@ -546,7 +533,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- SETTINGS -->
-
 <div class="screen" id="screen-settings">
   <div class="hdr">
     <button class="hdr-back" onclick="navTo('home')">←</button>
@@ -610,7 +596,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- BOTTOM NAV -->
-
 <div class="bnav">
   <button class="nbtn active" id="nav-home" onclick="navTo('home')"><div class="nicon">🏠</div><div class="nlbl">Home</div></button>
   <button class="nbtn" id="nav-today" onclick="navTo('today')"><div class="nicon">📍</div><div class="nlbl">Today</div></button>
@@ -620,7 +605,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- CONNECT MODAL -->
-
 <div class="mbg" id="connectModal" onclick="hideMBG(event,'connectModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -636,7 +620,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- TRANSFER MODAL -->
-
 <div class="mbg" id="transferModal" onclick="hideMBG(event,'transferModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -648,7 +631,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- REPAIR MODAL -->
-
 <div class="mbg" id="repairModal" onclick="hideMBG(event,'repairModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -700,7 +682,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- RECEIPT MODAL -->
-
 <div class="mbg" id="receiptModal" onclick="hideMBG(event,'receiptModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -727,7 +708,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- REP SWITCHER MODAL -->
-
 <div class="mbg" id="repModal" onclick="hideMBG(event,'repModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -742,7 +722,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </div>
 
 <!-- PIN CHANGE MODAL -->
-
 <div class="mbg" id="pinModal" onclick="hideMBG(event,'pinModal')">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -1225,663 +1204,710 @@ function openEdit(cmId,pk){
       <button class="sh-btn" onclick="insEdit('${cmId}','P.C. ')">P.C.</button>
     </div>
     <textarea class="cmedit-ta" id="et-${cmId}" placeholder="Add your update..."></textarea>
-
-```
-<div class="cmedit-acts">
-  <button class="btn-save" onclick="saveCMUpdate('${cmId}','${pk}','${ts}')">Save</button>
-  <button class="btn-ce" onclick="document.getElementById('edit-${cmId}').innerHTML=''">Cancel</button>
-</div>
-```
-
+    <div class="cmedit-acts">
+      <button class="btn-save" onclick="saveCMUpdate('${cmId}','${pk}','${ts}')">Save</button>
+      <button class="btn-ce" onclick="document.getElementById('edit-${cmId}').innerHTML=''">Cancel</button>
+    </div>
   </div>`;
   document.getElementById(`et-${cmId}`)?.focus();
 }
 
 function insEdit(id,text){
-const ta=document.getElementById(`et-${id}`);if(!ta)return;
-const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+text+ta.value.substring(p);
-ta.selectionStart=ta.selectionEnd=p+text.length;ta.focus();
+  const ta=document.getElementById(`et-${id}`);if(!ta)return;
+  const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+text+ta.value.substring(p);
+  ta.selectionStart=ta.selectionEnd=p+text.length;ta.focus();
 }
 
 async function saveCMUpdate(cmId,pk,ts){
-const ta=document.getElementById(`et-${cmId}`);
-if(!ta||!ta.value.trim()){showToast(‘Enter update text’,‘error’);return;}
-const newNote=`\n\n${ts}  ${ta.value.trim()}`;
-const btn=document.querySelector(`#edit-${cmId} .btn-save`);
-if(btn){btn.textContent=‘Saving…’;btn.disabled=true;}
-try{
-const ex=await callAIM(‘SearchContactManagement’,{CustomerID:pk});
-const cms=ex.ContactRecords||ex.Records||[];
-const cm=cms.find(c=>String(c.Pk||c.ID||c.RefNum)===String(cmId));
-const existing=cm?(cm.Comments||cm.Notes||’’):’’;
-await callAIM(‘EditContactRecord’,{Pk:cmId,CustomerID:pk,Comments:existing+newNote});
-showToast(‘CM updated ✓’,‘success’);
-document.getElementById(`edit-${cmId}`).innerHTML=’’;
-loadTodayCMs();
-}catch(err){showToast(err.message,‘error’);if(btn){btn.textContent=‘Save’;btn.disabled=false;}}
+  const ta=document.getElementById(`et-${cmId}`);
+  if(!ta||!ta.value.trim()){showToast('Enter update text','error');return;}
+  const newNote=`\n\n${ts}  ${ta.value.trim()}`;
+  const btn=document.querySelector(`#edit-${cmId} .btn-save`);
+  if(btn){btn.textContent='Saving...';btn.disabled=true;}
+  try{
+    const ex=await callAIM('SearchContactManagement',{CustomerID:pk});
+    const cms=ex.ContactRecords||ex.Records||[];
+    const cm=cms.find(c=>String(c.Pk||c.ID||c.RefNum)===String(cmId));
+    const existing=cm?(cm.Comments||cm.Notes||''):'';
+    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Comments:existing+newNote});
+    showToast('CM updated ✓','success');
+    document.getElementById(`edit-${cmId}`).innerHTML='';
+    loadTodayCMs();
+  }catch(err){showToast(err.message,'error');if(btn){btn.textContent='Save';btn.disabled=false;}}
 }
 
 async function closeCM(cmId,pk){
-if(!confirm(‘Mark this CM as closed?’))return;
-try{
-await callAIM(‘EditContactRecord’,{Pk:cmId,CustomerID:pk,Closed:true});
-showToast(‘CM closed ✓’,‘success’);loadTodayCMs();
-}catch(err){showToast(err.message,‘error’);}
+  if(!confirm('Mark this CM as closed?'))return;
+  try{
+    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Closed:true});
+    showToast('CM closed ✓','success');loadTodayCMs();
+  }catch(err){showToast(err.message,'error');}
 }
 
 // ── CM TRANSFER ───────────────────────────────────────────
 function openTransfer(cmId,pk){
-cmForTransfer={cmId,pk};
-// Build transfer options: days for current rep + all employees
-const r=REPS[currentRep];
-const dayOpts=[
-{label:’Monday — ’+r.name,code:r.emp[‘Mon’]},
-{label:’Tuesday — ’+r.name,code:r.emp[‘Tue’]},
-{label:’Wednesday — ’+r.name,code:r.emp[‘Wed’]},
-{label:’Thursday — ’+r.name,code:r.emp[‘Thur’]},
-{label:’Friday — ’+r.name,code:r.emp[‘Fri’]},
-{label:‘District 102 — ‘+r.name,code:r.d102},
-];
-const repOpts=Object.entries(REPS).filter(([k])=>k!==currentRep).map(([k,v])=>({label:v.name,code:v.emp[‘Mon’].replace(‘MON-’,’’)}));
-const otherOpts=[{label:‘Nikki’,code:‘Nikki’},{label:‘Office Staff’,code:‘Office Staff’}];
+  cmForTransfer={cmId,pk};
+  // Build transfer options: days for current rep + all employees
+  const r=REPS[currentRep];
+  const dayOpts=[
+    {label:'Monday — '+r.name,code:r.emp['Mon']},
+    {label:'Tuesday — '+r.name,code:r.emp['Tue']},
+    {label:'Wednesday — '+r.name,code:r.emp['Wed']},
+    {label:'Thursday — '+r.name,code:r.emp['Thur']},
+    {label:'Friday — '+r.name,code:r.emp['Fri']},
+    {label:'District 102 — '+r.name,code:r.d102},
+  ];
+  const repOpts=Object.entries(REPS).filter(([k])=>k!==currentRep).map(([k,v])=>({label:v.name,code:v.emp['Mon'].replace('MON-','')}));
+  const otherOpts=[{label:'Nikki',code:'Nikki'},{label:'Office Staff',code:'Office Staff'}];
 
-let html=’<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Change Day</div>’;
-dayOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-html+=’<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Assign to Rep</div>’;
-repOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-html+=’<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Other</div>’;
-otherOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-document.getElementById(‘transferList’).innerHTML=html;
-document.getElementById(‘transferModal’).classList.add(‘show’);
+  let html='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Change Day</div>';
+  dayOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
+  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Assign to Rep</div>';
+  repOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
+  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Other</div>';
+  otherOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
+  document.getElementById('transferList').innerHTML=html;
+  document.getElementById('transferModal').classList.add('show');
 }
 
 async function doTransfer(emp){
-if(!cmForTransfer)return;
-const{cmId,pk}=cmForTransfer;
-const popup=document.getElementById(‘popupCheck’).checked;
-document.getElementById(‘transferModal’).classList.remove(‘show’);
-try{
-await callAIM(‘EditContactRecord’,{Pk:cmId,CustomerID:pk,Employee:emp,Popup:popup});
-showToast(`Transferred ✓`,‘success’);loadTodayCMs();
-}catch(err){showToast(err.message,‘error’);}
+  if(!cmForTransfer)return;
+  const{cmId,pk}=cmForTransfer;
+  const popup=document.getElementById('popupCheck').checked;
+  document.getElementById('transferModal').classList.remove('show');
+  try{
+    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Employee:emp,Popup:popup});
+    showToast(`Transferred ✓`,'success');loadTodayCMs();
+  }catch(err){showToast(err.message,'error');}
 }
 
-// ── TODAY’s CMs ───────────────────────────────────────────
+// ── TODAY's CMs ───────────────────────────────────────────
 function setCMFilter(f,btn){
-cmFilter=f;
-document.querySelectorAll(’#filterOpen,#filterAll’).forEach(b=>b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-loadTodayCMs();
+  cmFilter=f;
+  document.querySelectorAll('#filterOpen,#filterAll').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadTodayCMs();
 }
 
 function toggleNewCMForm(){
-const c=document.getElementById(‘newCMFormContainer’);
-const btn=document.getElementById(‘newCMToggleBtn’);
-const open=c.style.display===‘none’;
-c.style.display=open?‘block’:‘none’;
-btn.textContent=open?‘✕ Cancel’:’+ New CM’;
-if(open)c.scrollIntoView({behavior:‘smooth’});
+  const c=document.getElementById('newCMFormContainer');
+  const btn=document.getElementById('newCMToggleBtn');
+  const open=c.style.display==='none';
+  c.style.display=open?'block':'none';
+  btn.textContent=open?'✕ Cancel':'+ New CM';
+  if(open)c.scrollIntoView({behavior:'smooth'});
 }
 
 async function loadTodayCMs(){
-const cont=document.getElementById(‘cmsBySchool’);if(!cont)return;
-if(!auth.connected){cont.innerHTML=notConnMsg();return;}
-if(!routeData){cont.innerHTML=’’;return;}
-cont.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
-const ta=getDayAbbr();const routeKey=ta===‘Thu’?‘Thur’:ta;
-const orderedSchools=orderSchools(routeData.schools,routeKey);
-let html=’’;
-for(const s of orderedSchools){
-try{
-const custs=await callAIM(‘SearchCustomers’,{LastName:s.name.split(’ ‘)[0]});
-const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(s.name.toLowerCase().split(’ ’)[0]));
-if(!match)continue;
-const cmData=await callAIM(‘SearchContactManagement’,{CustomerID:match.Pk});
-const all=cmData.ContactRecords||cmData.Records||[];
-const cms=cmFilter===‘open’?all.filter(c=>!c.Closed&&!c.IsClosed):all;
-if(cms.length===0)continue;
-const oc=all.filter(c=>!c.Closed&&!c.IsClosed).length;
-html+=`<div style="margin-bottom:16px"> <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"> <div style="font-size:13px;font-weight:700;color:var(--pm-blue)">${esc(s.name)}</div> ${oc>0?`<span class="badge b-yellow">${oc} open</span>`:''} </div> ${cms.map(cm=>renderCM(cm,match.Pk)).join('')} </div>`;
-}catch(e){}
-}
-cont.innerHTML=html||`<div class="empty-state"><div class="eicon">✓</div><div class="etxt">${cmFilter==='open'?'No open CMs for today\'s schools':'No CMs found'}</div></div>`;
+  const cont=document.getElementById('cmsBySchool');if(!cont)return;
+  if(!auth.connected){cont.innerHTML=notConnMsg();return;}
+  if(!routeData){cont.innerHTML='';return;}
+  cont.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
+  const ta=getDayAbbr();const routeKey=ta==='Thu'?'Thur':ta;
+  const orderedSchools=orderSchools(routeData.schools,routeKey);
+  let html='';
+  for(const s of orderedSchools){
+    try{
+      const custs=await callAIM('SearchCustomers',{LastName:s.name.split(' ')[0]});
+      const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(s.name.toLowerCase().split(' ')[0]));
+      if(!match)continue;
+      const cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
+      const all=cmData.ContactRecords||cmData.Records||[];
+      const cms=cmFilter==='open'?all.filter(c=>!c.Closed&&!c.IsClosed):all;
+      if(cms.length===0)continue;
+      const oc=all.filter(c=>!c.Closed&&!c.IsClosed).length;
+      html+=`<div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:13px;font-weight:700;color:var(--pm-blue)">${esc(s.name)}</div>
+          ${oc>0?`<span class="badge b-yellow">${oc} open</span>`:''}
+        </div>
+        ${cms.map(cm=>renderCM(cm,match.Pk)).join('')}
+      </div>`;
+    }catch(e){}
+  }
+  cont.innerHTML=html||`<div class="empty-state"><div class="eicon">✓</div><div class="etxt">${cmFilter==='open'?'No open CMs for today\'s schools':'No CMs found'}</div></div>`;
 }
 
 function populateSchoolSelect(){
-if(!routeData)return;
-const sel=document.getElementById(‘cmSchool’);if(!sel)return;
-sel.innerHTML=’<option value="">Select school…</option>’;
-routeData.allSchools.forEach(s=>{const o=document.createElement(‘option’);o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
+  if(!routeData)return;
+  const sel=document.getElementById('cmSchool');if(!sel)return;
+  sel.innerHTML='<option value="">Select school...</option>';
+  routeData.allSchools.forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
 }
 
 function prefillCM(name){
-navTo(‘cms’);
-const f=document.getElementById(‘newCMFormContainer’);
-const btn=document.getElementById(‘newCMToggleBtn’);
-f.style.display=‘block’;btn.textContent=‘✕ Cancel’;
-setTimeout(()=>{const s=document.getElementById(‘cmSchool’);if(s&&name)s.value=name;},150);
+  navTo('cms');
+  const f=document.getElementById('newCMFormContainer');
+  const btn=document.getElementById('newCMToggleBtn');
+  f.style.display='block';btn.textContent='✕ Cancel';
+  setTimeout(()=>{const s=document.getElementById('cmSchool');if(s&&name)s.value=name;},150);
 }
 
-function setTemplate(t){document.getElementById(‘cmNotes’).value=t;document.getElementById(‘cmNotes’).focus();}
+function setTemplate(t){document.getElementById('cmNotes').value=t;document.getElementById('cmNotes').focus();}
 function insertShorthand(t){
-const ta=document.getElementById(‘cmNotes’);if(!ta)return;
-const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+t+ta.value.substring(p);
-ta.selectionStart=ta.selectionEnd=p+t.length;ta.focus();
+  const ta=document.getElementById('cmNotes');if(!ta)return;
+  const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+t+ta.value.substring(p);
+  ta.selectionStart=ta.selectionEnd=p+t.length;ta.focus();
 }
 
 async function submitNewCM(){
-const school=document.getElementById(‘cmSchool’).value;
-const action=document.getElementById(‘cmAction’).value;
-const subject=document.getElementById(‘cmSubject’).value.trim();
-const notes=document.getElementById(‘cmNotes’).value.trim();
-if(!school){showToast(‘Please select a school’,‘error’);return;}
-if(!notes){showToast(‘Please enter notes’,‘error’);return;}
-if(!auth.connected){showToast(‘Connect to AIM first’,‘error’);return;}
-const btn=document.getElementById(‘cmSubmitBtn’);btn.textContent=‘Saving…’;btn.disabled=true;
-try{
-const custs=await callAIM(‘SearchCustomers’,{LastName:school.split(’ ‘)[0]});
-const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(school.toLowerCase().split(’ ‘)[0]));
-if(!match)throw new Error(‘School not found in AIM’);
-const ta=getDayAbbr();
-const emp=getEmpCode(ta);
-await callAIM(‘AddContactRecord’,{CustomerID:match.Pk,Action:action,Subject:subject||action,Comments:notes,Employee:emp});
-showToast(‘CM saved ✓’,‘success’);
-document.getElementById(‘cmNotes’).value=’’;document.getElementById(‘cmSubject’).value=’’;
-toggleNewCMForm();loadTodayCMs();
-}catch(err){showToast(err.message,‘error’);}
-finally{btn.textContent=‘Save CM to AIM’;btn.disabled=false;}
+  const school=document.getElementById('cmSchool').value;
+  const action=document.getElementById('cmAction').value;
+  const subject=document.getElementById('cmSubject').value.trim();
+  const notes=document.getElementById('cmNotes').value.trim();
+  if(!school){showToast('Please select a school','error');return;}
+  if(!notes){showToast('Please enter notes','error');return;}
+  if(!auth.connected){showToast('Connect to AIM first','error');return;}
+  const btn=document.getElementById('cmSubmitBtn');btn.textContent='Saving...';btn.disabled=true;
+  try{
+    const custs=await callAIM('SearchCustomers',{LastName:school.split(' ')[0]});
+    const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(school.toLowerCase().split(' ')[0]));
+    if(!match)throw new Error('School not found in AIM');
+    const ta=getDayAbbr();
+    const emp=getEmpCode(ta);
+    await callAIM('AddContactRecord',{CustomerID:match.Pk,Action:action,Subject:subject||action,Comments:notes,Employee:emp});
+    showToast('CM saved ✓','success');
+    document.getElementById('cmNotes').value='';document.getElementById('cmSubject').value='';
+    toggleNewCMForm();loadTodayCMs();
+  }catch(err){showToast(err.message,'error');}
+  finally{btn.textContent='Save CM to AIM';btn.disabled=false;}
 }
 
 // ── REPAIR TICKET ─────────────────────────────────────────
 function setRA(t){
-repairAuth=t;
-[‘rtApproved’,‘rtEstimate’,‘rtRental’].forEach(id=>document.getElementById(id)?.classList.remove(‘active’));
-const m={approved:‘rtApproved’,estimate:‘rtEstimate’,rental:‘rtRental’};
-document.getElementById(m[t])?.classList.add(‘active’);
+  repairAuth=t;
+  ['rtApproved','rtEstimate','rtRental'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  const m={approved:'rtApproved',estimate:'rtEstimate',rental:'rtRental'};
+  document.getElementById(m[t])?.classList.add('active');
 }
 
-function showRepairModal(){document.getElementById(‘repairModal’).classList.add(‘show’);}
+function showRepairModal(){document.getElementById('repairModal').classList.add('show');}
 
 function showRepairTab(tab){
-document.getElementById(‘repairNewForm’).style.display=tab===‘new’?‘block’:‘none’;
-document.getElementById(‘repairSearchForm’).style.display=tab===‘search’?‘block’:‘none’;
-document.getElementById(‘rtNew’).classList.toggle(‘active’,tab===‘new’);
-document.getElementById(‘rtSearch’).classList.toggle(‘active’,tab===‘search’);
+  document.getElementById('repairNewForm').style.display=tab==='new'?'block':'none';
+  document.getElementById('repairSearchForm').style.display=tab==='search'?'block':'none';
+  document.getElementById('rtNew').classList.toggle('active',tab==='new');
+  document.getElementById('rtSearch').classList.toggle('active',tab==='search');
 }
 
 function setRepairSearchMode(mode,btn){
-repairSearchMode=mode;
-document.querySelectorAll(’#repairSearchForm .dtab’).forEach(b=>b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-const placeholder={school:‘School name’,date:‘Date (MM/DD/YYYY)’,serial:‘Serial number’};
-document.getElementById(‘repairSearchInput’).placeholder=placeholder[mode]||‘Enter search term…’;
+  repairSearchMode=mode;
+  document.querySelectorAll('#repairSearchForm .dtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const placeholder={school:'School name',date:'Date (MM/DD/YYYY)',serial:'Serial number'};
+  document.getElementById('repairSearchInput').placeholder=placeholder[mode]||'Enter search term...';
 }
 
 async function readTagPhoto(event){
-const file=event.target.files?.[0];if(!file)return;
-showToast(‘Reading tag…’,’’);
-try{
-const b64=await new Promise((res,rej)=>{
-const r=new FileReader();r.onload=()=>res(r.result.split(’,’)[1]);r.onerror=()=>rej(new Error(‘Read failed’));r.readAsDataURL(file);
-});
-const resp=await fetch(`${PROXY}/ai`,{
-method:‘POST’,headers:{‘Content-Type’:‘application/json’},
-body:JSON.stringify({
-model:‘claude-sonnet-4-20250514’,max_tokens:200,
-messages:[{role:‘user’,content:[
-{type:‘image’,source:{type:‘base64’,media_type:file.type,data:b64}},
-{type:‘text’,text:‘This is a barcode tag on a musical instrument case. Extract any serial number, student name, or account number visible. Respond with ONLY a JSON object like: {“serial”:”…”,“name”:”…”,“account”:”…”}. If a field is not visible, use empty string.’}
-]}]
-})
-});
-const data=await resp.json();
-const text=data.content?.[0]?.text||’{}’;
-const clean=text.replace(/`json|`/g,’’).trim();
-const parsed=JSON.parse(clean);
-if(parsed.serial){document.getElementById(‘rtSerial’).value=parsed.serial;await lookupSerialForRepair();}
-if(parsed.name&&!document.getElementById(‘rtName’).value)document.getElementById(‘rtName’).value=parsed.name;
-if(parsed.account&&!document.getElementById(‘rtAcct’).value)document.getElementById(‘rtAcct’).value=parsed.account;
-showToast(‘Tag read ✓’,‘success’);
-}catch(err){showToast(‘Could not read tag’,‘error’);}
+  const file=event.target.files?.[0];if(!file)return;
+  showToast('Reading tag...','');
+  try{
+    const b64=await new Promise((res,rej)=>{
+      const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Read failed'));r.readAsDataURL(file);
+    });
+    const resp=await fetch(`${PROXY}/ai`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:file.type,data:b64}},
+          {type:'text',text:'This is a barcode tag on a musical instrument case. Extract any serial number, student name, or account number visible. Respond with ONLY a JSON object like: {"serial":"...","name":"...","account":"..."}. If a field is not visible, use empty string.'}
+        ]}]
+      })
+    });
+    const data=await resp.json();
+    const text=data.content?.[0]?.text||'{}';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    if(parsed.serial){document.getElementById('rtSerial').value=parsed.serial;await lookupSerialForRepair();}
+    if(parsed.name&&!document.getElementById('rtName').value)document.getElementById('rtName').value=parsed.name;
+    if(parsed.account&&!document.getElementById('rtAcct').value)document.getElementById('rtAcct').value=parsed.account;
+    showToast('Tag read ✓','success');
+  }catch(err){showToast('Could not read tag','error');}
 }
 
 async function lookupSerialForRepair(){
-const serial=document.getElementById(‘rtSerial’).value.trim();
-if(serial.length<4)return;
-if(!auth.connected)return;
-const result=document.getElementById(‘serialLookupResult’);
-try{
-const data=await callAIM(‘SerialDetail’,{SerialNumber:serial});
-if(data.Status?.StatusCode===‘Error’)return;
-const inst=data.SerialInfo||data;
-if(inst.Description)document.getElementById(‘rtInst’).value=inst.Description;
-if(inst.CustomerName)document.getElementById(‘rtName’).value=inst.CustomerName;
-if(inst.CustomerAcct)document.getElementById(‘rtAcct’).value=inst.CustomerAcct;
-result.innerHTML=`<div style="font-size:12px;color:var(--green);padding:6px 10px;background:var(--green-bg);border-radius:8px;margin-bottom:8px">✓ Found: ${esc(inst.Description||'')} — ${esc(inst.CustomerName||'')}</div>`;
-}catch(e){}
+  const serial=document.getElementById('rtSerial').value.trim();
+  if(serial.length<4)return;
+  if(!auth.connected)return;
+  const result=document.getElementById('serialLookupResult');
+  try{
+    const data=await callAIM('SerialDetail',{SerialNumber:serial});
+    if(data.Status?.StatusCode==='Error')return;
+    const inst=data.SerialInfo||data;
+    if(inst.Description)document.getElementById('rtInst').value=inst.Description;
+    if(inst.CustomerName)document.getElementById('rtName').value=inst.CustomerName;
+    if(inst.CustomerAcct)document.getElementById('rtAcct').value=inst.CustomerAcct;
+    result.innerHTML=`<div style="font-size:12px;color:var(--green);padding:6px 10px;background:var(--green-bg);border-radius:8px;margin-bottom:8px">✓ Found: ${esc(inst.Description||'')} — ${esc(inst.CustomerName||'')}</div>`;
+  }catch(e){}
 }
 
 async function submitRepair(){
-const inst=document.getElementById(‘rtInst’).value.trim();
-const notes=document.getElementById(‘rtNotes’).value.trim();
-if(!inst||!notes){showToast(‘Instrument and description required’,‘error’);return;}
-if(!auth.connected){showToast(‘Connect to AIM first’,‘error’);return;}
-const btn=document.getElementById(‘rtBtn’);btn.textContent=‘Creating…’;btn.disabled=true;
-try{
-await callAIM(‘PostServiceTicket’,{
-CustomerID:document.getElementById(‘rtAcct’).value.trim()||’’,
-SerialNumber:document.getElementById(‘rtSerial’).value.trim(),
-Description:inst,Notes:notes,
-Status:repairAuth===‘estimate’?‘ESTIMATE’:‘WORK ORDER’,
-IsRental:repairAuth===‘rental’
-});
-showToast(‘Repair ticket created ✓’,‘success’);
-[‘rtName’,‘rtAcct’,‘rtInst’,‘rtSerial’,‘rtNotes’].forEach(id=>{const el=document.getElementById(id);if(el)el.value=’’;});
-hideMBG({target:document.getElementById(‘repairModal’)},‘repairModal’);
-}catch(err){showToast(err.message,‘error’);}
-finally{btn.textContent=‘Create Service Ticket in AIM’;btn.disabled=false;}
+  const inst=document.getElementById('rtInst').value.trim();
+  const notes=document.getElementById('rtNotes').value.trim();
+  if(!inst||!notes){showToast('Instrument and description required','error');return;}
+  if(!auth.connected){showToast('Connect to AIM first','error');return;}
+  const btn=document.getElementById('rtBtn');btn.textContent='Creating...';btn.disabled=true;
+  try{
+    await callAIM('PostServiceTicket',{
+      CustomerID:document.getElementById('rtAcct').value.trim()||'',
+      SerialNumber:document.getElementById('rtSerial').value.trim(),
+      Description:inst,Notes:notes,
+      Status:repairAuth==='estimate'?'ESTIMATE':'WORK ORDER',
+      IsRental:repairAuth==='rental'
+    });
+    showToast('Repair ticket created ✓','success');
+    ['rtName','rtAcct','rtInst','rtSerial','rtNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    hideMBG({target:document.getElementById('repairModal')},'repairModal');
+  }catch(err){showToast(err.message,'error');}
+  finally{btn.textContent='Create Service Ticket in AIM';btn.disabled=false;}
 }
 
 async function searchRepairs(){
-const query=document.getElementById(‘repairSearchInput’).value.trim();
-if(!query)return;
-if(!auth.connected){showToast(‘Connect to AIM first’,‘error’);return;}
-const result=document.getElementById(‘repairSearchResults’);
-result.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
-try{
-const params={};
-if(repairSearchMode===‘school’)params.ShipTo=query;
-else if(repairSearchMode===‘serial’)params.SerialNumber=query;
-else params.Date=query;
-const data=await callAIM(‘SearchServiceTickets’,params);
-const tickets=data.ServiceTickets||data.Records||[];
-if(tickets.length===0){result.innerHTML=`<div class="empty-state"><div class="etxt">No repairs found</div></div>`;return;}
-result.innerHTML=`<div class="slbl">${tickets.length} results</div>`+renderRepairItems(tickets);
-}catch(err){result.innerHTML=`<div class="empty-state"><div class="etxt">Error: ${esc(err.message)}</div></div>`;}
+  const query=document.getElementById('repairSearchInput').value.trim();
+  if(!query)return;
+  if(!auth.connected){showToast('Connect to AIM first','error');return;}
+  const result=document.getElementById('repairSearchResults');
+  result.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
+  try{
+    const params={};
+    if(repairSearchMode==='school')params.ShipTo=query;
+    else if(repairSearchMode==='serial')params.SerialNumber=query;
+    else params.Date=query;
+    const data=await callAIM('SearchServiceTickets',params);
+    const tickets=data.ServiceTickets||data.Records||[];
+    if(tickets.length===0){result.innerHTML=`<div class="empty-state"><div class="etxt">No repairs found</div></div>`;return;}
+    result.innerHTML=`<div class="slbl">${tickets.length} results</div>`+renderRepairItems(tickets);
+  }catch(err){result.innerHTML=`<div class="empty-state"><div class="etxt">Error: ${esc(err.message)}</div></div>`;}
 }
 
 // ── SCANS ─────────────────────────────────────────────────
 function filterScans(f,btn){
-document.querySelectorAll(’#screen-scans .dtab’).forEach(b=>b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-renderScans(f);
+  document.querySelectorAll('#screen-scans .dtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderScans(f);
 }
 
-function renderScans(filter=‘all’){
-const el=document.getElementById(‘scansList’);if(!el)return;
-const today=new Date().toLocaleDateString();
-let scans=scanLog;
-if(filter===‘today’)scans=scans.filter(s=>s.date===today);
-else if(filter===‘cps’)scans=scans.filter(s=>s.isCPS);
-if(scans.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">🔍</div><div class="etxt">No scans found</div></div>`;return;}
-let html=’’;
-let lastDate=’’;
-scans.forEach(s=>{
-if(s.date!==lastDate){html+=`<div class="slbl">${s.date}</div>`;lastDate=s.date;}
-html+=`<div class="scan-item"> <div class="si-top"> <div class="si-action ${s.action}">${s.action==='deliver'?'📥':'📤'}</div> <div class="si-name">${esc(s.serial)}</div> <span class="badge ${s.action==='deliver'?'b-green':'b-yellow'}">${s.action==='deliver'?'Delivery':'Pickup'}</span> ${s.isCPS?'<span class="badge b-orange">CPS</span>':''} </div> <div class="si-meta">${s.time||''} · ${esc(s.school)}</div> </div>`;
-});
-el.innerHTML=html;
+function renderScans(filter='all'){
+  const el=document.getElementById('scansList');if(!el)return;
+  const today=new Date().toLocaleDateString();
+  let scans=scanLog;
+  if(filter==='today')scans=scans.filter(s=>s.date===today);
+  else if(filter==='cps')scans=scans.filter(s=>s.isCPS);
+  if(scans.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">🔍</div><div class="etxt">No scans found</div></div>`;return;}
+  let html='';
+  let lastDate='';
+  scans.forEach(s=>{
+    if(s.date!==lastDate){html+=`<div class="slbl">${s.date}</div>`;lastDate=s.date;}
+    html+=`<div class="scan-item">
+      <div class="si-top">
+        <div class="si-action ${s.action}">${s.action==='deliver'?'📥':'📤'}</div>
+        <div class="si-name">${esc(s.serial)}</div>
+        <span class="badge ${s.action==='deliver'?'b-green':'b-yellow'}">${s.action==='deliver'?'Delivery':'Pickup'}</span>
+        ${s.isCPS?'<span class="badge b-orange">CPS</span>':''}
+      </div>
+      <div class="si-meta">${s.time||''} · ${esc(s.school)}</div>
+    </div>`;
+  });
+  el.innerHTML=html;
 }
 
 function emailScans(recipient){
-const today=new Date().toLocaleDateString();
-const isOffice=recipient===‘office’;
-const scans=isOffice?scanLog.filter(s=>s.isCPS&&s.date===today):scanLog.filter(s=>s.date===today);
-if(scans.length===0){showToast(‘No scans to send’,‘error’);return;}
-const lines=scans.map(s=>`${s.action==='deliver'?'DELIVERY':'PICKUP'} — ${s.serial} — ${s.school} — ${s.time||''}`).join(’\n’);
-const body=`Scan log for ${today}:\n\n${lines}\n\nSent from PM Music Field Rep App`;
-const email=isOffice?OFFICE:RICKY;
-window.location.href=`mailto:${email}?subject=${encodeURIComponent('Scan Log — '+today)}&body=${encodeURIComponent(body)}`;
-showToast(‘Email app opened ✓’,‘success’);
+  const today=new Date().toLocaleDateString();
+  const isOffice=recipient==='office';
+  const scans=isOffice?scanLog.filter(s=>s.isCPS&&s.date===today):scanLog.filter(s=>s.date===today);
+  if(scans.length===0){showToast('No scans to send','error');return;}
+  const lines=scans.map(s=>`${s.action==='deliver'?'DELIVERY':'PICKUP'} — ${s.serial} — ${s.school} — ${s.time||''}`).join('\n');
+  const body=`Scan log for ${today}:\n\n${lines}\n\nSent from PM Music Field Rep App`;
+  const email=isOffice?OFFICE:RICKY;
+  window.location.href=`mailto:${email}?subject=${encodeURIComponent('Scan Log — '+today)}&body=${encodeURIComponent(body)}`;
+  showToast('Email app opened ✓','success');
 }
 
 // ── SHELVES ───────────────────────────────────────────────
 function filterShelves(day,btn){
-document.querySelectorAll(’#shelvesTabs .dtab’).forEach(b=>b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-document.getElementById(‘shelvesList’).innerHTML=`<div class="empty-state"><div class="eicon">📦</div><div class="etxt">Shelf items for ${day} will load with live AIM data</div></div>`;
+  document.querySelectorAll('#shelvesTabs .dtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('shelvesList').innerHTML=`<div class="empty-state"><div class="eicon">📦</div><div class="etxt">Shelf items for ${day} will load with live AIM data</div></div>`;
 }
 
 // ── NOTES ─────────────────────────────────────────────────
 function populateNoteSchools(){
-const sel=document.getElementById(‘noteSchool’);if(!sel)return;
-sel.innerHTML=’<option value="">Select school…</option>’;
-if(routeData){
-routeData.allSchools.forEach(s=>{const o=document.createElement(‘option’);o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
-}
+  const sel=document.getElementById('noteSchool');if(!sel)return;
+  sel.innerHTML='<option value="">Select school...</option>';
+  if(routeData){
+    routeData.allSchools.forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
+  }
 }
 
 function toggleNoteMic(){
-if(!(‘webkitSpeechRecognition’in window)&&!(‘SpeechRecognition’in window)){showToast(‘Voice not supported’,‘error’);return;}
-const btn=document.getElementById(‘noteMicBtn’);
-if(noteRecording){noteMicRec?.stop();noteRecording=false;btn.textContent=‘🎤 Voice’;btn.classList.remove(‘active’);return;}
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-noteMicRec=new SR();noteMicRec.continuous=true;noteMicRec.interimResults=false;noteMicRec.lang=‘en-US’;
-noteMicRec.onstart=()=>{noteRecording=true;btn.textContent=‘⏹ Stop’;btn.classList.add(‘active’);};
-noteMicRec.onresult=(e)=>{
-const ta=document.getElementById(‘noteText’);
-if(ta)ta.value+=(ta.value?’ ‘:’’)+e.results[e.results.length-1][0].transcript;
-};
-noteMicRec.onend=()=>{noteRecording=false;btn.textContent=‘🎤 Voice’;btn.classList.remove(‘active’);};
-noteMicRec.start();
+  if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){showToast('Voice not supported','error');return;}
+  const btn=document.getElementById('noteMicBtn');
+  if(noteRecording){noteMicRec?.stop();noteRecording=false;btn.textContent='🎤 Voice';btn.classList.remove('active');return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  noteMicRec=new SR();noteMicRec.continuous=true;noteMicRec.interimResults=false;noteMicRec.lang='en-US';
+  noteMicRec.onstart=()=>{noteRecording=true;btn.textContent='⏹ Stop';btn.classList.add('active');};
+  noteMicRec.onresult=(e)=>{
+    const ta=document.getElementById('noteText');
+    if(ta)ta.value+=(ta.value?' ':'')+e.results[e.results.length-1][0].transcript;
+  };
+  noteMicRec.onend=()=>{noteRecording=false;btn.textContent='🎤 Voice';btn.classList.remove('active');};
+  noteMicRec.start();
 }
 
-function clearNoteText(){document.getElementById(‘noteText’).value=’’;}
+function clearNoteText(){document.getElementById('noteText').value='';}
 
 function saveNote(){
-const school=document.getElementById(‘noteSchool’).value;
-const text=document.getElementById(‘noteText’).value.trim();
-if(!school||!text){showToast(‘Select a school and enter notes’,‘error’);return;}
-const note={id:Date.now(),school,text,date:new Date().toLocaleDateString(),timestamp:new Date().toISOString()};
-noteLog.unshift(note);
-try{localStorage.setItem(‘pmNoteLog’,JSON.stringify(noteLog.slice(0,500)));}catch(e){}
-document.getElementById(‘noteText’).value=’’;
-showToast(‘Note saved ✓’,‘success’);
-renderNotes();
+  const school=document.getElementById('noteSchool').value;
+  const text=document.getElementById('noteText').value.trim();
+  if(!school||!text){showToast('Select a school and enter notes','error');return;}
+  const note={id:Date.now(),school,text,date:new Date().toLocaleDateString(),timestamp:new Date().toISOString()};
+  noteLog.unshift(note);
+  try{localStorage.setItem('pmNoteLog',JSON.stringify(noteLog.slice(0,500)));}catch(e){}
+  document.getElementById('noteText').value='';
+  showToast('Note saved ✓','success');
+  renderNotes();
 }
 
 function filterNotes(){
-const q=document.getElementById(‘noteSearch’).value.toLowerCase();
-renderNotes(q);
+  const q=document.getElementById('noteSearch').value.toLowerCase();
+  renderNotes(q);
 }
 
-function renderNotes(query=’’){
-const el=document.getElementById(‘notesList’);if(!el)return;
-let notes=noteLog;
-if(query)notes=notes.filter(n=>n.school.toLowerCase().includes(query)||n.text.toLowerCase().includes(query)||n.date.includes(query));
-if(notes.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">📋</div><div class="etxt">No notes yet</div></div>`;return;}
-el.innerHTML=notes.map(n=>`<div class="note-item">
-<div class="note-school">${esc(n.school)}</div>
-<div class="note-date">${n.date}</div>
-<div class="note-text">${esc(n.text)}</div>
-
+function renderNotes(query=''){
+  const el=document.getElementById('notesList');if(!el)return;
+  let notes=noteLog;
+  if(query)notes=notes.filter(n=>n.school.toLowerCase().includes(query)||n.text.toLowerCase().includes(query)||n.date.includes(query));
+  if(notes.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">📋</div><div class="etxt">No notes yet</div></div>`;return;}
+  el.innerHTML=notes.map(n=>`<div class="note-item">
+    <div class="note-school">${esc(n.school)}</div>
+    <div class="note-date">${n.date}</div>
+    <div class="note-text">${esc(n.text)}</div>
   </div>`).join('');
 }
 
 // ── DIRECTOR-Y ────────────────────────────────────────────
 function loadDirectory(){
-sortDirectors(‘name’,document.getElementById(‘sortName’));
+  sortDirectors('name',document.getElementById('sortName'));
 }
 
 function sortDirectors(by,btn){
-dirSort=by;
-document.querySelectorAll(’#screen-directory .dtab’).forEach(b=>b.classList.remove(‘active’));
-btn?.classList.add(‘active’);
-filterDirectors();
+  dirSort=by;
+  document.querySelectorAll('#screen-directory .dtab').forEach(b=>b.classList.remove('active'));
+  btn?.classList.add('active');
+  filterDirectors();
 }
 
 function filterDirectors(){
-const q=document.getElementById(‘dirSearch’)?.value.toLowerCase()||’’;
-let dirs=[…DIRECTORS];
-if(q)dirs=dirs.filter(d=>
-d.name.toLowerCase().includes(q)||
-d.school.toLowerCase().includes(q)||
-d.district.toLowerCase().includes(q)||
-d.day.toLowerCase().includes(q)
-);
-if(dirSort===‘name’)dirs.sort((a,b)=>a.name.localeCompare(b.name));
-else if(dirSort===‘school’)dirs.sort((a,b)=>a.school.localeCompare(b.school));
-else if(dirSort===‘district’)dirs.sort((a,b)=>a.district.localeCompare(b.district));
-else if(dirSort===‘day’)dirs.sort((a,b)=>a.day.localeCompare(b.day));
-renderDirectoryList(dirs);
+  const q=document.getElementById('dirSearch')?.value.toLowerCase()||'';
+  let dirs=[...DIRECTORS];
+  if(q)dirs=dirs.filter(d=>
+    d.name.toLowerCase().includes(q)||
+    d.school.toLowerCase().includes(q)||
+    d.district.toLowerCase().includes(q)||
+    d.day.toLowerCase().includes(q)
+  );
+  if(dirSort==='name')dirs.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(dirSort==='school')dirs.sort((a,b)=>a.school.localeCompare(b.school));
+  else if(dirSort==='district')dirs.sort((a,b)=>a.district.localeCompare(b.district));
+  else if(dirSort==='day')dirs.sort((a,b)=>a.day.localeCompare(b.day));
+  renderDirectoryList(dirs);
 }
 
 function renderDirectoryList(dirs){
-const el=document.getElementById(‘directoryList’);if(!el)return;
-if(dirs.length===0){el.innerHTML=`<div class="empty-state"><div class="etxt">No directors found</div></div>`;return;}
-// Group by school (strip B/O suffix for grouping)
-const schoolMap={};
-dirs.forEach(d=>{
-const key=d.school.replace(/\s*(B)|\s*(O)|\s*(CH)|\s*(GM)/gi,’’).trim();
-if(!schoolMap[key])schoolMap[key]={school:key,district:d.district,day:d.day,directors:[]};
-schoolMap[key].directors.push(d);
-});
-const schools=Object.values(schoolMap);
-el.innerHTML=schools.map((s,i)=>`<div class="dcard" style="animation-delay:${Math.min(i,.2)*0.03}s"> <div class="dcard-school">${esc(s.school)}</div> <div class="dcard-name">District ${esc(s.district)} · ${esc(s.day)}</div> ${s.directors.map(d=>`<div style="margin:6px 0 4px;font-size:13px;font-weight:600;color:var(--text2)">${esc(d.name)} <span class="badge b-gray">${d.role||‘B’}</span></div>
-<div class="dcard-acts">
-${d.email&&d.email!==‘N/A’?`<a class="dact email" href="mailto:${d.email}">✉️ Email</a>`:’’}
-${d.phone?`<a class="dact text" href="sms:${d.phone}">💬 Text</a>`:’’}
-${d.phone?`<a class="dact" href="tel:${d.phone}" style="border-color:var(--border)">📞 Call</a>`:’’}
-</div>`).join(’’)}
-
+  const el=document.getElementById('directoryList');if(!el)return;
+  if(dirs.length===0){el.innerHTML=`<div class="empty-state"><div class="etxt">No directors found</div></div>`;return;}
+  // Group by school (strip B/O suffix for grouping)
+  const schoolMap={};
+  dirs.forEach(d=>{
+    const key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
+    if(!schoolMap[key])schoolMap[key]={school:key,district:d.district,day:d.day,directors:[]};
+    schoolMap[key].directors.push(d);
+  });
+  const schools=Object.values(schoolMap);
+  el.innerHTML=schools.map((s,i)=>`<div class="dcard" style="animation-delay:${Math.min(i,.2)*0.03}s">
+    <div class="dcard-school">${esc(s.school)}</div>
+    <div class="dcard-name">District ${esc(s.district)} · ${esc(s.day)}</div>
+    ${s.directors.map(d=>`<div style="margin:6px 0 4px;font-size:13px;font-weight:600;color:var(--text2)">${esc(d.name)} <span class="badge b-gray">${d.role||'B'}</span></div>
+    <div class="dcard-acts">
+      ${d.email&&d.email!=='N/A'?`<a class="dact email" href="mailto:${d.email}">✉️ Email</a>`:''}
+      ${d.phone?`<a class="dact text" href="sms:${d.phone}">💬 Text</a>`:''}
+      ${d.phone?`<a class="dact" href="tel:${d.phone}" style="border-color:var(--border)">📞 Call</a>`:''}
+    </div>`).join('')}
   </div>`).join('');
 }
 
 // ── RECEIPT ───────────────────────────────────────────────
-function showReceiptModal(){document.getElementById(‘receiptModal’).classList.add(‘show’);}
+function showReceiptModal(){document.getElementById('receiptModal').classList.add('show');}
 function handleReceipt(event){
-const file=event.target.files?.[0];if(!file)return;
-const prev=document.getElementById(‘receiptPreview’);
-prev.src=URL.createObjectURL(file);prev.style.display=‘block’;
-document.getElementById(‘receiptCategorySection’).style.display=‘block’;
+  const file=event.target.files?.[0];if(!file)return;
+  const prev=document.getElementById('receiptPreview');
+  prev.src=URL.createObjectURL(file);prev.style.display='block';
+  document.getElementById('receiptCategorySection').style.display='block';
 }
 function sendReceipt(){
-const cat=document.getElementById(‘receiptCategory’).value;
-const subject=`Receipt — ${cat} — PM Music Center`;
-window.location.href=`mailto:${RICKY}?subject=${encodeURIComponent(subject)}`;
-showToast(‘Email app opened ✓’,‘success’);
-setTimeout(()=>hideMBG({target:document.getElementById(‘receiptModal’)},‘receiptModal’),800);
+  const cat=document.getElementById('receiptCategory').value;
+  const subject=`Receipt — ${cat} — PM Music Center`;
+  window.location.href=`mailto:${RICKY}?subject=${encodeURIComponent(subject)}`;
+  showToast('Email app opened ✓','success');
+  setTimeout(()=>hideMBG({target:document.getElementById('receiptModal')},'receiptModal'),800);
 }
 
 // ── CALENDAR ──────────────────────────────────────────────
 async function loadCalendar(){
-const el=document.getElementById(‘calContent’);if(!el)return;
-el.innerHTML=`<div class="loading-state"><div class="spinner"></div><div>Loading calendar...</div></div>`;
-try{
-const r=await fetch(`${PROXY}/calendar`);
-const data=await r.json();
-if(data.error)throw new Error(data.error);
-const events=data.events||[];
-const deliveries=data.deliveries||[];
-const now=new Date();
-const twoWeeks=new Date(now.getTime()+14*24*60*60*1000);
-// Parse event dates
-const parseDate=str=>{if(!str)return null;try{return new Date(str);}catch{return null;}};
-// Filter events with dates
-const withDates=events.filter(e=>{
-const d=parseDate(e.date||e.Date||e.date_1||’’);
-return d&&!isNaN(d);
-}).sort((a,b)=>{
-return new Date(a.date||a.Date||0)-new Date(b.date||b.Date||0);
-});
-const upcoming=withDates.filter(e=>{
-const d=parseDate(e.date||e.Date||’’);
-return d&&d>=now&&d<=twoWeeks;
-});
-const all=withDates.filter(e=>{
-const d=parseDate(e.date||e.Date||’’);
-return d&&d>=now;
-});
-// Get event types for filter
-const types=[…new Set(all.map(e=>e.event_type||e.type||e.event||‘Event’).filter(Boolean))];
-let html=’’;
-// Upcoming banner
-if(upcoming.length>0){
-html+=`<div class="slbl">Upcoming — Next 2 Weeks (${upcoming.length})</div>`;
-upcoming.forEach(e=>{
-const dt=parseDate(e.date||e.Date||’’);
-const daysAway=Math.ceil((dt-now)/86400000);
-html+=`<div class="cali" style="border-left-color:${daysAway<=7?'var(--red)':'var(--green)'}"> <div class="cali-event">${esc(e.event_type||e.type||e.event||'Event')}</div> <div class="cali-school">${esc(e.school||e.School||'')}${e.district||e.District?` · District ${esc(e.district||e.District)}`:''}</div> <div class="cali-meta"> <span class="cali-tag">📅 ${dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span> ${e.time||e.Time?`<span class="cali-tag">⏰ ${esc(e.time||e.Time)}</span>`:''} ${e.arrival_time||e.Arrival_Time?`<span class="cali-tag">🚗 Arrive ${esc(e.arrival_time||e.Arrival_Time)}</span>`:''} ${daysAway<=7?`<span class="badge b-red">${daysAway===0?‘Today’:daysAway===1?‘Tomorrow’:daysAway+’ days’}</span>`:''} </div> </div>`;
-});
-}
-// Filter tabs
-html+=`<div class="slbl" style="margin-top:8px">All Events</div> <div class="dtabs" id="calFilterTabs"> <button class="dtab active" onclick="filterCalEvents('all',this)">All</button> ${types.map(t=>`<button class="dtab" onclick="filterCalEvents('${esc(t)}',this)">${esc(t)}</button>`).join('')} </div> <div id="calEventsList">`;
-all.forEach(e=>{
-const dt=parseDate(e.date||e.Date||’’);
-html+=`<div class="cali" data-type="${esc(e.event_type||e.type||e.event||'')}"> <div class="cali-event">${esc(e.event_type||e.type||e.event||'Event')}</div> <div class="cali-school">${esc(e.school||e.School||'')}${e.district||e.District?` · District ${esc(e.district||e.District)}`:''}</div> <div class="cali-meta"> <span class="cali-tag">📅 ${dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}</span> ${e.time||e.Time?`<span class="cali-tag">⏰ ${esc(e.time||e.Time)}</span>`:''} ${e.arrival_time||e.Arrival_Time?`<span class="cali-tag">🚗 Arrive ${esc(e.arrival_time||e.Arrival_Time)}</span>`:''} ${e.notes||e.Notes?`<span class="cali-tag">📝 ${esc((e.notes||e.Notes).substring(0,40))}</span>`:''} </div> </div>`;
-});
-html+=`</div>`;
-if(deliveries.length>0){
-html+=`<div class="slbl" style="margin-top:12px">Delivery Dates</div>`;
-deliveries.forEach(d=>{
-html+=`<div class="cali" style="border-left-color:var(--orange)"> <div class="cali-event">New Rental Delivery</div> <div class="cali-school">${esc(Object.values(d).filter(v=>v&&v!=='delivery').slice(0,2).join(' · '))}</div> </div>`;
-});
-}
-if(all.length===0&&deliveries.length===0){
-html=`<div class="empty-state"><div class="eicon">📅</div><div class="etxt">No upcoming events found in Nikki's calendar</div></div>`;
-}
-el.innerHTML=html;
-}catch(err){
-el.innerHTML=`<div class="empty-state"><div class="eicon">⚠️</div><div class="etxt">Could not load calendar: ${esc(err.message)}</div></div>`;
-}
+  const el=document.getElementById('calContent');if(!el)return;
+  el.innerHTML=`<div class="loading-state"><div class="spinner"></div><div>Loading calendar...</div></div>`;
+  try{
+    const r=await fetch(`${PROXY}/calendar`);
+    const data=await r.json();
+    if(data.error)throw new Error(data.error);
+    const events=data.events||[];
+    const deliveries=data.deliveries||[];
+    const now=new Date();
+    const twoWeeks=new Date(now.getTime()+14*24*60*60*1000);
+    // Parse event dates
+    const parseDate=str=>{if(!str)return null;try{return new Date(str);}catch{return null;}};
+    // Filter events with dates
+    const withDates=events.filter(e=>{
+      const d=parseDate(e.date||e.Date||e.date_1||'');
+      return d&&!isNaN(d);
+    }).sort((a,b)=>{
+      return new Date(a.date||a.Date||0)-new Date(b.date||b.Date||0);
+    });
+    const upcoming=withDates.filter(e=>{
+      const d=parseDate(e.date||e.Date||'');
+      return d&&d>=now&&d<=twoWeeks;
+    });
+    const all=withDates.filter(e=>{
+      const d=parseDate(e.date||e.Date||'');
+      return d&&d>=now;
+    });
+    // Get event types for filter
+    const types=[...new Set(all.map(e=>e.event_type||e.type||e.event||'Event').filter(Boolean))];
+    let html='';
+    // Upcoming banner
+    if(upcoming.length>0){
+      html+=`<div class="slbl">Upcoming — Next 2 Weeks (${upcoming.length})</div>`;
+      upcoming.forEach(e=>{
+        const dt=parseDate(e.date||e.Date||'');
+        const daysAway=Math.ceil((dt-now)/86400000);
+        html+=`<div class="cali" style="border-left-color:${daysAway<=7?'var(--red)':'var(--green)'}">
+          <div class="cali-event">${esc(e.event_type||e.type||e.event||'Event')}</div>
+          <div class="cali-school">${esc(e.school||e.School||'')}${e.district||e.District?` · District ${esc(e.district||e.District)}`:''}</div>
+          <div class="cali-meta">
+            <span class="cali-tag">📅 ${dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span>
+            ${e.time||e.Time?`<span class="cali-tag">⏰ ${esc(e.time||e.Time)}</span>`:''}
+            ${e.arrival_time||e.Arrival_Time?`<span class="cali-tag">🚗 Arrive ${esc(e.arrival_time||e.Arrival_Time)}</span>`:''}
+            ${daysAway<=7?`<span class="badge b-red">${daysAway===0?'Today':daysAway===1?'Tomorrow':daysAway+' days'}</span>`:''}
+          </div>
+        </div>`;
+      });
+    }
+    // Filter tabs
+    html+=`<div class="slbl" style="margin-top:8px">All Events</div>
+    <div class="dtabs" id="calFilterTabs">
+      <button class="dtab active" onclick="filterCalEvents('all',this)">All</button>
+      ${types.map(t=>`<button class="dtab" onclick="filterCalEvents('${esc(t)}',this)">${esc(t)}</button>`).join('')}
+    </div>
+    <div id="calEventsList">`;
+    all.forEach(e=>{
+      const dt=parseDate(e.date||e.Date||'');
+      html+=`<div class="cali" data-type="${esc(e.event_type||e.type||e.event||'')}">
+        <div class="cali-event">${esc(e.event_type||e.type||e.event||'Event')}</div>
+        <div class="cali-school">${esc(e.school||e.School||'')}${e.district||e.District?` · District ${esc(e.district||e.District)}`:''}</div>
+        <div class="cali-meta">
+          <span class="cali-tag">📅 ${dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}</span>
+          ${e.time||e.Time?`<span class="cali-tag">⏰ ${esc(e.time||e.Time)}</span>`:''}
+          ${e.arrival_time||e.Arrival_Time?`<span class="cali-tag">🚗 Arrive ${esc(e.arrival_time||e.Arrival_Time)}</span>`:''}
+          ${e.notes||e.Notes?`<span class="cali-tag">📝 ${esc((e.notes||e.Notes).substring(0,40))}</span>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+    if(deliveries.length>0){
+      html+=`<div class="slbl" style="margin-top:12px">Delivery Dates</div>`;
+      deliveries.forEach(d=>{
+        html+=`<div class="cali" style="border-left-color:var(--orange)">
+          <div class="cali-event">New Rental Delivery</div>
+          <div class="cali-school">${esc(Object.values(d).filter(v=>v&&v!=='delivery').slice(0,2).join(' · '))}</div>
+        </div>`;
+      });
+    }
+    if(all.length===0&&deliveries.length===0){
+      html=`<div class="empty-state"><div class="eicon">📅</div><div class="etxt">No upcoming events found in Nikki's calendar</div></div>`;
+    }
+    el.innerHTML=html;
+  }catch(err){
+    el.innerHTML=`<div class="empty-state"><div class="eicon">⚠️</div><div class="etxt">Could not load calendar: ${esc(err.message)}</div></div>`;
+  }
 }
 
 function filterCalEvents(type,btn){
-document.querySelectorAll(’#calFilterTabs .dtab’).forEach(b=>b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-document.querySelectorAll(’#calEventsList .cali’).forEach(el=>{
-if(type===‘all’||el.dataset.type===type)el.style.display=’’;
-else el.style.display=‘none’;
-});
+  document.querySelectorAll('#calFilterTabs .dtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#calEventsList .cali').forEach(el=>{
+    if(type==='all'||el.dataset.type===type)el.style.display='';
+    else el.style.display='none';
+  });
 }
 
 // ── ARRIVAL TEMPLATES ─────────────────────────────────────
 function showArrival(name){
-const templates=[
-{label:‘🚗 On my way (30 min)’,text:`On my way to ${name}! I'll be there in about 30 minutes. — Ted, PM Music Center`},
-{label:‘🚗 On my way (15 min)’,text:`Heading to ${name} now — should be there in about 15 minutes. — Ted, PM Music Center`},
-{label:‘📦 Coming with items’,text:`Hi! I'll be coming by ${name} today with items for your program. See you soon! — Ted, PM Music Center`},
-{label:‘📭 Nothing today — available’,text:`Hi! I don't have anything scheduled for ${name} today, but happy to stop by if you need anything. Just let me know! — Ted, PM Music Center`}
-];
-const existing=document.getElementById(‘arrivalOverlay’);
-if(existing)existing.remove();
-const div=document.createElement(‘div’);
-div.id=‘arrivalOverlay’;
-div.style.cssText=‘position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;display:flex;align-items:flex-end;backdrop-filter:blur(4px)’;
-div.innerHTML=`<div style="background:#fff;border-radius:20px 20px 0 0;padding:22px 20px 36px;width:100%;max-height:80vh;overflow-y:auto"> <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px"></div> <div style="font-size:18px;font-weight:700;color:var(--pm-blue);margin-bottom:16px">📍 Message Director — ${esc(name)}</div> ${templates.map(t=>`<button onclick="copyArrival('${esc(t.text)}')" style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:left;font-family:var(--sans);font-size:13px;color:var(--text2);cursor:pointer;width:100%;margin-bottom:7px;line-height:1.5">
-<strong style="display:block;font-weight:600;color:var(--text);margin-bottom:3px">${esc(t.label)}</strong>${esc(t.text.substring(0,90))}…
-</button>`).join(’’)}
-<button onclick="document.getElementById('arrivalOverlay').remove()" style="width:100%;padding:12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:var(--sans);font-size:14px;cursor:pointer;margin-top:4px">Close</button>
-
+  const templates=[
+    {label:'🚗 On my way (30 min)',text:`On my way to ${name}! I'll be there in about 30 minutes. — Ted, PM Music Center`},
+    {label:'🚗 On my way (15 min)',text:`Heading to ${name} now — should be there in about 15 minutes. — Ted, PM Music Center`},
+    {label:'📦 Coming with items',text:`Hi! I'll be coming by ${name} today with items for your program. See you soon! — Ted, PM Music Center`},
+    {label:'📭 Nothing today — available',text:`Hi! I don't have anything scheduled for ${name} today, but happy to stop by if you need anything. Just let me know! — Ted, PM Music Center`}
+  ];
+  const existing=document.getElementById('arrivalOverlay');
+  if(existing)existing.remove();
+  const div=document.createElement('div');
+  div.id='arrivalOverlay';
+  div.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;display:flex;align-items:flex-end;backdrop-filter:blur(4px)';
+  div.innerHTML=`<div style="background:#fff;border-radius:20px 20px 0 0;padding:22px 20px 36px;width:100%;max-height:80vh;overflow-y:auto">
+    <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px"></div>
+    <div style="font-size:18px;font-weight:700;color:var(--pm-blue);margin-bottom:16px">📍 Message Director — ${esc(name)}</div>
+    ${templates.map(t=>`<button onclick="copyArrival('${esc(t.text)}')" style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:left;font-family:var(--sans);font-size:13px;color:var(--text2);cursor:pointer;width:100%;margin-bottom:7px;line-height:1.5">
+      <strong style="display:block;font-weight:600;color:var(--text);margin-bottom:3px">${esc(t.label)}</strong>${esc(t.text.substring(0,90))}...
+    </button>`).join('')}
+    <button onclick="document.getElementById('arrivalOverlay').remove()" style="width:100%;padding:12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:var(--sans);font-size:14px;cursor:pointer;margin-top:4px">Close</button>
   </div>`;
   div.addEventListener('click',e=>{if(e.target===div)div.remove();});
   document.body.appendChild(div);
 }
 
 function copyArrival(text){
-navigator.clipboard?.writeText(text).then(()=>{showToast(‘Copied ✓’,‘success’);document.getElementById(‘arrivalOverlay’)?.remove();})
-.catch(()=>showToast(‘Long-press to copy’,’’));
+  navigator.clipboard?.writeText(text).then(()=>{showToast('Copied ✓','success');document.getElementById('arrivalOverlay')?.remove();})
+  .catch(()=>showToast('Long-press to copy',''));
 }
 
 // ── AI ────────────────────────────────────────────────────
-function setAIQuery(t){document.getElementById(‘chatInput’).value=t;document.getElementById(‘chatInput’).focus();}
-function autoResize(el){el.style.height=‘auto’;el.style.height=Math.min(el.scrollHeight,100)+‘px’;}
+function setAIQuery(t){document.getElementById('chatInput').value=t;document.getElementById('chatInput').focus();}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
 
 async function sendAI(){
-const input=document.getElementById(‘chatInput’);
-const text=input.value.trim();if(!text)return;
-input.value=’’;input.style.height=‘auto’;
-addBubble(text,‘user’);
-const tid=‘t’+Date.now();
-addBubble(‘Thinking…’,‘thinking’,tid);
-chatHistory.push({role:‘user’,content:text});
-try{
-const resp=await fetch(`${PROXY}/ai`,{
-method:‘POST’,headers:{‘Content-Type’:‘application/json’},
-body:JSON.stringify({
-model:‘claude-sonnet-4-20250514’,max_tokens:1000,
-system:`You are an AI assistant for ${REPS[currentRep].name}, an Educational Representative at PM Music Center in the Chicago suburbs. You help with AIM instrument rental management system queries.
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();if(!text)return;
+  input.value='';input.style.height='auto';
+  addBubble(text,'user');
+  const tid='t'+Date.now();
+  addBubble('Thinking...','thinking',tid);
+  chatHistory.push({role:'user',content:text});
+  try{
+    const resp=await fetch(`${PROXY}/ai`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`You are an AI assistant for ${REPS[currentRep].name}, an Educational Representative at PM Music Center in the Chicago suburbs. You help with AIM instrument rental management system queries.
 
-Today’s schools: ${routeData?.schools?.map(s=>s.name).join(’, ’)||‘loading’}.
+Today's schools: ${routeData?.schools?.map(s=>s.name).join(', ')||'loading'}.
 Current rep: ${REPS[currentRep].name} (${REPS[currentRep].initials}).
 AIM connected: ${auth.connected}.
 
-Help with: customer lookups, CM queries, inventory checks, serial lookups, repair status, school info. Be concise — Ted is in the field.`, messages:chatHistory.slice(-10) }) }); const data=await resp.json(); const reply=data.content?.[0]?.text||'Sorry, no response.'; chatHistory.push({role:'assistant',content:reply}); document.getElementById(tid)?.remove(); addBubble(reply,'ai'); }catch(err){document.getElementById(tid)?.remove();addBubble(`Error: ${err.message}`,‘ai’);}
+Help with: customer lookups, CM queries, inventory checks, serial lookups, repair status, school info. Be concise — Ted is in the field.`,
+        messages:chatHistory.slice(-10)
+      })
+    });
+    const data=await resp.json();
+    const reply=data.content?.[0]?.text||'Sorry, no response.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(tid)?.remove();
+    addBubble(reply,'ai');
+  }catch(err){document.getElementById(tid)?.remove();addBubble(`Error: ${err.message}`,'ai');}
 }
 
-function addBubble(text,type,id=’’){
-const msgs=document.getElementById(‘chatMessages’);
-const div=document.createElement(‘div’);
-div.className=`cbub ${type}`;if(id)div.id=id;
-div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+function addBubble(text,type,id=''){
+  const msgs=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className=`cbub ${type}`;if(id)div.id=id;
+  div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
 }
 
 function toggleMic(){
-if(!(‘webkitSpeechRecognition’in window)&&!(‘SpeechRecognition’in window)){showToast(‘Voice not supported’,‘error’);return;}
-const btn=document.getElementById(‘micBtn’);
-if(isRecording){micRec?.stop();isRecording=false;btn.classList.remove(‘recording’);btn.textContent=‘🎤’;return;}
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-micRec=new SR();micRec.continuous=false;micRec.interimResults=false;micRec.lang=‘en-US’;
-micRec.onstart=()=>{isRecording=true;btn.classList.add(‘recording’);btn.textContent=‘⏹’;};
-micRec.onresult=(e)=>{document.getElementById(‘chatInput’).value=e.results[0][0].transcript;};
-micRec.onend=()=>{isRecording=false;btn.classList.remove(‘recording’);btn.textContent=‘🎤’;};
-micRec.onerror=(e)=>{isRecording=false;btn.classList.remove(‘recording’);btn.textContent=‘🎤’;showToast(’Voice error: ’+e.error,‘error’);};
-micRec.start();
+  if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){showToast('Voice not supported','error');return;}
+  const btn=document.getElementById('micBtn');
+  if(isRecording){micRec?.stop();isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  micRec=new SR();micRec.continuous=false;micRec.interimResults=false;micRec.lang='en-US';
+  micRec.onstart=()=>{isRecording=true;btn.classList.add('recording');btn.textContent='⏹';};
+  micRec.onresult=(e)=>{document.getElementById('chatInput').value=e.results[0][0].transcript;};
+  micRec.onend=()=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';};
+  micRec.onerror=(e)=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';showToast('Voice error: '+e.error,'error');};
+  micRec.start();
 }
 
 // ── AIM AUTH ──────────────────────────────────────────────
 async function autoConnect(){
-try{
-const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}`);
-const d1=await r1.json();if(!d1.OAuthToken)return;
-const ed=d1.NewEndpointDomain?.replace(//$/,’’)||‘https://sandbox.active-e.net’;
-const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(settings.user)}&password=${encodeURIComponent(settings.pass)}&endpointdomain=${encodeURIComponent(ed)}`);
-const d2=await r2.json();if(!d2.Token)return;
-auth={connected:true,apiKey:settings.apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
-updateDots();showToast(‘Auto-connected to AIM ✓’,‘success’);
-renderToday();renderHome();
-}catch(e){}
+  try{
+    const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}`);
+    const d1=await r1.json();if(!d1.OAuthToken)return;
+    const ed=d1.NewEndpointDomain?.replace(/\/$/,'')||'https://sandbox.active-e.net';
+    const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(settings.user)}&password=${encodeURIComponent(settings.pass)}&endpointdomain=${encodeURIComponent(ed)}`);
+    const d2=await r2.json();if(!d2.Token)return;
+    auth={connected:true,apiKey:settings.apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
+    updateDots();showToast('Auto-connected to AIM ✓','success');
+    renderToday();renderHome();
+  }catch(e){}
 }
 
 async function connectAIM(){
-const apiKey=document.getElementById(‘mApiKey’).value.trim();
-const user=document.getElementById(‘mUser’).value.trim();
-const pass=document.getElementById(‘mPass’).value.trim();
-const save=document.getElementById(‘saveCredsCheck’).checked;
-const btn=document.getElementById(‘mConnectBtn’);btn.textContent=‘Connecting…’;btn.disabled=true;
-try{
-const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
-const d1=await r1.json();if(!d1.OAuthToken)throw new Error(‘No OAuth token’);
-const ed=d1.NewEndpointDomain?.replace(//$/,’’)||‘https://sandbox.active-e.net’;
-const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(ed)}`);
-const d2=await r2.json();if(!d2.Token)throw new Error(d2.Status?.ErrorMessage||‘Auth failed’);
-auth={connected:true,apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
-if(save){settings.apiKey=apiKey;settings.user=user;settings.pass=pass;settings.saveCreds=true;localStorage.setItem(‘pm_apikey’,apiKey);localStorage.setItem(‘pm_user’,user);localStorage.setItem(‘pm_pass’,pass);localStorage.setItem(‘pm_savecreds’,‘true’);}
-updateDots();updateSettingsDisplay();
-hideMBG({target:document.getElementById(‘connectModal’)},‘connectModal’);
-showToast(‘Connected to AIM ✓’,‘success’);
-renderToday();renderHome();
-}catch(err){showToast(err.message,‘error’);}
-finally{btn.textContent=‘Connect’;btn.disabled=false;}
+  const apiKey=document.getElementById('mApiKey').value.trim();
+  const user=document.getElementById('mUser').value.trim();
+  const pass=document.getElementById('mPass').value.trim();
+  const save=document.getElementById('saveCredsCheck').checked;
+  const btn=document.getElementById('mConnectBtn');btn.textContent='Connecting...';btn.disabled=true;
+  try{
+    const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
+    const d1=await r1.json();if(!d1.OAuthToken)throw new Error('No OAuth token');
+    const ed=d1.NewEndpointDomain?.replace(/\/$/,'')||'https://sandbox.active-e.net';
+    const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(ed)}`);
+    const d2=await r2.json();if(!d2.Token)throw new Error(d2.Status?.ErrorMessage||'Auth failed');
+    auth={connected:true,apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
+    if(save){settings.apiKey=apiKey;settings.user=user;settings.pass=pass;settings.saveCreds=true;localStorage.setItem('pm_apikey',apiKey);localStorage.setItem('pm_user',user);localStorage.setItem('pm_pass',pass);localStorage.setItem('pm_savecreds','true');}
+    updateDots();updateSettingsDisplay();
+    hideMBG({target:document.getElementById('connectModal')},'connectModal');
+    showToast('Connected to AIM ✓','success');
+    renderToday();renderHome();
+  }catch(err){showToast(err.message,'error');}
+  finally{btn.textContent='Connect';btn.disabled=false;}
 }
 
 async function callAIM(path,params={}){
-if(!auth.connected)throw new Error(‘Not connected to AIM’);
-const qs=new URLSearchParams({apikey:auth.apiKey,appid:APP_ID,oauthtoken:auth.oauthToken,token:auth.token,endpointdomain:auth.endpointDomain,path,…params}).toString();
-const r=await fetch(`${PROXY}/api?${qs}`);
-const data=await r.json();
-if(data.Status?.StatusCode===‘Error’)throw new Error(data.Status.ErrorMessage);
-return data;
+  if(!auth.connected)throw new Error('Not connected to AIM');
+  const qs=new URLSearchParams({apikey:auth.apiKey,appid:APP_ID,oauthtoken:auth.oauthToken,token:auth.token,endpointdomain:auth.endpointDomain,path,...params}).toString();
+  const r=await fetch(`${PROXY}/api?${qs}`);
+  const data=await r.json();
+  if(data.Status?.StatusCode==='Error')throw new Error(data.Status.ErrorMessage);
+  return data;
 }
 
 function updateDots(){
-for(let i=0;i<5;i++){const el=document.getElementById(‘cdot’+i);if(el)el.className=auth.connected?‘cdot on’:‘cdot’;}
-document.getElementById(‘ctxt0’).textContent=auth.connected?‘Connected’:‘Connect’;
-[‘ctxt1’,‘ctxt2’,‘ctxt3’].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=auth.connected?‘AIM ✓’:‘AIM’;});
+  for(let i=0;i<5;i++){const el=document.getElementById('cdot'+i);if(el)el.className=auth.connected?'cdot on':'cdot';}
+  document.getElementById('ctxt0').textContent=auth.connected?'Connected':'Connect';
+  ['ctxt1','ctxt2','ctxt3'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=auth.connected?'AIM ✓':'AIM';});
 }
 
 function notConnMsg(){return`<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to see data</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>`;}
 
 // ── UI ────────────────────────────────────────────────────
 function navTo(name){
-document.querySelectorAll(’.screen’).forEach(s=>s.classList.remove(‘active’));
-document.getElementById(`screen-${name}`)?.classList.add(‘active’);
-document.querySelectorAll(’.nbtn’).forEach(b=>b.classList.remove(‘active’));
-document.getElementById(`nav-${name}`)?.classList.add(‘active’);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`screen-${name}`)?.classList.add('active');
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`nav-${name}`)?.classList.add('active');
 }
 function showConnectModal(){
-document.getElementById(‘mApiKey’).value=settings.apiKey;
-document.getElementById(‘mUser’).value=settings.user;
-document.getElementById(‘mPass’).value=settings.pass;
-document.getElementById(‘connectModal’).classList.add(‘show’);
+  document.getElementById('mApiKey').value=settings.apiKey;
+  document.getElementById('mUser').value=settings.user;
+  document.getElementById('mPass').value=settings.pass;
+  document.getElementById('connectModal').classList.add('show');
 }
-function hideMBG(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove(‘show’);}
-function showToast(msg,type=’’){
-const t=document.getElementById(‘toast’);t.textContent=msg;t.className=`toast show ${type}`;
-clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove(‘show’),2500);
+function hideMBG(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('show');}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
 }
-function esc(s){if(s==null)return’’;return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’).replace(/’/g,’'’);}
+function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 </script>
-
 </body>
 </html>
