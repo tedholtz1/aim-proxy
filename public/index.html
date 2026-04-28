@@ -2175,4 +2175,236 @@ function showToast(msg,type=''){
 function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 </script>
 </body>
+</html>function dataURLtoBlob(dataURL){
+  var arr=dataURL.split(',');
+  var mime=arr[0].match(/:(.*?);/)[1];
+  var bstr=atob(arr[1]);
+  var n=bstr.length;
+  var u8arr=new Uint8Array(n);
+  while(n--){u8arr[n]=bstr.charCodeAt(n);}
+  return new Blob([u8arr],{type:mime});
+}
+
+async function sendReceipt(){
+  var cat=document.getElementById('receiptCategory').value;
+  if(!window._receiptDataURL){showToast('Please take a photo first','error');return;}
+  var btn=document.querySelector('#receiptModal .mcbtn');
+  if(btn){btn.textContent='Sending...';btn.disabled=true;}
+  var resultDiv=document.getElementById('receiptResult');
+  if(resultDiv)resultDiv.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px">Sending...</div>';
+  try{
+    var blob=dataURLtoBlob(window._receiptDataURL);
+    var formData=new FormData();
+    formData.append('to',RICKY);
+    formData.append('subject',cat);
+    formData.append('body','Hi Ricky, receipt for '+cat+' on '+new Date().toLocaleDateString()+'. Thanks, Ted');
+    formData.append('photo',blob,'receipt.jpg');
+    var response=await fetch(PROXY+'/email-photo',{method:'POST',body:formData});
+    var text=await response.text();
+    if(resultDiv)resultDiv.innerHTML='<div style="font-size:11px;padding:8px;font-family:var(--mono)">'+text.substring(0,300)+'</div>';
+    var data=JSON.parse(text);
+    if(data.success){
+      showToast('Receipt sent to Ricky ✓','success');
+      window._receiptDataURL=null;
+      setTimeout(function(){hideMBG({target:document.getElementById('receiptModal')},'receiptModal');},1500);
+    } else {
+      showToast('Error: '+(data.error||'unknown'),'error');
+    }
+  }catch(err){
+    if(resultDiv)resultDiv.innerHTML='<div style="font-size:11px;color:var(--red);padding:8px">JS Error: '+err.message+'<br>Stack: '+err.stack.substring(0,200)+'</div>';
+    showToast('Error: '+err.message,'error');
+  }finally{
+    if(btn){btn.textContent='Send to Ricky';btn.disabled=false;}
+  }
+}
+
+
+async function sendAI(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();if(!text)return;
+  input.value='';input.style.height='auto';
+  addBubble(text,'user');
+  const tid='t'+Date.now();
+  addBubble('Thinking...','thinking',tid);
+  chatHistory.push({role:'user',content:text});
+  try{
+    const resp=await fetch(`${PROXY}/ai`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`You are an AI assistant for ${REPS[currentRep].name}, an Educational Representative at PM Music Center in the Chicago suburbs. You help with AIM instrument rental management system queries.
+
+Today's schools: ${routeData?.schools?.map(s=>s.name).join(', ')||'loading'}.
+Current rep: ${REPS[currentRep].name} (${REPS[currentRep].initials}).
+AIM connected: ${auth.connected}.
+
+Help with: customer lookups, CM queries, inventory checks, serial lookups, repair status, school info. Be concise — Ted is in the field.`,
+        messages:chatHistory.slice(-10)
+      })
+    });
+    const data=await resp.json();
+    const reply=data.content?.[0]?.text||'Sorry, no response.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(tid)?.remove();
+    addBubble(reply,'ai');
+  }catch(err){document.getElementById(tid)?.remove();addBubble(`Error: ${err.message}`,'ai');}
+}
+
+function addBubble(text,type,id=''){
+  const msgs=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className=`cbub ${type}`;if(id)div.id=id;
+  div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function toggleMic(){
+  if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){showToast('Voice not supported','error');return;}
+  const btn=document.getElementById('micBtn');
+  if(isRecording){micRec?.stop();isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  micRec=new SR();micRec.continuous=false;micRec.interimResults=false;micRec.lang='en-US';
+  micRec.onstart=()=>{isRecording=true;btn.classList.add('recording');btn.textContent='⏹';};
+  micRec.onresult=(e)=>{document.getElementById('chatInput').value=e.results[0][0].transcript;};
+  micRec.onend=()=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';};
+  micRec.onerror=(e)=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';showToast('Voice error: '+e.error,'error');};
+  micRec.start();
+}
+
+// ── BARCODE SCANNER ──────────────────────────────────────
+var scannerActive=false;
+var scannerCallback=null;
+var codeReader=null;
+
+function startScanner(callback){
+  scannerCallback=callback;
+  document.getElementById('scannerModal').classList.add('show');
+  document.getElementById('scannerResult').style.display='none';
+  document.getElementById('scannerUseBtn').style.display='none';
+  document.getElementById('scannerStatus').textContent='Point camera at barcode';
+  try{
+    codeReader=new ZXing.BrowserMultiFormatReader();
+    // Get available cameras first
+    codeReader.listVideoInputDevices().then(function(devices){
+      var deviceId=undefined;
+      // Prefer rear camera on mobile
+      var rear=devices.find(function(d){return d.label.toLowerCase().includes('back')||d.label.toLowerCase().includes('rear')||d.label.toLowerCase().includes('environment');});
+      if(rear)deviceId=rear.deviceId;
+      codeReader.decodeFromVideoDevice(deviceId,'scannerVideo',function(result,err){
+        if(result){
+          var text=result.getText();
+          document.getElementById('scannerResultText').textContent=text;
+          document.getElementById('scannerResult').style.display='block';
+          document.getElementById('scannerUseBtn').style.display='block';
+          document.getElementById('scannerStatus').textContent='Barcode detected! ✓';
+          codeReader.reset();
+        }
+      });
+      scannerActive=true;
+      document.getElementById('scannerStatus').textContent='Point camera at barcode';
+    }).catch(function(e){
+      // Fallback - try without device selection
+      codeReader.decodeFromVideoDevice(undefined,'scannerVideo',function(result,err){
+        if(result){
+          var text=result.getText();
+          document.getElementById('scannerResultText').textContent=text;
+          document.getElementById('scannerResult').style.display='block';
+          document.getElementById('scannerUseBtn').style.display='block';
+          document.getElementById('scannerStatus').textContent='Barcode detected! ✓';
+          codeReader.reset();
+        }
+      });
+      scannerActive=true;
+    });
+  }catch(e){
+    document.getElementById('scannerStatus').textContent='Scanner error: '+e.message+'. Enter manually.';
+    console.error('Scanner error:',e);
+  }
+}
+
+function useScanResult(){
+  var text=document.getElementById('scannerResultText').textContent;
+  stopScanner();
+  if(scannerCallback)scannerCallback(text);
+}
+
+function stopScanner(){
+  if(codeReader)try{codeReader.reset();}catch(e){}
+  scannerActive=false;
+  document.getElementById('scannerModal').classList.remove('show');
+}
+
+// ── AIM AUTH ──────────────────────────────────────────────
+async function autoConnect(){
+  try{
+    const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}`);
+    const d1=await r1.json();if(!d1.OAuthToken)return;
+    const ed=d1.NewEndpointDomain?.replace(/\/$/,'')||'https://sandbox.active-e.net';
+    const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(settings.apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(settings.user)}&password=${encodeURIComponent(settings.pass)}&endpointdomain=${encodeURIComponent(ed)}`);
+    const d2=await r2.json();if(!d2.Token)return;
+    auth={connected:true,apiKey:settings.apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
+    updateDots();showToast('Auto-connected to AIM ✓','success');
+    renderToday();renderHome();
+  }catch(e){}
+}
+
+async function connectAIM(){
+  const apiKey=document.getElementById('mApiKey').value.trim();
+  const user=document.getElementById('mUser').value.trim();
+  const pass=document.getElementById('mPass').value.trim();
+  const save=document.getElementById('saveCredsCheck').checked;
+  const btn=document.getElementById('mConnectBtn');btn.textContent='Connecting...';btn.disabled=true;
+  try{
+    const r1=await fetch(`${PROXY}/getendpoint?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}`);
+    const d1=await r1.json();if(!d1.OAuthToken)throw new Error('No OAuth token');
+    const ed=d1.NewEndpointDomain?.replace(/\/$/,'')||'https://sandbox.active-e.net';
+    const r2=await fetch(`${PROXY}/security?apikey=${encodeURIComponent(apiKey)}&appid=${APP_ID}&oauthtoken=${encodeURIComponent(d1.OAuthToken)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&endpointdomain=${encodeURIComponent(ed)}`);
+    const d2=await r2.json();if(!d2.Token)throw new Error(d2.Status?.ErrorMessage||'Auth failed');
+    auth={connected:true,apiKey,oauthToken:d1.OAuthToken,token:d2.Token,endpointDomain:ed};
+    if(save){settings.apiKey=apiKey;settings.user=user;settings.pass=pass;settings.saveCreds=true;localStorage.setItem('pm_apikey',apiKey);localStorage.setItem('pm_user',user);localStorage.setItem('pm_pass',pass);localStorage.setItem('pm_savecreds','true');}
+    updateDots();updateSettingsDisplay();
+    hideMBG({target:document.getElementById('connectModal')},'connectModal');
+    showToast('Connected to AIM ✓','success');
+    renderToday();renderHome();
+  }catch(err){showToast(err.message,'error');}
+  finally{btn.textContent='Connect';btn.disabled=false;}
+}
+
+async function callAIM(path,params={}){
+  if(!auth.connected)throw new Error('Not connected to AIM');
+  const qs=new URLSearchParams({apikey:auth.apiKey,appid:APP_ID,oauthtoken:auth.oauthToken,token:auth.token,endpointdomain:auth.endpointDomain,path,...params}).toString();
+  const r=await fetch(`${PROXY}/api?${qs}`);
+  const data=await r.json();
+  if(data.Status?.StatusCode==='Error')throw new Error(data.Status.ErrorMessage);
+  return data;
+}
+
+function updateDots(){
+  for(let i=0;i<5;i++){const el=document.getElementById('cdot'+i);if(el)el.className=auth.connected?'cdot on':'cdot';}
+  document.getElementById('ctxt0').textContent=auth.connected?'Connected':'Connect';
+  ['ctxt1','ctxt2','ctxt3'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=auth.connected?'AIM ✓':'AIM';});
+}
+
+function notConnMsg(){return`<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to see data</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>`;}
+
+// ── UI ────────────────────────────────────────────────────
+function navTo(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`screen-${name}`)?.classList.add('active');
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`nav-${name}`)?.classList.add('active');
+}
+function showConnectModal(){
+  document.getElementById('mApiKey').value=settings.apiKey;
+  document.getElementById('mUser').value=settings.user;
+  document.getElementById('mPass').value=settings.pass;
+  document.getElementById('connectModal').classList.add('show');
+}
+function hideMBG(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('show');}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+</script>
+</body>
 </html>
