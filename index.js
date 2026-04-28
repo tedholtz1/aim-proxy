@@ -142,7 +142,14 @@ app.post('/email', async function(req, res) {
     await transporter.sendMail(mailOptions);
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Email error:', err.message, err.code, err.response);
+    res.status(500).json({ 
+      error: err.message, 
+      code: err.code,
+      response: err.response,
+      user: gmailUser ? gmailUser.substring(0,5)+'...' : 'NOT SET',
+      passSet: !!gmailPass
+    });
   }
 });
 
