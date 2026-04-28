@@ -4,10 +4,13 @@ const fetch = require('node-fetch');
 const path = require('path');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5*1024*1024 } });
 
 const AIM_BASE = 'https://active-ewebservice.biz/aeServices30/api';
 const ROUTE_SHEET_ID = '1TPlzM5rPkI2HPKJxkC7zAdkzHxw1bqoOninfb0SS4Xg';
@@ -100,6 +103,43 @@ app.get('/calendar', async function(req, res) {
     res.json({ events: events, deliveries: deliveries, tab: yearTab, allTabs: sheetNames });
   } catch (err) {
     res.status(500).json({ error: err.message, sheetId: CALENDAR_SHEET_ID });
+  }
+});
+
+// Email with photo - multipart form (iOS compatible)
+app.post('/email-photo', upload.single('photo'), async function(req, res) {
+  try {
+    var to = req.body.to || '';
+    var subject = req.body.subject || 'Receipt';
+    var body = req.body.body || '';
+    var gmailUser = process.env.GMAIL_USER;
+    var gmailPass = process.env.GMAIL_APP_PASSWORD;
+    if (!gmailUser || !gmailPass) {
+      res.status(500).json({ error: 'Email not configured' });
+      return;
+    }
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: gmailUser, pass: gmailPass }
+    });
+    var mailOptions = {
+      from: gmailUser,
+      to: to,
+      subject: subject,
+      text: body
+    };
+    if (req.file) {
+      mailOptions.attachments = [{
+        filename: 'receipt.jpg',
+        content: req.file.buffer,
+        contentType: req.file.mimetype || 'image/jpeg'
+      }];
+    }
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Email-photo error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
