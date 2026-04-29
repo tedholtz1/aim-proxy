@@ -741,7 +741,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
       <div style="font-size:36px;margin-bottom:8px">📸</div>
       <div style="font-size:14px;font-weight:600;color:var(--text2)">Tap to take photo</div>
     </div>
-    <input type="file" id="receiptInput" accept="image/*" capture="environment" style="display:none" onchange="handleReceipt(event)">
+    <input type="file" id="receiptInput" accept="image/*" capture="environment" style="display:none">
     <img id="receiptPreview" style="width:100%;border-radius:var(--r);margin-top:10px;display:none"><div id="receiptSize" style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center"></div>
     <div id="receiptResult"></div>
     <div id="receiptCategorySection" style="display:none;margin-top:14px">
@@ -909,6 +909,12 @@ window.addEventListener('DOMContentLoaded',async()=>{
   renderScans();
   renderNotes();
   populateNoteSchools();
+  // Receipt file input listener - more reliable than onchange on iOS
+  var ri=document.getElementById('receiptInput');
+  if(ri){
+    ri.addEventListener('change',function(e){handleReceipt(e);},false);
+    ri.addEventListener('input',function(e){handleReceipt(e);},false);
+  }
 });
 
 // ── PIN ───────────────────────────────────────────────────
