@@ -311,6 +311,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
       <div class="home-btn" onclick="navTo('notes')"><div class="home-icon">🎙️</div><div class="home-label">Notes</div><div class="home-sub">Take and review notes</div></div>
       <div class="home-btn" onclick="showRepairModal()"><div class="home-icon">🔧</div><div class="home-label">Repair Ticket</div><div class="home-sub">New ticket or search existing</div></div>
       <div class="home-btn" onclick="showReceiptModal()"><div class="home-icon">📷</div><div class="home-label">Log Receipt</div><div class="home-sub">Photo receipt → email Ricky</div></div>
+      <div class="home-btn" onclick="navTo('briefing');runMorningBriefing()"><div class="home-icon">☀️</div><div class="home-label">Morning Briefing</div><div class="home-sub">Shelf check, email drafts & flags</div></div>
       <div class="home-btn" onclick="navTo('settings')" style="grid-column:1/-1"><div class="home-icon">⚙️</div><div class="home-label">Settings</div><div class="home-sub">PIN, credentials, rep, preferences</div></div>
     </div>
   </div>
@@ -345,9 +346,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
     <div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot2"></div><span id="ctxt2">AIM</span></div>
   </div>
   <div class="cnt">
-    <div style="display:flex;gap:7px">
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
       <button id="filterOpen" class="dtab active" onclick="setCMFilter('open',this)">Open</button>
       <button id="filterAll" class="dtab" onclick="setCMFilter('all',this)">All</button>
+      <button class="dtab" style="background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow)" onclick="showCMUpdates()" id="cmUpdatesBtn">📋 CM Updates <span id="cmUpdateCount" style="background:var(--yellow);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">0</span></button>
     </div>
     <div id="cmsBySchool"><div class="loading-state"><div class="spinner"></div></div></div>
     <button class="btn-p" onclick="toggleNewCMForm()" id="newCMToggleBtn">+ New CM</button>
@@ -491,7 +493,8 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
       <div style="display:flex;gap:8px">
         <input type="text" class="finput" id="standaloneScanInput" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
         <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('standaloneScanInput').value=v;})">📷</button>
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan()">📥 Log</button>
+        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('deliver')">📥 Deliver</button>
+        <button style="background:var(--yellow);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('pickup')">📤 Pick Up</button>
       </div>
     </div>
     <div style="display:flex;gap:8px">
@@ -593,6 +596,18 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
         <div class="ival" style="font-size:12px">offices@pmmusiccenter.com</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MORNING BRIEFING -->
+<div class="screen" id="screen-briefing">
+  <div class="hdr">
+    <button class="hdr-back" onclick="navTo('home')">←</button>
+    <div class="hdr-title">☀️ Morning Briefing</div>
+    <div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot5"></div><span id="ctxt5">AIM</span></div>
+  </div>
+  <div class="cnt" id="briefingContent">
+    <div class="loading-state"><div class="spinner"></div><div>Building your morning briefing...</div></div>
   </div>
 </div>
 
@@ -889,6 +904,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   updateSettingsDisplay();
   await loadRoute();
   if(settings.saveCreds&&settings.apiKey&&settings.user&&settings.pass)autoConnect();
+  updateCMUpdateBadge();
   loadDirectory();
   renderScans();
   renderNotes();
@@ -1062,6 +1078,7 @@ async function openSchool(school){
     <div class="acard blue" onclick="openSchoolCMs('${esc(school.name)}')"><div class="aicon">📝</div><div class="albl">CMs</div></div>
     <div class="acard green" onclick="showContactDirector('${esc(school.name)}')"><div class="aicon">📞</div><div class="albl">Contact Director(s)</div></div>
     <div class="acard yellow" onclick="showScanDelivery('${esc(school.name)}')"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>
+    <div class="acard blue" onclick="showManualLog('${esc(school.name)}')"><div class="aicon">✏️</div><div class="albl">Log Manually</div></div>
     <div class="acard orange" onclick="showRepairStatus('${esc(school.name)}')"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>
     <div class="acard purple" onclick="openVisitNote('${esc(school.name)}')"><div class="aicon">📋</div><div class="albl">Notes</div></div>
   </div>
@@ -1117,7 +1134,8 @@ function showScanDelivery(schoolName){
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <input type="text" class="finput" id="scanSerial" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
         <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('scanSerial').value=v;})">📷</button>
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Log</button>
+        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Deliver</button>
+        <button style="background:var(--yellow);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','pickup')">📤 Pick Up</button>
       </div>
       ${isCPS?'<div style="font-size:11px;color:var(--orange);font-weight:600;padding:6px 10px;background:var(--orange-bg);border-radius:8px">CPS — scans will go to office email</div>':''}
     </div>
@@ -1125,16 +1143,137 @@ function showScanDelivery(schoolName){
   renderSchoolScans(schoolName);
 }
 
-function logStandaloneScan(){
-  const input=document.getElementById('standaloneScanInput');
-  const val=input?.value.trim();
+function logStandaloneScan(action){
+  action=action||'deliver';
+  var input=document.getElementById('standaloneScanInput');
+  var val=input?input.value.trim():'';
   if(!val){showToast('Enter serial or invoice #','error');return;}
-  const entry={id:Date.now(),serial:val,action:'deliver',school:'(No school)',isCPS:false,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
+  var entry={id:Date.now(),serial:val,action:action,school:'(No school)',isCPS:false,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
   scanLog.unshift(entry);
   try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
+  // Queue for CM update agent
+  queueCMUpdate(entry);
   if(input)input.value='';
-  showToast('Scan logged ✓','success');
+  showToast((action==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
   renderScans();
+}
+
+function showManualLog(schoolName){
+  var detail=document.getElementById('schoolDetail');
+  if(!detail)return;
+  detail.innerHTML='<div class="slbl" style="margin-top:12px">Log Manually — '+esc(schoolName)+'</div>'
+    +'<div class="fcard" style="margin-top:8px">'
+    +'<div style="font-size:13px;color:var(--muted);margin-bottom:12px">For items without a barcode — cases, bows, mouthpieces, supplies, folders, strings, etc.</div>'
+    +'<div class="ff"><div class="flbl">Description</div>'
+    +'<input type="text" class="finput" id="manualDesc" placeholder="e.g. Clarinet case replacement" autocomplete="off"></div>'
+    +'<div class="ff"><div class="flbl">Action</div>'
+    +'<div style="display:flex;gap:8px;margin-top:4px">'
+    +'<button id="manualDeliver" class="dtab active" onclick="setManualAction(&quot;deliver&quot;,this)">📥 Delivered</button>'
+    +'<button id="manualPickup" class="dtab" onclick="setManualAction(&quot;pickup&quot;,this)">📤 Picked Up</button>'
+    +'</div></div>'
+    +'<div class="ff"><div class="flbl">Notes (optional)</div>'
+    +'<input type="text" class="finput" id="manualNotes" placeholder="e.g. Dropped off new case, picked up broken case"></div>'
+    +'<button class="btn-p" id="manualLogBtn" data-school="'+esc(schoolName)+'" onclick="submitManualLog(this.dataset.school)">Log This Item</button>'
+    +'</div>'
+    +'<div id="manualLogList"></div>';
+  renderManualLogs(schoolName);
+}
+
+var manualAction='deliver';
+function setManualAction(action,btn){
+  manualAction=action;
+  document.querySelectorAll('#manualDeliver,#manualPickup').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function submitManualLog(schoolName){
+  var desc=document.getElementById('manualDesc');
+  var notes=document.getElementById('manualNotes');
+  var descVal=desc?desc.value.trim():'';
+  if(!descVal){showToast('Please enter a description','error');return;}
+  var isCPS=CPS_SCHOOLS.some(function(c){return schoolName.toLowerCase().includes(c.toLowerCase());});
+  var entry={
+    id:Date.now(),
+    serial:'(manual)',
+    description:descVal,
+    notes:notes?notes.value.trim():'',
+    action:manualAction,
+    school:schoolName,
+    isCPS:isCPS,
+    manual:true,
+    timestamp:new Date().toISOString(),
+    date:new Date().toLocaleDateString(),
+    time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})
+  };
+  scanLog.unshift(entry);
+  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
+  // Queue CM update
+  queueManualCMUpdate(entry);
+  if(desc)desc.value='';
+  if(notes)notes.value='';
+  showToast((manualAction==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
+  renderManualLogs(schoolName);
+  renderScans();
+}
+
+function renderManualLogs(schoolName){
+  var el=document.getElementById('manualLogList');if(!el)return;
+  var today=new Date().toLocaleDateString();
+  var logs=scanLog.filter(function(s){return s.school===schoolName&&s.date===today&&s.manual;});
+  if(logs.length===0)return;
+  var html='<div class="slbl" style="margin-top:12px">Today\'s Manual Logs</div>';
+  logs.forEach(function(s){
+    html+='<div class="scan-item">'
+      +'<div class="si-top">'
+      +'<div class="si-action '+(s.action==='deliver'?'deliver':'pickup')+'">'+(s.action==='deliver'?'📥':'📤')+'</div>'
+      +'<div class="si-name">'+esc(s.description||s.serial)+'</div>'
+      +'<span class="badge '+(s.action==='deliver'?'b-green':'b-yellow')+'">'+(s.action==='deliver'?'Delivered':'Picked Up')+'</span>'
+      +'</div>'
+      +(s.notes?'<div class="si-meta">'+esc(s.notes)+'</div>':'')
+      +'</div>';
+  });
+  el.innerHTML=html;
+}
+
+async function queueManualCMUpdate(entry){
+  if(!auth.connected)return;
+  try{
+    var custs=await callAIM('SearchCustomers',{LastName:entry.school.split(' ')[0]});
+    var match=(custs.Customers||[]).find(function(c){
+      return c.Name&&c.Name.toLowerCase().includes(entry.school.toLowerCase().split(' ')[0]);
+    });
+    if(!match)return;
+    var cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
+    var openCMs=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+    if(openCMs.length===0)return;
+    // Find best matching CM
+    var bestCM=openCMs.find(function(c){
+      var n=(c.Comments||c.Notes||c.Subject||'').toLowerCase();
+      return n.includes(entry.description.toLowerCase().split(' ')[0]);
+    })||openCMs[0];
+    var ts=getTimestamp();
+    var draftNote;
+    if(entry.action==='deliver'){
+      draftNote=ts+'  Delivered '+entry.description+'.'+(entry.notes?' '+entry.notes+'.':'');
+    } else {
+      draftNote=ts+'  P/U '+entry.description+'.'+(entry.notes?' '+entry.notes+'.':'');
+    }
+    var suggestClose=entry.notes&&(entry.notes.toLowerCase().includes('closing')||entry.notes.toLowerCase().includes('picked up'));
+    var queueItem={
+      id:Date.now(),
+      status:'pending',
+      scan:entry,
+      cm:{pk:bestCM.Pk||bestCM.ID,customerPk:match.Pk,subject:bestCM.Subject||bestCM.Action||'CM',notes:bestCM.Comments||bestCM.Notes||''},
+      instrument:entry.description,
+      draftNote:draftNote,
+      suggestClose:suggestClose,
+      school:entry.school,
+      timestamp:new Date().toISOString()
+    };
+    cmUpdateQueue.unshift(queueItem);
+    saveCMQueue();
+    showToast('CM update queued ✓','success');
+  }catch(e){}
 }
 
 function logDeliveryScan(schoolName,action){
@@ -2101,6 +2240,366 @@ function stopScanner(){
   document.getElementById('scannerModal').classList.remove('show');
 }
 
+
+// ── CM UPDATE AGENT ──────────────────────────────────────
+var cmUpdateQueue=[];
+try{cmUpdateQueue=JSON.parse(localStorage.getItem('pmCMQueue')||'[]');}catch(e){}
+
+function saveCMQueue(){
+  try{localStorage.setItem('pmCMQueue',JSON.stringify(cmUpdateQueue.slice(0,200)));}catch(e){}
+  updateCMUpdateBadge();
+}
+
+function toggleShelfCheck(el){
+  el.classList.toggle('checked');
+  el.textContent=el.classList.contains('checked')?'✓':'';
+}
+
+function updateCMUpdateBadge(){
+  var el=document.getElementById('cmUpdateCount');
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  if(el)el.textContent=pending.length;
+}
+
+function getTimestamp(){
+  var now=new Date();
+  var m=String(now.getMonth()+1).padStart(2,'0');
+  var d=String(now.getDate()).padStart(2,'0');
+  var y=now.getFullYear();
+  var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var day=days[now.getDay()];
+  var h=now.getHours();
+  var min=String(now.getMinutes()).padStart(2,'0');
+  var ap=h>=12?'P':'A';
+  if(h>12)h-=12;if(h===0)h=12;
+  return m+'/'+d+'/'+y+' '+day+' '+h+':'+min+ap+' '+settings.initials;
+}
+
+function draftCMNote(action, serial, cmNotes){
+  // Read existing CM to determine context
+  var notes=(cmNotes||'').toLowerCase();
+  var ts=getTimestamp();
+  var isLoaner=notes.includes('loaner');
+  var isRepair=notes.includes('repair');
+  var isReturn=notes.includes('return');
+  var isUpsize=notes.includes('upsize');
+  var isBow=notes.includes('bow');
+
+  if(action==='deliver'){
+    if(isLoaner&&isRepair)return ts+'  T&D loaner #'+serial+'. Delivered.';
+    if(isLoaner)return ts+'  T&D loaner #'+serial+'.';
+    if(isRepair)return ts+'  Delivered repaired instrument #'+serial+'.';
+    if(isUpsize)return ts+'  Delivered upsize #'+serial+'.';
+    if(isBow)return ts+'  Delivered replacement bow.';
+    return ts+'  Delivered #'+serial+'.';
+  } else {
+    if(isLoaner&&isRepair)return ts+'  P/U repair #'+serial+' for service. T&D loaner noted separately.';
+    if(isRepair)return ts+'  P/U repair #'+serial+' for service.';
+    if(isLoaner)return ts+'  P/U loaner #'+serial+'.';
+    if(isReturn)return ts+'  P/U return #'+serial+'.';
+    if(isBow)return ts+'  P/U bow for exchange.';
+    return ts+'  P/U #'+serial+'.';
+  }
+}
+
+function shouldClose(action, cmNotes){
+  var notes=(cmNotes||'').toLowerCase();
+  if(action==='deliver'){
+    // Close if this was a repair delivery with loaner pickup
+    if(notes.includes('repair')&&notes.includes('loaner'))return true;
+    // Close if this is a bow replacement waiting on old bow
+    if(notes.includes('bow'))return false;
+    return false;
+  } else {
+    // Close if picking up a loaner that was part of a completed repair
+    if(notes.includes('repair')&&notes.includes('loaner'))return true;
+    // Close if return
+    if(notes.includes('return'))return true;
+    return false;
+  }
+}
+
+async function queueCMUpdate(scanEntry){
+  if(!auth.connected)return;
+  if(scanEntry.school==='(No school)')return;
+  try{
+    // Look up the serial in AIM
+    var instData=await callAIM('SerialDetail',{SerialNumber:scanEntry.serial});
+    var inst=instData.SerialInfo||instData;
+    var customerPk=inst.CustomerPk||inst.CustomerID||'';
+    var instDesc=inst.Description||inst.Name||scanEntry.serial;
+    if(!customerPk)return;
+
+    // Find open CMs for this customer
+    var cmData=await callAIM('SearchContactManagement',{CustomerID:customerPk});
+    var cms=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+    if(cms.length===0)return;
+
+    // Match best CM
+    var bestCM=cms[0];
+    var draftNote=draftCMNote(scanEntry.action,scanEntry.serial,bestCM.Comments||bestCM.Notes||'');
+    var suggestClose=shouldClose(scanEntry.action,bestCM.Comments||bestCM.Notes||'');
+
+    var queueItem={
+      id:Date.now(),
+      status:'pending',
+      scan:scanEntry,
+      cm:{pk:bestCM.Pk||bestCM.ID,customerPk:customerPk,subject:bestCM.Subject||bestCM.Action||'CM',notes:bestCM.Comments||bestCM.Notes||''},
+      instrument:instDesc,
+      draftNote:draftNote,
+      suggestClose:suggestClose,
+      school:scanEntry.school,
+      timestamp:new Date().toISOString()
+    };
+    cmUpdateQueue.unshift(queueItem);
+    saveCMQueue();
+    showToast('CM update queued for '+instDesc,'success');
+  }catch(e){
+    // Silent fail - scan still logged even if CM match fails
+  }
+}
+
+function showCMUpdates(){
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  var existing=document.getElementById('cmUpdatesPanel');
+  if(existing)existing.remove();
+
+  var panel=document.createElement('div');
+  panel.id='cmUpdatesPanel';
+  panel.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto;padding-bottom:80px';
+
+  var html='<div class="hdr" style="position:sticky;top:0">'
+    '<button class="hdr-back" onclick="document.getElementById(&quot;cmUpdatesPanel&quot;).remove()">←</button>'
+    +'<div class="hdr-title">📋 CM Updates ('+pending.length+')</div>'
+    +'</div>'
+    +'<div style="padding:14px;display:flex;flex-direction:column;gap:10px">';
+
+  if(pending.length===0){
+    html+='<div class="empty-state"><div class="eicon">✓</div><div class="etxt">No pending CM updates</div></div>';
+  } else {
+    // Group by school
+    var bySchool={};
+    pending.forEach(function(q){
+      if(!bySchool[q.school])bySchool[q.school]=[];
+      bySchool[q.school].push(q);
+    });
+
+    Object.keys(bySchool).forEach(function(school){
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
+      bySchool[school].forEach(function(q){
+        html+='<div class="cmi open" id="queue-'+q.id+'">'
+          +'<div class="cmi-top">'
+          +'<div class="cmi-subj">'+esc(q.instrument)+' — '+esc(q.cm.subject)+'</div>'
+          +'<span class="badge '+(q.scan.action==='deliver'?'b-green':'b-yellow')+'">'+(q.scan.action==='deliver'?'📥 Deliver':'📤 Pickup')+'</span>'
+          +'</div>'
+          +'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Serial: '+esc(q.scan.serial)+'</div>'
+          +'<div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Proposed CM Update</div>'
+          +'<textarea id="draft-'+q.id+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:70px;outline:none">'+esc(q.draftNote)+'</textarea>'
+          +(q.suggestClose?'<div style="font-size:12px;color:var(--green);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
+          +'<div class="cmi-acts" style="margin-top:10px">'
+          +'<button class="cmbtn primary" onclick="approveCMUpdate(this.dataset.id)" data-id="'+q.id+'">✓ Approve</button>'
+          +(q.suggestClose?'<button class="cmbtn green" onclick="approveCMUpdate(this.dataset.id,true)" data-id="'+q.id+'">✓ Approve &amp; Close</button>':'')
+          +'<button class="cmbtn red" onclick="skipCMUpdate(this.dataset.id)" data-id="'+q.id+'">Skip</button>'
+          +'</div>'
+          +'</div>';
+      });
+    });
+
+    html+='<button class="btn-p" onclick="approveAllCMUpdates()" style="margin-top:12px">Submit All Approved</button>';
+  }
+
+  html+='</div>';
+  panel.innerHTML=html;
+  document.body.appendChild(panel);
+}
+
+async function approveCMUpdate(queueId, andClose){
+  var q=cmUpdateQueue.find(function(x){return String(x.id)===String(queueId);});
+  if(!q)return;
+  var draftEl=document.getElementById('draft-'+queueId);
+  var note=draftEl?draftEl.value.trim():q.draftNote;
+  var btn=document.querySelector('#queue-'+queueId+' .cmbtn.primary');
+  if(btn){btn.textContent='Saving...';btn.disabled=true;}
+  try{
+    var existing=await callAIM('SearchContactManagement',{CustomerID:q.cm.customerPk});
+    var cms=existing.ContactRecords||existing.Records||[];
+    var cm=cms.find(function(c){return String(c.Pk||c.ID||c.RefNum)===String(q.cm.pk);});
+    var existingNotes=cm?(cm.Comments||cm.Notes||''):'';
+    var updated=existingNotes+'\n\n'+note;
+    await callAIM('EditContactRecord',{Pk:q.cm.pk,CustomerID:q.cm.customerPk,Comments:updated});
+    if(andClose){
+      await callAIM('EditContactRecord',{Pk:q.cm.pk,CustomerID:q.cm.customerPk,Closed:true});
+    }
+    q.status='approved';
+    saveCMQueue();
+    var el=document.getElementById('queue-'+queueId);
+    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--green);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
+    showToast('CM updated ✓','success');
+  }catch(err){
+    showToast('Error: '+err.message,'error');
+    if(btn){btn.textContent='✓ Approve';btn.disabled=false;}
+  }
+}
+
+function skipCMUpdate(queueId){
+  var q=cmUpdateQueue.find(function(x){return String(x.id)===String(queueId);});
+  if(q)q.status='skipped';
+  saveCMQueue();
+  var el=document.getElementById('queue-'+queueId);
+  if(el)el.style.display='none';
+  showToast('Skipped','');
+}
+
+async function approveAllCMUpdates(){
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  if(pending.length===0){showToast('No pending updates','');return;}
+  showToast('Submitting '+pending.length+' updates...','');
+  for(var i=0;i<pending.length;i++){
+    await approveCMUpdate(pending[i].id,pending[i].suggestClose);
+  }
+}
+
+// ── MORNING BRIEFING AGENT ──────────────────────────────
+async function runMorningBriefing(){
+  var content=document.getElementById('briefingContent');
+  if(!content)return;
+  content.innerHTML='<div class="loading-state"><div class="spinner"></div><div>Building your morning briefing...</div></div>';
+
+  if(!auth.connected){
+    content.innerHTML='<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to AIM first</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>';
+    return;
+  }
+  if(!routeData){
+    content.innerHTML='<div class="empty-state"><div class="etxt">Route not loaded yet</div></div>';
+    return;
+  }
+
+  var html='<div class="day-banner"><div class="day-label">Morning Briefing</div><div class="day-name" style="font-size:20px">'+routeData.today+'</div></div>';
+  var shelfItems=[];
+  var emailDrafts=[];
+  var asNeededDrafts=[];
+  var flags=[];
+  var twoWeeksAgo=new Date(Date.now()-14*24*60*60*1000);
+
+  var schools=routeData.schools;
+  for(var i=0;i<schools.length;i++){
+    var school=schools[i];
+    try{
+      var custs=await callAIM('SearchCustomers',{LastName:school.name.split(' ')[0]});
+      var match=(custs.Customers||[]).find(function(c){return c.Name&&c.Name.toLowerCase().includes(school.name.toLowerCase().split(' ')[0]);});
+      if(!match)continue;
+
+      var cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
+      var openCMs=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+
+      if(openCMs.length>0){
+        // Build shelf items from open CMs
+        openCMs.forEach(function(cm){
+          var subj=cm.Subject||cm.Action||'Item';
+          var notes=(cm.Comments||cm.Notes||'').toLowerCase();
+          var alreadyScanned=scanLog.some(function(s){return s.school===school.name&&s.date===new Date().toLocaleDateString();});
+          if(!alreadyScanned){
+            shelfItems.push({school:school.name,description:subj,cm:cm});
+          }
+          // Flag old estimates
+          var cmDate=new Date(cm.Date||cm.EntryDate||0);
+          if(notes.includes('estimate')&&cmDate<new Date(Date.now()-7*24*60*60*1000)){
+            flags.push({school:school.name,issue:'Estimate pending '+Math.floor((Date.now()-cmDate)/86400000)+' days',cm:cm});
+          }
+          // Flag long-running loaners
+          if(notes.includes('loaner')&&cmDate<new Date(Date.now()-30*24*60*60*1000)){
+            flags.push({school:school.name,issue:'Loaner out '+Math.floor((Date.now()-cmDate)/86400000)+' days',cm:cm});
+          }
+        });
+
+        // Build email draft
+        var deliveries=openCMs.filter(function(c){var n=(c.Comments||c.Notes||'').toLowerCase();return n.includes('deliver')||n.includes('loaner')||n.includes('repair');});
+        var pickups=openCMs.filter(function(c){var n=(c.Comments||c.Notes||'').toLowerCase();return n.includes('pickup')||n.includes('p/u')||n.includes('return');});
+        if(deliveries.length>0||pickups.length>0){
+          var delivList=deliveries.map(function(c){return c.Subject||c.Action||'item';}).join(', ');
+          var pickList=pickups.map(function(c){return c.Subject||c.Action||'item';}).join(', ');
+          var dirs=DIRECTORS.filter(function(d){return d.school===school.name||(school.name&&d.school&&school.name.toLowerCase().includes(d.school.toLowerCase().split(' ')[0]));}).filter(function(d){return d.role!=='CH';});
+          var dirEmail=dirs.length>0?dirs[0].email:'';
+          var dirFN=dirs.length>0?dirs[0].name.split(' ')[0]:'';
+          var draftParts=['Hi'+(dirFN?' '+dirFN:'')+',',''];
+          draftParts.push('I will be stopping by '+school.name+' today.');
+          if(delivList)draftParts.push('','I will be bringing: '+delivList+'.');
+          if(pickList)draftParts.push('','I plan to pick up: '+pickList+'.');
+          draftParts.push('','Let me know if there is anything else you need. See you soon!','','Ted, PM Music Center');
+          var draft=draftParts.join('\n');
+          emailDrafts.push({school:school.name,to:dirEmail,draft:draft,dirs:dirs});
+        }
+      } else {
+        // As-needed school - nothing today
+        var dirs2=DIRECTORS.filter(function(d){return d.school===school.name||(school.name&&d.school&&school.name.toLowerCase().includes(d.school.toLowerCase().split(' ')[0]));}).filter(function(d){return d.role!=='CH';});
+        if(dirs2.length>0&&dirs2[0].email){
+          var nd=['Hi '+dirs2[0].name.split(' ')[0]+',','','I do not have anything scheduled for '+school.name+' today, but I am available if you need anything. Just let me know!','','Ted, PM Music Center'];
+          asNeededDrafts.push({school:school.name,to:dirs2[0].email,draft:nd.join('\n')});
+        }
+      }
+    }catch(e){}
+  }
+
+  // ── SHELF CHECKLIST ──
+  html+='<div class="slbl">📦 Shelf Checklist ('+shelfItems.length+')</div>';
+  if(shelfItems.length===0){
+    html+='<div class="card" style="color:var(--green);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
+  } else {
+    shelfItems.forEach(function(item,i){
+      html+='<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px">'
+        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--green);font-weight:700;flex-shrink:0"></div>'
+        +'<div><div style="font-weight:600;font-size:14px">'+esc(item.description)+'</div><div style="font-size:12px;color:var(--muted)">'+esc(item.school)+'</div></div>'
+        +'</div>';
+    });
+  }
+
+  // ── EMAIL DRAFTS ──
+  if(emailDrafts.length>0){
+    html+='<div class="slbl" style="margin-top:8px">✉️ Pre-Route Emails ('+emailDrafts.length+')</div>';
+    emailDrafts.forEach(function(d,di){
+      var dId='bDraft'+di;
+      var mailHref=d.to?'mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center - '+d.school)+'&body='+encodeURIComponent(d.draft):'';
+      html+='<div class="card">'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<textarea id="'+dId+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:100px;outline:none">'+esc(d.draft)+'</textarea>'
+        +'<div style="display:flex;gap:7px;margin-top:8px">'
+        +(mailHref?'<a class="dact email" href="'+mailHref+'">✉️ Send</a>':'')
+        +'<button class="dact" data-target="'+dId+'" onclick="var ta=document.getElementById(this.dataset.target);if(ta)copyText(ta.value)">Copy</button>'
+        +'</div>'
+        +'</div>';
+    });
+  }
+
+  // ── AS-NEEDED ──
+  if(asNeededDrafts.length>0){
+    html+='<div class="slbl" style="margin-top:8px">📭 Nothing Today ('+asNeededDrafts.length+')</div>';
+    asNeededDrafts.forEach(function(d,di){
+      var ndId2='nd2Draft'+di;
+      var nm2='mailto:'+d.to+'?subject='+encodeURIComponent('PM Music - '+d.school)+'&body='+encodeURIComponent(d.draft);
+      html+='<div class="card"><div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<textarea id="'+ndId2+'" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
+        +'<div style="display:flex;gap:7px;margin-top:8px">'
+        +(d.to?'<a class="dact email" href="'+nm2+'">✉️ Send</a>':'')
+        +'<button class="dact" data-t="'+ndId2+'" onclick="var t=document.getElementById(this.dataset.t);if(t)copyText(t.value)">Copy</button>'
+        +'</div></div>';
+    });
+  }
+
+  // ── FLAGS ──
+  if(flags.length>0){
+    html+='<div class="slbl" style="margin-top:8px">⚠️ Needs Attention ('+flags.length+')</div>';
+    flags.forEach(function(f){
+      html+='<div class="card" style="border-left:3px solid var(--red)">'
+        +'<div style="font-weight:600;font-size:13px;color:var(--red)">'+esc(f.school)+'</div>'
+        +'<div style="font-size:13px;color:var(--text2);margin-top:3px">'+esc(f.issue)+'</div>'
+        +'</div>';
+    });
+  }
+
+  content.innerHTML=html;
+  updateCMUpdateBadge();
+}
+
 // ── AIM AUTH ──────────────────────────────────────────────
 async function autoConnect(){
   try{
@@ -2331,6 +2830,367 @@ function stopScanner(){
   if(codeReader)try{codeReader.reset();}catch(e){}
   scannerActive=false;
   document.getElementById('scannerModal').classList.remove('show');
+}
+
+
+// ── CM UPDATE AGENT ──────────────────────────────────────
+var cmUpdateQueue=[];
+try{cmUpdateQueue=JSON.parse(localStorage.getItem('pmCMQueue')||'[]');}catch(e){}
+
+function saveCMQueue(){
+  try{localStorage.setItem('pmCMQueue',JSON.stringify(cmUpdateQueue.slice(0,200)));}catch(e){}
+  updateCMUpdateBadge();
+}
+
+function toggleShelfCheck(el){
+  el.classList.toggle('checked');
+  el.textContent=el.classList.contains('checked')?'✓':'';
+}
+
+function updateCMUpdateBadge(){
+  var el=document.getElementById('cmUpdateCount');
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  if(el)el.textContent=pending.length;
+}
+
+function getTimestamp(){
+  var now=new Date();
+  var m=String(now.getMonth()+1).padStart(2,'0');
+  var d=String(now.getDate()).padStart(2,'0');
+  var y=now.getFullYear();
+  var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var day=days[now.getDay()];
+  var h=now.getHours();
+  var min=String(now.getMinutes()).padStart(2,'0');
+  var ap=h>=12?'P':'A';
+  if(h>12)h-=12;if(h===0)h=12;
+  return m+'/'+d+'/'+y+' '+day+' '+h+':'+min+ap+' '+settings.initials;
+}
+
+function draftCMNote(action, serial, cmNotes){
+  // Read existing CM to determine context
+  var notes=(cmNotes||'').toLowerCase();
+  var ts=getTimestamp();
+  var isLoaner=notes.includes('loaner');
+  var isRepair=notes.includes('repair');
+  var isReturn=notes.includes('return');
+  var isUpsize=notes.includes('upsize');
+  var isBow=notes.includes('bow');
+
+  if(action==='deliver'){
+    if(isLoaner&&isRepair)return ts+'  T&D loaner #'+serial+'. Delivered.';
+    if(isLoaner)return ts+'  T&D loaner #'+serial+'.';
+    if(isRepair)return ts+'  Delivered repaired instrument #'+serial+'.';
+    if(isUpsize)return ts+'  Delivered upsize #'+serial+'.';
+    if(isBow)return ts+'  Delivered replacement bow.';
+    return ts+'  Delivered #'+serial+'.';
+  } else {
+    if(isLoaner&&isRepair)return ts+'  P/U repair #'+serial+' for service. T&D loaner noted separately.';
+    if(isRepair)return ts+'  P/U repair #'+serial+' for service.';
+    if(isLoaner)return ts+'  P/U loaner #'+serial+'.';
+    if(isReturn)return ts+'  P/U return #'+serial+'.';
+    if(isBow)return ts+'  P/U bow for exchange.';
+    return ts+'  P/U #'+serial+'.';
+  }
+}
+
+function shouldClose(action, cmNotes){
+  var notes=(cmNotes||'').toLowerCase();
+  if(action==='deliver'){
+    // Close if this was a repair delivery with loaner pickup
+    if(notes.includes('repair')&&notes.includes('loaner'))return true;
+    // Close if this is a bow replacement waiting on old bow
+    if(notes.includes('bow'))return false;
+    return false;
+  } else {
+    // Close if picking up a loaner that was part of a completed repair
+    if(notes.includes('repair')&&notes.includes('loaner'))return true;
+    // Close if return
+    if(notes.includes('return'))return true;
+    return false;
+  }
+}
+
+async function queueCMUpdate(scanEntry){
+  if(!auth.connected)return;
+  if(scanEntry.school==='(No school)')return;
+  try{
+    // Look up the serial in AIM
+    var instData=await callAIM('SerialDetail',{SerialNumber:scanEntry.serial});
+    var inst=instData.SerialInfo||instData;
+    var customerPk=inst.CustomerPk||inst.CustomerID||'';
+    var instDesc=inst.Description||inst.Name||scanEntry.serial;
+    if(!customerPk)return;
+
+    // Find open CMs for this customer
+    var cmData=await callAIM('SearchContactManagement',{CustomerID:customerPk});
+    var cms=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+    if(cms.length===0)return;
+
+    // Match best CM
+    var bestCM=cms[0];
+    var draftNote=draftCMNote(scanEntry.action,scanEntry.serial,bestCM.Comments||bestCM.Notes||'');
+    var suggestClose=shouldClose(scanEntry.action,bestCM.Comments||bestCM.Notes||'');
+
+    var queueItem={
+      id:Date.now(),
+      status:'pending',
+      scan:scanEntry,
+      cm:{pk:bestCM.Pk||bestCM.ID,customerPk:customerPk,subject:bestCM.Subject||bestCM.Action||'CM',notes:bestCM.Comments||bestCM.Notes||''},
+      instrument:instDesc,
+      draftNote:draftNote,
+      suggestClose:suggestClose,
+      school:scanEntry.school,
+      timestamp:new Date().toISOString()
+    };
+    cmUpdateQueue.unshift(queueItem);
+    saveCMQueue();
+    showToast('CM update queued for '+instDesc,'success');
+  }catch(e){
+    // Silent fail - scan still logged even if CM match fails
+  }
+}
+
+function showCMUpdates(){
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  var existing=document.getElementById('cmUpdatesPanel');
+  if(existing)existing.remove();
+
+  var panel=document.createElement('div');
+  panel.id='cmUpdatesPanel';
+  panel.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto;padding-bottom:80px';
+
+  var html='<div class="hdr" style="position:sticky;top:0">'
+    '<button class="hdr-back" onclick="document.getElementById(&quot;cmUpdatesPanel&quot;).remove()">←</button>'
+    +'<div class="hdr-title">📋 CM Updates ('+pending.length+')</div>'
+    +'</div>'
+    +'<div style="padding:14px;display:flex;flex-direction:column;gap:10px">';
+
+  if(pending.length===0){
+    html+='<div class="empty-state"><div class="eicon">✓</div><div class="etxt">No pending CM updates</div></div>';
+  } else {
+    // Group by school
+    var bySchool={};
+    pending.forEach(function(q){
+      if(!bySchool[q.school])bySchool[q.school]=[];
+      bySchool[q.school].push(q);
+    });
+
+    Object.keys(bySchool).forEach(function(school){
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
+      bySchool[school].forEach(function(q){
+        html+='<div class="cmi open" id="queue-'+q.id+'">'
+          +'<div class="cmi-top">'
+          +'<div class="cmi-subj">'+esc(q.instrument)+' — '+esc(q.cm.subject)+'</div>'
+          +'<span class="badge '+(q.scan.action==='deliver'?'b-green':'b-yellow')+'">'+(q.scan.action==='deliver'?'📥 Deliver':'📤 Pickup')+'</span>'
+          +'</div>'
+          +'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Serial: '+esc(q.scan.serial)+'</div>'
+          +'<div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Proposed CM Update</div>'
+          +'<textarea id="draft-'+q.id+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:70px;outline:none">'+esc(q.draftNote)+'</textarea>'
+          +(q.suggestClose?'<div style="font-size:12px;color:var(--green);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
+          +'<div class="cmi-acts" style="margin-top:10px">'
+          +'<button class="cmbtn primary" onclick="approveCMUpdate(this.dataset.id)" data-id="'+q.id+'">✓ Approve</button>'
+          +(q.suggestClose?'<button class="cmbtn green" onclick="approveCMUpdate(this.dataset.id,true)" data-id="'+q.id+'">✓ Approve &amp; Close</button>':'')
+          +'<button class="cmbtn red" onclick="skipCMUpdate(this.dataset.id)" data-id="'+q.id+'">Skip</button>'
+          +'</div>'
+          +'</div>';
+      });
+    });
+
+    html+='<button class="btn-p" onclick="approveAllCMUpdates()" style="margin-top:12px">Submit All Approved</button>';
+  }
+
+  html+='</div>';
+  panel.innerHTML=html;
+  document.body.appendChild(panel);
+}
+
+async function approveCMUpdate(queueId, andClose){
+  var q=cmUpdateQueue.find(function(x){return String(x.id)===String(queueId);});
+  if(!q)return;
+  var draftEl=document.getElementById('draft-'+queueId);
+  var note=draftEl?draftEl.value.trim():q.draftNote;
+  var btn=document.querySelector('#queue-'+queueId+' .cmbtn.primary');
+  if(btn){btn.textContent='Saving...';btn.disabled=true;}
+  try{
+    var existing=await callAIM('SearchContactManagement',{CustomerID:q.cm.customerPk});
+    var cms=existing.ContactRecords||existing.Records||[];
+    var cm=cms.find(function(c){return String(c.Pk||c.ID||c.RefNum)===String(q.cm.pk);});
+    var existingNotes=cm?(cm.Comments||cm.Notes||''):'';
+    var updated=existingNotes+'\n\n'+note;
+    await callAIM('EditContactRecord',{Pk:q.cm.pk,CustomerID:q.cm.customerPk,Comments:updated});
+    if(andClose){
+      await callAIM('EditContactRecord',{Pk:q.cm.pk,CustomerID:q.cm.customerPk,Closed:true});
+    }
+    q.status='approved';
+    saveCMQueue();
+    var el=document.getElementById('queue-'+queueId);
+    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--green);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
+    showToast('CM updated ✓','success');
+  }catch(err){
+    showToast('Error: '+err.message,'error');
+    if(btn){btn.textContent='✓ Approve';btn.disabled=false;}
+  }
+}
+
+function skipCMUpdate(queueId){
+  var q=cmUpdateQueue.find(function(x){return String(x.id)===String(queueId);});
+  if(q)q.status='skipped';
+  saveCMQueue();
+  var el=document.getElementById('queue-'+queueId);
+  if(el)el.style.display='none';
+  showToast('Skipped','');
+}
+
+async function approveAllCMUpdates(){
+  var pending=cmUpdateQueue.filter(function(q){return q.status==='pending';});
+  if(pending.length===0){showToast('No pending updates','');return;}
+  showToast('Submitting '+pending.length+' updates...','');
+  for(var i=0;i<pending.length;i++){
+    await approveCMUpdate(pending[i].id,pending[i].suggestClose);
+  }
+}
+
+// ── MORNING BRIEFING AGENT ──────────────────────────────
+async function runMorningBriefing(){
+  var content=document.getElementById('briefingContent');
+  if(!content)return;
+  content.innerHTML='<div class="loading-state"><div class="spinner"></div><div>Building your morning briefing...</div></div>';
+
+  if(!auth.connected){
+    content.innerHTML='<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to AIM first</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>';
+    return;
+  }
+  if(!routeData){
+    content.innerHTML='<div class="empty-state"><div class="etxt">Route not loaded yet</div></div>';
+    return;
+  }
+
+  var html='<div class="day-banner"><div class="day-label">Morning Briefing</div><div class="day-name" style="font-size:20px">'+routeData.today+'</div></div>';
+  var shelfItems=[];
+  var emailDrafts=[];
+  var asNeededDrafts=[];
+  var flags=[];
+  var twoWeeksAgo=new Date(Date.now()-14*24*60*60*1000);
+
+  var schools=routeData.schools;
+  for(var i=0;i<schools.length;i++){
+    var school=schools[i];
+    try{
+      var custs=await callAIM('SearchCustomers',{LastName:school.name.split(' ')[0]});
+      var match=(custs.Customers||[]).find(function(c){return c.Name&&c.Name.toLowerCase().includes(school.name.toLowerCase().split(' ')[0]);});
+      if(!match)continue;
+
+      var cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
+      var openCMs=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+
+      if(openCMs.length>0){
+        // Build shelf items from open CMs
+        openCMs.forEach(function(cm){
+          var subj=cm.Subject||cm.Action||'Item';
+          var notes=(cm.Comments||cm.Notes||'').toLowerCase();
+          var alreadyScanned=scanLog.some(function(s){return s.school===school.name&&s.date===new Date().toLocaleDateString();});
+          if(!alreadyScanned){
+            shelfItems.push({school:school.name,description:subj,cm:cm});
+          }
+          // Flag old estimates
+          var cmDate=new Date(cm.Date||cm.EntryDate||0);
+          if(notes.includes('estimate')&&cmDate<new Date(Date.now()-7*24*60*60*1000)){
+            flags.push({school:school.name,issue:'Estimate pending '+Math.floor((Date.now()-cmDate)/86400000)+' days',cm:cm});
+          }
+          // Flag long-running loaners
+          if(notes.includes('loaner')&&cmDate<new Date(Date.now()-30*24*60*60*1000)){
+            flags.push({school:school.name,issue:'Loaner out '+Math.floor((Date.now()-cmDate)/86400000)+' days',cm:cm});
+          }
+        });
+
+        // Build email draft
+        var deliveries=openCMs.filter(function(c){var n=(c.Comments||c.Notes||'').toLowerCase();return n.includes('deliver')||n.includes('loaner')||n.includes('repair');});
+        var pickups=openCMs.filter(function(c){var n=(c.Comments||c.Notes||'').toLowerCase();return n.includes('pickup')||n.includes('p/u')||n.includes('return');});
+        if(deliveries.length>0||pickups.length>0){
+          var delivList=deliveries.map(function(c){return c.Subject||c.Action||'item';}).join(', ');
+          var pickList=pickups.map(function(c){return c.Subject||c.Action||'item';}).join(', ');
+          var dirs=DIRECTORS.filter(function(d){return d.school===school.name||(school.name&&d.school&&school.name.toLowerCase().includes(d.school.toLowerCase().split(' ')[0]));}).filter(function(d){return d.role!=='CH';});
+          var dirEmail=dirs.length>0?dirs[0].email:'';
+          var dirFN=dirs.length>0?dirs[0].name.split(' ')[0]:'';
+          var draftParts=['Hi'+(dirFN?' '+dirFN:'')+',',''];
+          draftParts.push('I will be stopping by '+school.name+' today.');
+          if(delivList)draftParts.push('','I will be bringing: '+delivList+'.');
+          if(pickList)draftParts.push('','I plan to pick up: '+pickList+'.');
+          draftParts.push('','Let me know if there is anything else you need. See you soon!','','Ted, PM Music Center');
+          var draft=draftParts.join('\n');
+          emailDrafts.push({school:school.name,to:dirEmail,draft:draft,dirs:dirs});
+        }
+      } else {
+        // As-needed school - nothing today
+        var dirs2=DIRECTORS.filter(function(d){return d.school===school.name||(school.name&&d.school&&school.name.toLowerCase().includes(d.school.toLowerCase().split(' ')[0]));}).filter(function(d){return d.role!=='CH';});
+        if(dirs2.length>0&&dirs2[0].email){
+          var nd=['Hi '+dirs2[0].name.split(' ')[0]+',','','I do not have anything scheduled for '+school.name+' today, but I am available if you need anything. Just let me know!','','Ted, PM Music Center'];
+          asNeededDrafts.push({school:school.name,to:dirs2[0].email,draft:nd.join('\n')});
+        }
+      }
+    }catch(e){}
+  }
+
+  // ── SHELF CHECKLIST ──
+  html+='<div class="slbl">📦 Shelf Checklist ('+shelfItems.length+')</div>';
+  if(shelfItems.length===0){
+    html+='<div class="card" style="color:var(--green);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
+  } else {
+    shelfItems.forEach(function(item,i){
+      html+='<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px">'
+        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--green);font-weight:700;flex-shrink:0"></div>'
+        +'<div><div style="font-weight:600;font-size:14px">'+esc(item.description)+'</div><div style="font-size:12px;color:var(--muted)">'+esc(item.school)+'</div></div>'
+        +'</div>';
+    });
+  }
+
+  // ── EMAIL DRAFTS ──
+  if(emailDrafts.length>0){
+    html+='<div class="slbl" style="margin-top:8px">✉️ Pre-Route Emails ('+emailDrafts.length+')</div>';
+    emailDrafts.forEach(function(d,di){
+      var dId='bDraft'+di;
+      var mailHref=d.to?'mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center - '+d.school)+'&body='+encodeURIComponent(d.draft):'';
+      html+='<div class="card">'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<textarea id="'+dId+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:100px;outline:none">'+esc(d.draft)+'</textarea>'
+        +'<div style="display:flex;gap:7px;margin-top:8px">'
+        +(mailHref?'<a class="dact email" href="'+mailHref+'">✉️ Send</a>':'')
+        +'<button class="dact" data-target="'+dId+'" onclick="var ta=document.getElementById(this.dataset.target);if(ta)copyText(ta.value)">Copy</button>'
+        +'</div>'
+        +'</div>';
+    });
+  }
+
+  // ── AS-NEEDED ──
+  if(asNeededDrafts.length>0){
+    html+='<div class="slbl" style="margin-top:8px">📭 Nothing Today ('+asNeededDrafts.length+')</div>';
+    asNeededDrafts.forEach(function(d){
+      html+='<div class="card">'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<div style="font-size:12px;color:var(--text2);margin-bottom:8px">'+esc(d.draft)+'</div>'
+        +'<div style="display:flex;gap:7px">'
+        +(d.to?'<a class="dact email" href="mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center — '+d.school)+'&body='+encodeURIComponent(d.draft)+'">✉️ Send</a>':'')
+        +'<button class="dact" onclick="copyText(''+d.draft.replace(/'/g,'\'').replace(/
+/g,'\n')+'')">Copy</button>'
+        +'</div>'
+        +'</div>';
+    });
+  }
+
+  // ── FLAGS ──
+  if(flags.length>0){
+    html+='<div class="slbl" style="margin-top:8px">⚠️ Needs Attention ('+flags.length+')</div>';
+    flags.forEach(function(f){
+      html+='<div class="card" style="border-left:3px solid var(--red)">'
+        +'<div style="font-weight:600;font-size:13px;color:var(--red)">'+esc(f.school)+'</div>'
+        +'<div style="font-size:13px;color:var(--text2);margin-top:3px">'+esc(f.issue)+'</div>'
+        +'</div>';
+    });
+  }
+
+  content.innerHTML=html;
+  updateCMUpdateBadge();
 }
 
 // ── AIM AUTH ──────────────────────────────────────────────
