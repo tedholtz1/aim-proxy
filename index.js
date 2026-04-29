@@ -159,10 +159,12 @@ app.post('/email-photo', express.raw({ type: '*/*', limit: '10mb' }), async func
     if (!to) { res.status(400).json({ error: 'No recipient' }); return; }
 
     // Build Resend API request
+    // Until domain is verified, send to the resend account email
+    var resendAccountEmail = process.env.RESEND_TEST_EMAIL || to;
     var emailPayload = {
       from: 'PM Music Field Rep <onboarding@resend.dev>',
-      to: [to],
-      subject: subject,
+      to: [resendAccountEmail],
+      subject: subject + ' (forward to ' + to + ')',
       text: emailBody || ('Receipt - ' + subject)
     };
 
