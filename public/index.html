@@ -1980,19 +1980,8 @@ function renderDirectoryList(dirs){
 
 // ── RECEIPT ───────────────────────────────────────────────
 function showReceiptModal(){document.getElementById('receiptModal').classList.add('show');}
-function handleReceipt(event){
-  const file=event.target.files?.[0];if(!file)return;
-  const prev=document.getElementById('receiptPreview');
-  prev.src=URL.createObjectURL(file);prev.style.display='block';
-  document.getElementById('receiptCategorySection').style.display='block';
-}
-function sendReceipt(){
-  const cat=document.getElementById('receiptCategory').value;
-  const subject=`Receipt — ${cat} — PM Music Center`;
-  window.location.href=`mailto:${RICKY}?subject=${encodeURIComponent(subject)}`;
-  showToast('Email app opened ✓','success');
-  setTimeout(()=>hideMBG({target:document.getElementById('receiptModal')},'receiptModal'),800);
-}
+/* old handleReceipt removed */
+/* old sendReceipt removed */
 
 // ── CALENDAR ──────────────────────────────────────────────
 async function loadCalendar(){
@@ -2682,6 +2671,35 @@ function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').repla
   var u8arr=new Uint8Array(n);
   while(n--){u8arr[n]=bstr.charCodeAt(n);}
   return new Blob([u8arr],{type:mime});
+}
+
+function handleReceipt(event){
+  var file=event.target.files?event.target.files[0]:null;
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var canvas=document.createElement('canvas');
+      var maxSize=800;
+      var w=img.width,h=img.height;
+      if(w>h){if(w>maxSize){h=Math.round(h*maxSize/w);w=maxSize;}}
+      else{if(h>maxSize){w=Math.round(w*maxSize/h);h=maxSize;}}
+      canvas.width=w;canvas.height=h;
+      var ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      var compressed=canvas.toDataURL('image/jpeg',0.7);
+      window._receiptDataURL=compressed;
+      var prev=document.getElementById('receiptPreview');
+      if(prev){prev.src=compressed;prev.style.display='block';}
+      var cs=document.getElementById('receiptCategorySection');
+      if(cs)cs.style.display='block';
+      var sz=document.getElementById('receiptSize');
+      if(sz)sz.textContent='Photo ready ('+(Math.round(compressed.length*0.75/1024))+'KB)';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 async function sendReceipt(){
