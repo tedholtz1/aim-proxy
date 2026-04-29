@@ -119,9 +119,24 @@ app.post('/email-photo', upload.single('photo'), async function(req, res) {
       return;
     }
     var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: gmailUser, pass: gmailPass }
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: { user: gmailUser, pass: gmailPass },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+      tls: { rejectUnauthorized: false }
     });
+    // Verify connection first
+    try {
+      await transporter.verify();
+      console.log('SMTP connection verified for', gmailUser);
+    } catch(verifyErr) {
+      console.error('SMTP verify failed:', verifyErr.message, verifyErr.code);
+      res.status(500).json({ error: 'SMTP verify failed: ' + verifyErr.message, code: verifyErr.code });
+      return;
+    }
     var mailOptions = {
       from: gmailUser,
       to: to,
