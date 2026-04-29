@@ -3,14 +3,10 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 const path = require('path');
 const { google } = require('googleapis');
-const nodemailer = require('nodemailer');
-const multer = require('multer');
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
-
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5*1024*1024 } });
 
 const AIM_BASE = 'https://active-ewebservice.biz/aeServices30/api';
 const ROUTE_SHEET_ID = '1TPlzM5rPkI2HPKJxkC7zAdkzHxw1bqoOninfb0SS4Xg';
@@ -106,52 +102,95 @@ app.get('/calendar', async function(req, res) {
   }
 });
 
-// Email with photo - multipart form (iOS compatible)
-app.post('/email-photo', upload.single('photo'), async function(req, res) {
+// Email with photo via Resend API
+app.post('/email-photo', express.raw({ type: '*/*', limit: '10mb' }), async function(req, res) {
   try {
-    var to = req.body.to || '';
-    var subject = req.body.subject || 'Receipt';
-    var body = req.body.body || '';
-    var gmailUser = process.env.GMAIL_USER;
-    var gmailPass = process.env.GMAIL_APP_PASSWORD;
-    if (!gmailUser || !gmailPass) {
-      res.status(500).json({ error: 'Email not configured' });
+    var resendKey = process.env.RESEND_API_KEY;
+    if (!resendKey) {
+      res.status(500).json({ error: 'Email not configured - RESEND_API_KEY missing' });
       return;
     }
-    var transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: { user: gmailUser, pass: gmailPass },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-      tls: { rejectUnauthorized: false }
-    });
-    // Verify connection first
-    try {
-      await transporter.verify();
-      console.log('SMTP connection verified for', gmailUser);
-    } catch(verifyErr) {
-      console.error('SMTP verify failed:', verifyErr.message, verifyErr.code);
-      res.status(500).json({ error: 'SMTP verify failed: ' + verifyErr.message, code: verifyErr.code });
-      return;
+
+    // Parse multipart form data manually
+    var contentType = req.headers['content-type'] || '';
+    var body = req.body;
+    var to = '';
+    var subject = 'Receipt';
+    var emailBody = '';
+    var photoBase64 = '';
+    var photoMime = 'image/jpeg';
+
+    if (contentType.includes('multipart/form-data')) {
+      // Parse boundary
+      var boundary = contentType.split('boundary=')[1];
+      if (boundary) {
+        var rawStr = body.toString('binary');
+        var parts = rawStr.split('--' + boundary);
+        parts.forEach(function(part) {
+          if (part.includes('name="to"')) {
+            to = part.split('\r\n\r\n')[1].replace(/\r\n--$/, '').trim();
+          } else if (part.includes('name="subject"')) {
+            subject = part.split('\r\n\r\n')[1].replace(/\r\n--$/, '').trim();
+          } else if (part.includes('name="body"')) {
+            emailBody = part.split('\r\n\r\n')[1].replace(/\r\n--$/, '').trim();
+          } else if (part.includes('name="photo"')) {
+            var mimeMatch = part.match(/Content-Type: ([^\r\n]+)/);
+            if (mimeMatch) photoMime = mimeMatch[1].trim();
+            var dataStart = part.indexOf('\r\n\r\n') + 4;
+            var dataEnd = part.lastIndexOf('\r\n');
+            if (dataStart > 3 && dataEnd > dataStart) {
+              var rawBytes = part.substring(dataStart, dataEnd);
+              photoBase64 = Buffer.from(rawBytes, 'binary').toString('base64');
+            }
+          }
+        });
+      }
+    } else if (contentType.includes('application/json')) {
+      var parsed = JSON.parse(body.toString());
+      to = parsed.to || '';
+      subject = parsed.subject || 'Receipt';
+      emailBody = parsed.body || '';
+      if (parsed.attachments && parsed.attachments[0]) {
+        photoBase64 = parsed.attachments[0].data || '';
+        photoMime = parsed.attachments[0].contentType || 'image/jpeg';
+      }
     }
-    var mailOptions = {
-      from: gmailUser,
-      to: to,
+
+    if (!to) { res.status(400).json({ error: 'No recipient' }); return; }
+
+    // Build Resend API request
+    var emailPayload = {
+      from: 'PM Music Field Rep <onboarding@resend.dev>',
+      to: [to],
       subject: subject,
-      text: body
+      text: emailBody || ('Receipt - ' + subject)
     };
-    if (req.file) {
-      mailOptions.attachments = [{
+
+    if (photoBase64) {
+      emailPayload.attachments = [{
         filename: 'receipt.jpg',
-        content: req.file.buffer,
-        contentType: req.file.mimetype || 'image/jpeg'
+        content: photoBase64
       }];
     }
-    await transporter.sendMail(mailOptions);
-    res.json({ success: true });
+
+    var resendResp = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + resendKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailPayload)
+    });
+
+    var resendData = await resendResp.json();
+    console.log('Resend response:', JSON.stringify(resendData));
+
+    if (resendData.id) {
+      res.json({ success: true, id: resendData.id });
+    } else {
+      res.status(500).json({ error: resendData.message || JSON.stringify(resendData) });
+    }
+
   } catch (err) {
     console.error('Email-photo error:', err.message);
     res.status(500).json({ error: err.message });
