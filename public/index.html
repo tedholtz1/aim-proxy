@@ -2667,9 +2667,7 @@ function showToast(msg,type=''){
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
 }
 function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-</script>
-</body>
-</html>function dataURLtoBlob(dataURL){
+function dataURLtoBlob(dataURL){
   var arr=dataURL.split(',');
   var mime=arr[0].match(/:(.*?);/)[1];
   var bstr=atob(arr[1]);
@@ -3189,16 +3187,15 @@ async function runMorningBriefing(){
   // ── AS-NEEDED ──
   if(asNeededDrafts.length>0){
     html+='<div class="slbl" style="margin-top:8px">📭 Nothing Today ('+asNeededDrafts.length+')</div>';
-    asNeededDrafts.forEach(function(d){
+    asNeededDrafts.forEach(function(d,dxi){
+      var axId='ax'+dxi;
       html+='<div class="card">'
         +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
-        +'<div style="font-size:12px;color:var(--text2);margin-bottom:8px">'+esc(d.draft)+'</div>'
-        +'<div style="display:flex;gap:7px">'
-        +(d.to?'<a class="dact email" href="mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center — '+d.school)+'&body='+encodeURIComponent(d.draft)+'">✉️ Send</a>':'')
-        +'<button class="dact" onclick="copyText(''+d.draft.replace(/'/g,'\'').replace(/
-/g,'\n')+'')">Copy</button>'
-        +'</div>'
-        +'</div>';
+        +'<textarea id="'+axId+'" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
+        +'<div style="display:flex;gap:7px;margin-top:8px">'
+        +(d.to?'<a class="dact email" href="mailto:'+d.to+'?subject='+encodeURIComponent('PM Music - '+d.school)+'&body='+encodeURIComponent(d.draft)+'">✉️ Send</a>':'')
+        +'<button class="dact" data-ax="'+axId+'" onclick="var t=document.getElementById(this.dataset.ax);if(t)copyText(t.value)">Copy</button>'
+        +'</div></div>';
     });
   }
 
