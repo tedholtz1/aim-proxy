@@ -730,7 +730,7 @@ html,body{
     <div style="display:flex;gap:7px;flex-wrap:wrap">
       <button id="filterOpen" class="dtab active" onclick="setCMFilter('open',this)">Open</button>
       <button id="filterAll" class="dtab" onclick="setCMFilter('all',this)">All</button>
-      <button class="dtab" style="background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow)" onclick="showCMUpdates()" id="cmUpdatesBtn">📋 CM Updates <span id="cmUpdateCount" style="background:var(--yellow);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">0</span></button>
+      <button class="dtab" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)" onclick="showCMUpdates()" id="cmUpdatesBtn">📋 CM Updates <span id="cmUpdateCount" style="background:var(--amber);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">0</span></button>
     </div>
     <div id="cmsBySchool"><div class="loading-state"><div class="spinner"></div></div></div>
     <button class="btn-p" onclick="toggleNewCMForm()" id="newCMToggleBtn">+ New CM</button>
@@ -740,7 +740,7 @@ html,body{
         <div class="ff"><div class="flbl">School</div>
         <div style="position:relative">
           <input type="text" class="finput" id="cmSchoolInput" placeholder="Type school name..." autocomplete="off" oninput="filterSchoolDropdown(this.value,'cmSchoolList','cmSchoolInput')" onfocus="filterSchoolDropdown(this.value,'cmSchoolList','cmSchoolInput')">
-          <div id="cmSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--shm)"></div>
+          <div id="cmSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--sh-md)"></div>
         </div>
         <input type="hidden" id="cmSchool">
         </div>
@@ -836,7 +836,7 @@ html,body{
   </div>
   <div class="cnt" id="shelvesContent">
     <div class="card">
-      <div style="font-size:15px;font-weight:700;color:var(--pm-blue);margin-bottom:8px">📦 Shelf Checker</div>
+      <div style="font-size:15px;font-weight:700;color:var(--pm);margin-bottom:8px">📦 Shelf Checker</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.6">Shows items expected on your shelves based on CMs and invoices from the past two weeks, sorted by day. Will activate fully with live AIM data.</div>
     </div>
     <div class="dtabs" id="shelvesTabs">
@@ -866,9 +866,9 @@ html,body{
       <div class="ftitle" style="font-size:14px;margin-bottom:10px">📦 Scan Without School</div>
       <div style="display:flex;gap:8px">
         <input type="text" class="finput" id="standaloneScanInput" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
-        <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('standaloneScanInput').value=v;})">📷</button>
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('deliver')">📥 Deliver</button>
-        <button style="background:var(--yellow);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('pickup')">📤 Pick Up</button>
+        <button style="background:var(--pm);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('standaloneScanInput').value=v;})">📷</button>
+        <button style="background:var(--emerald);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('deliver')">📥 Deliver</button>
+        <button style="background:var(--amber);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('pickup')">📤 Pick Up</button>
       </div>
     </div>
     <div id="scansList"></div>
@@ -888,7 +888,7 @@ html,body{
         <div class="flbl">School</div>
         <div style="position:relative">
           <input type="text" class="finput" id="noteSchoolInput" placeholder="Type school name..." autocomplete="off" oninput="filterSchoolDropdown(this.value,'noteSchoolList','noteSchoolInput')" onfocus="filterSchoolDropdown(this.value,'noteSchoolList','noteSchoolInput')">
-          <div id="noteSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--shm)"></div>
+          <div id="noteSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--sh-md)"></div>
         </div>
         <input type="hidden" id="noteSchool">
       </div>
@@ -944,7 +944,7 @@ html,body{
       </div>
       <div class="iitem">
         <div class="ilbl">Auto-connect</div>
-        <div class="ival" style="color:var(--green)">Enabled</div>
+        <div class="ival" style="color:var(--emerald)">Enabled</div>
       </div>
     </div>
     <div class="slbl">Security</div>
@@ -999,14 +999,14 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">⚡ Connect to AIM</div>
     <div class="mfield"><div class="mlbl">API Key</div><input type="password" class="minput" id="mApiKey"></div>
     <div class="mfield"><div class="mlbl">Username</div><input type="text" class="minput" id="mUser"></div>
     <div class="mfield"><div class="mlbl">Password</div><input type="password" class="minput" id="mPass"></div>
     <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);margin-bottom:12px;cursor:pointer">
-      <input type="checkbox" id="saveCredsCheck" checked style="width:16px;height:16px;accent-color:var(--pm-blue)">Save credentials for auto-connect
+      <input type="checkbox" id="saveCredsCheck" checked style="width:16px;height:16px;accent-color:var(--pm)">Save credentials for auto-connect
     </label>
     <button class="mcbtn" onclick="connectAIM()" id="mConnectBtn">Connect</button>
   </div>
@@ -1017,7 +1017,7 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">📷 Scan Barcode</div>
     <div style="position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px;min-height:240px">
@@ -1026,9 +1026,9 @@ html,body{
       <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.8);font-size:12px;font-weight:600">Align barcode within green box</div>
     </div>
     <div id="scannerStatus" style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:12px">Point camera at barcode</div>
-    <div id="scannerResult" style="display:none;background:var(--green-bg);border:1px solid var(--green-border);border-radius:10px;padding:12px;margin-bottom:12px">
-      <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Scanned</div>
-      <div id="scannerResultText" style="font-size:16px;font-weight:700;color:var(--green);font-family:var(--mono)"></div>
+    <div id="scannerResult" style="display:none;background:var(--emerald-bg);border:1px solid var(--emerald-border);border-radius:10px;padding:12px;margin-bottom:12px">
+      <div style="font-size:11px;color:var(--emerald);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Scanned</div>
+      <div id="scannerResultText" style="font-size:16px;font-weight:700;color:var(--emerald);font-family:var(--mono)"></div>
     </div>
     <button class="mcbtn" id="scannerUseBtn" style="display:none" onclick="useScanResult()">Use This Value</button>
     <button class="btn-s" onclick="stopScanner()">Cancel</button>
@@ -1039,7 +1039,7 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">↗ Transfer CM</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Change day or assign to another rep</div>
@@ -1053,7 +1053,7 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">🔧 Repair Ticket</div>
     <div style="display:flex;gap:7px;margin-bottom:16px">
@@ -1065,11 +1065,11 @@ html,body{
         <div class="mlbl">Scan / Photo Instrument Tag or Enter Serial #</div>
         <div style="display:flex;gap:8px;margin-bottom:8px">
           <input type="text" class="minput" id="rtSerial" placeholder="Serial number" style="flex:1;font-family:var(--mono)" oninput="if(this.value.length>4)lookupSerialForRepair()">
-          <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="openRepairScanner()">📷 Scan</button>
-          <button style="background:var(--pm-blue2);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="lookupSerialForRepair()">Lookup</button>
+          <button style="background:var(--pm);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="openRepairScanner()">📷 Scan</button>
+          <button style="background:var(--pm2);color:#fff;border:none;border-radius:9px;padding:12px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="lookupSerialForRepair()">Lookup</button>
         </div>
         <div style="display:flex;gap:8px">
-          <button style="flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:10px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer" onclick="document.getElementById('rtTagPhoto').click()">📷 Photo Tag</button>
+          <button style="flex:1;background:var(--white);border:1px solid var(--border2);border-radius:9px;padding:10px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer" onclick="document.getElementById('rtTagPhoto').click()">📷 Photo Tag</button>
           <input type="file" id="rtTagPhoto" accept="image/*" capture="environment" style="display:none" onchange="readTagPhoto(event)">
         </div>
       </div>
@@ -1108,10 +1108,10 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">📷 Log Receipt</div>
-    <div style="border:2px dashed var(--border2);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;background:var(--bg)" onclick="document.getElementById('receiptInput').click()">
+    <div style="border:2px dashed var(--border2);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;background:var(--white)" onclick="document.getElementById('receiptInput').click()">
       <div style="font-size:36px;margin-bottom:8px">📸</div>
       <div style="font-size:14px;font-weight:600;color:var(--text2)">Tap to take photo</div>
     </div>
@@ -1138,7 +1138,7 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">👤 Switch Rep View</div>
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -1155,7 +1155,7 @@ html,body{
   <div class="msheet">
     <div style="display:flex;align-items:center;margin-bottom:18px">
     <div style="flex:1;height:4px;max-width:36px;background:var(--border2);border-radius:2px;margin:0 auto 0 0"></div>
-    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--bg);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
+    <button onclick="this.closest('.mbg').classList.remove('show');stopScanner&&stopScanner()" style="background:var(--white);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);flex-shrink:0">✕</button>
   </div>
     <div class="mtitle">🔒 Change PIN</div>
     <div class="mfield"><div class="mlbl">New PIN</div><input type="password" class="minput" id="newPIN" placeholder="4 digits" inputmode="numeric" maxlength="4"></div>
@@ -1513,9 +1513,9 @@ function showScanDelivery(schoolName){
       <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Enter serial # or invoice # for each item being delivered or picked up.</div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <input type="text" class="finput" id="scanSerial" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
-        <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('scanSerial').value=v;})">📷</button>
-        <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Deliver</button>
-        <button style="background:var(--yellow);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','pickup')">📤 Pick Up</button>
+        <button style="background:var(--pm);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('scanSerial').value=v;})">📷</button>
+        <button style="background:var(--emerald);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Deliver</button>
+        <button style="background:var(--amber);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','pickup')">📤 Pick Up</button>
       </div>
       ${isCPS?'<div style="font-size:11px;color:var(--orange);font-weight:600;padding:6px 10px;background:var(--orange-bg);border-radius:8px">CPS — scans will go to office email</div>':''}
     </div>
@@ -1908,7 +1908,7 @@ async function loadTodayCMs(){
       const oc=all.filter(c=>!c.Closed&&!c.IsClosed).length;
       html+=`<div style="margin-bottom:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:13px;font-weight:700;color:var(--pm-blue)">${esc(s.name)}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--pm)">${esc(s.name)}</div>
           ${oc>0?`<span class="badge b-yellow">${oc} open</span>`:''}
         </div>
         ${cms.map(cm=>renderCM(cm,match.Pk)).join('')}
@@ -2091,7 +2091,7 @@ async function lookupSerialForRepair(){
     if(inst.Description)document.getElementById('rtInst').value=inst.Description;
     if(inst.CustomerName)document.getElementById('rtName').value=inst.CustomerName;
     if(inst.CustomerAcct)document.getElementById('rtAcct').value=inst.CustomerAcct;
-    result.innerHTML=`<div style="font-size:12px;color:var(--green);padding:6px 10px;background:var(--green-bg);border-radius:8px;margin-bottom:8px">✓ Found: ${esc(inst.Description||'')} — ${esc(inst.CustomerName||'')}</div>`;
+    result.innerHTML=`<div style="font-size:12px;color:var(--emerald);padding:6px 10px;background:var(--emerald-bg);border-radius:8px;margin-bottom:8px">✓ Found: ${esc(inst.Description||'')} — ${esc(inst.CustomerName||'')}</div>`;
   }catch(e){}
 }
 
@@ -2167,7 +2167,7 @@ function renderScans(){
     var isOpen=openScanDate===date;
     html+='<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:8px">'
       +'<div data-date="'+date+'" onclick="toggleScanDate(this.dataset.date)" style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer">'
-      +'<div style="font-weight:700;font-size:14px;color:var(--pm-blue)">'+date+'</div>'
+      +'<div style="font-weight:700;font-size:14px;color:var(--pm)">'+date+'</div>'
       +'<div style="display:flex;align-items:center;gap:8px">'
       +'<span class="badge b-gray">'+dayScans.length+' scan'+(dayScans.length!==1?'s':'')+'</span>'
       +'<span style="color:var(--muted2);font-size:14px">'+(isOpen?'▲':'▼')+'</span>'
@@ -2181,15 +2181,15 @@ function renderScans(){
           +'<div class="si-name">'+esc(s.description||s.serial)+'</div>'
           +'<span class="badge '+(s.action==='deliver'?'b-green':'b-yellow')+'">'+(s.action==='deliver'?'Delivery':'Pickup')+'</span>'
           +(s.isCPS?'<span class="badge b-orange">CPS</span>':'')
-          +'<button data-sid="'+s.id+'" onclick="deleteScan(this.dataset.sid)" style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--red);cursor:pointer;margin-left:auto">✕</button>'
+          +'<button data-sid="'+s.id+'" onclick="deleteScan(this.dataset.sid)" style="background:var(--rose-bg);border:1px solid var(--rose-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--rose);cursor:pointer;margin-left:auto">✕</button>'
           +'</div>'
           +'<div class="si-meta">'+(s.time||'')+' · '+esc(s.school)+'</div>'
           +'</div>';
       });
             html+='<div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap">'
         +'<button class="dact email" data-d="'+date+'" data-r="nikki" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Nikki</button>'
-        +'<button class="dact" style="border-color:var(--green-border);background:var(--green-bg);color:var(--green)" data-d="'+date+'" data-r="office" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Office</button>'
-        +'<button class="dact" style="border-color:var(--pm-light);background:var(--pm-sky);color:var(--pm-blue2)" data-d="'+date+'" data-r="both" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Both</button>'
+        +'<button class="dact" style="border-color:var(--emerald-border);background:var(--emerald-bg);color:var(--emerald)" data-d="'+date+'" data-r="office" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Office</button>'
+        +'<button class="dact" style="border-color:var(--pm-mist);background:var(--pm-sky);color:var(--pm2)" data-d="'+date+'" data-r="both" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Both</button>'
         +'</div></div>';
     }
     html+='</div>';
@@ -2331,7 +2331,7 @@ function renderNotes(query,schoolFilter){
     return '<div class="note-item">'
       +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">'
       +'<div><div class="note-school">'+esc(n.school)+'</div><div class="note-date">'+n.date+'</div></div>'
-      +'<button data-nid="'+n.id+'" onclick="deleteNote(this.dataset.nid)" style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--red);cursor:pointer;flex-shrink:0">Delete</button>'
+      +'<button data-nid="'+n.id+'" onclick="deleteNote(this.dataset.nid)" style="background:var(--rose-bg);border:1px solid var(--rose-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--rose);cursor:pointer;flex-shrink:0">Delete</button>'
       +'</div>'
       +'<div class="note-text">'+esc(n.text)+'</div>'
       +'</div>';
@@ -2412,14 +2412,14 @@ function renderDirectoryList(dirs){
       html+='<div class="dcard-school">'+esc(s.school)+'</div>';
       html+='<div class="dcard-name" style="margin-bottom:8px">District '+esc(s.district)+' · '+esc(s.day)+'</div>';
       if(s.band.length>0){
-        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm-blue2);margin-bottom:5px">Band</div>';
+        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm2);margin-bottom:5px">Band</div>';
         s.band.forEach(function(d){
           html+='<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px">'+esc(d.name)+'</div>';
           html+='<div class="dcard-acts" style="margin-bottom:8px">'+dirContactHTML(d)+'</div>';
         });
       }
       if(s.orch.length>0){
-        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm-blue2);margin-bottom:5px;margin-top:4px">Orchestra</div>';
+        html+='<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pm2);margin-bottom:5px;margin-top:4px">Orchestra</div>';
         s.orch.forEach(function(d){
           html+='<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px">'+esc(d.name)+'</div>';
           html+='<div class="dcard-acts" style="margin-bottom:8px">'+dirContactHTML(d)+'</div>';
@@ -2441,7 +2441,7 @@ function renderDirectoryList(dirs){
     dayOrder.forEach(function(day){
       var dayDirs=dirs.filter(function(d){return d.day.indexOf(day)>=0;});
       if(dayDirs.length===0)return;
-      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:8px 2px 4px;border-bottom:2px solid var(--pm-sky);margin-bottom:8px">'+dayNames2[day]+'</div>';
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm);padding:8px 2px 4px;border-bottom:2px solid var(--pm-sky);margin-bottom:8px">'+dayNames2[day]+'</div>';
       var daySchoolMap={};
       dayDirs.forEach(function(d){
         var key=d.school.replace(/\s*\(B\)|\s*\(O\)|\s*\(CH\)|\s*\(GM\)/gi,'').trim();
@@ -2515,7 +2515,7 @@ async function loadCalendar(){
       upcoming.forEach(e=>{
         const dt=parseDate(e.date||e.Date||'');
         const daysAway=Math.ceil((dt-now)/86400000);
-        html+=`<div class="cali" style="border-left-color:${daysAway<=7?'var(--red)':'var(--green)'}">
+        html+=`<div class="cali" style="border-left-color:${daysAway<=7?'var(--rose)':'var(--emerald)'}">
           <div class="cali-event">${esc(e.event_type||e.type||e.event||'Event')}</div>
           <div class="cali-school">${esc(e.school||e.School||'')}${e.district||e.District?` · District ${esc(e.district||e.District)}`:''}</div>
           <div class="cali-meta">
@@ -2590,7 +2590,7 @@ function showArrival(name){
   div.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;display:flex;align-items:flex-end;backdrop-filter:blur(4px)';
   div.innerHTML=`<div style="background:#fff;border-radius:20px 20px 0 0;padding:22px 20px 36px;width:100%;max-height:80vh;overflow-y:auto">
     <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px"></div>
-    <div style="font-size:18px;font-weight:700;color:var(--pm-blue);margin-bottom:16px">📍 Message Director — ${esc(name)}</div>
+    <div style="font-size:18px;font-weight:700;color:var(--pm);margin-bottom:16px">📍 Message Director — ${esc(name)}</div>
     ${templates.map(t=>`<button onclick="copyArrival('${esc(t.text)}')" style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:left;font-family:var(--sans);font-size:13px;color:var(--text2);cursor:pointer;width:100%;margin-bottom:7px;line-height:1.5">
       <strong style="display:block;font-weight:600;color:var(--text);margin-bottom:3px">${esc(t.label)}</strong>${esc(t.text.substring(0,90))}...
     </button>`).join('')}
@@ -2849,7 +2849,7 @@ function showCMUpdates(){
 
   var panel=document.createElement('div');
   panel.id='cmUpdatesPanel';
-  panel.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto;padding-bottom:80px';
+  panel.style.cssText='position:fixed;inset:0;background:var(--white);z-index:150;overflow-y:auto;padding-bottom:80px';
 
   var html='<div class="hdr" style="position:sticky;top:0">'
     '<button class="hdr-back" onclick="document.getElementById(&quot;cmUpdatesPanel&quot;).remove()">←</button>'
@@ -2868,7 +2868,7 @@ function showCMUpdates(){
     });
 
     Object.keys(bySchool).forEach(function(school){
-      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
       bySchool[school].forEach(function(q){
         html+='<div class="cmi open" id="queue-'+q.id+'">'
           +'<div class="cmi-top">'
@@ -2878,7 +2878,7 @@ function showCMUpdates(){
           +'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Serial: '+esc(q.scan.serial)+'</div>'
           +'<div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Proposed CM Update</div>'
           +'<textarea id="draft-'+q.id+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:70px;outline:none">'+esc(q.draftNote)+'</textarea>'
-          +(q.suggestClose?'<div style="font-size:12px;color:var(--green);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
+          +(q.suggestClose?'<div style="font-size:12px;color:var(--emerald);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
           +'<div class="cmi-acts" style="margin-top:10px">'
           +'<button class="cmbtn primary" onclick="approveCMUpdate(this.dataset.id)" data-id="'+q.id+'">✓ Approve</button>'
           +(q.suggestClose?'<button class="cmbtn green" onclick="approveCMUpdate(this.dataset.id,true)" data-id="'+q.id+'">✓ Approve &amp; Close</button>':'')
@@ -2916,7 +2916,7 @@ async function approveCMUpdate(queueId, andClose){
     q.status='approved';
     saveCMQueue();
     var el=document.getElementById('queue-'+queueId);
-    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--green);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
+    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--emerald);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
     showToast('CM updated ✓','success');
   }catch(err){
     showToast('Error: '+err.message,'error');
@@ -3026,11 +3026,11 @@ async function runMorningBriefing(){
   // ── SHELF CHECKLIST ──
   html+='<div class="slbl">📦 Shelf Checklist ('+shelfItems.length+')</div>';
   if(shelfItems.length===0){
-    html+='<div class="card" style="color:var(--green);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
+    html+='<div class="card" style="color:var(--emerald);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
   } else {
     shelfItems.forEach(function(item,i){
       html+='<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px">'
-        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--green);font-weight:700;flex-shrink:0"></div>'
+        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--emerald);font-weight:700;flex-shrink:0"></div>'
         +'<div><div style="font-weight:600;font-size:14px">'+esc(item.description)+'</div><div style="font-size:12px;color:var(--muted)">'+esc(item.school)+'</div></div>'
         +'</div>';
     });
@@ -3043,7 +3043,7 @@ async function runMorningBriefing(){
       var dId='bDraft'+di;
       var mailHref=d.to?'mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center - '+d.school)+'&body='+encodeURIComponent(d.draft):'';
       html+='<div class="card">'
-        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm);margin-bottom:6px">'+esc(d.school)+'</div>'
         +'<textarea id="'+dId+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:100px;outline:none">'+esc(d.draft)+'</textarea>'
         +'<div style="display:flex;gap:7px;margin-top:8px">'
         +(mailHref?'<a class="dact email" href="'+mailHref+'">✉️ Send</a>':'')
@@ -3059,8 +3059,8 @@ async function runMorningBriefing(){
     asNeededDrafts.forEach(function(d,di){
       var ndId2='nd2Draft'+di;
       var nm2='mailto:'+d.to+'?subject='+encodeURIComponent('PM Music - '+d.school)+'&body='+encodeURIComponent(d.draft);
-      html+='<div class="card"><div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
-        +'<textarea id="'+ndId2+'" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
+      html+='<div class="card"><div style="font-weight:700;font-size:13px;color:var(--pm);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<textarea id="'+ndId2+'" style="width:100%;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
         +'<div style="display:flex;gap:7px;margin-top:8px">'
         +(d.to?'<a class="dact email" href="'+nm2+'">✉️ Send</a>':'')
         +'<button class="dact" data-t="'+ndId2+'" onclick="var t=document.getElementById(this.dataset.t);if(t)copyText(t.value)">Copy</button>'
@@ -3072,8 +3072,8 @@ async function runMorningBriefing(){
   if(flags.length>0){
     html+='<div class="slbl" style="margin-top:8px">⚠️ Needs Attention ('+flags.length+')</div>';
     flags.forEach(function(f){
-      html+='<div class="card" style="border-left:3px solid var(--red)">'
-        +'<div style="font-weight:600;font-size:13px;color:var(--red)">'+esc(f.school)+'</div>'
+      html+='<div class="card" style="border-left:3px solid var(--rose)">'
+        +'<div style="font-weight:600;font-size:13px;color:var(--rose)">'+esc(f.school)+'</div>'
         +'<div style="font-size:13px;color:var(--text2);margin-top:3px">'+esc(f.issue)+'</div>'
         +'</div>';
     });
@@ -3224,7 +3224,7 @@ async function sendReceipt(){
       showToast('Error: '+(data.error||'unknown'),'error');
     }
   }catch(err){
-    if(resultDiv)resultDiv.innerHTML='<div style="font-size:11px;color:var(--red);padding:8px">JS Error: '+err.message+'<br>Stack: '+err.stack.substring(0,200)+'</div>';
+    if(resultDiv)resultDiv.innerHTML='<div style="font-size:11px;color:var(--rose);padding:8px">JS Error: '+err.message+'<br>Stack: '+err.stack.substring(0,200)+'</div>';
     showToast('Error: '+err.message,'error');
   }finally{
     if(btn){btn.textContent='Send to Ricky';btn.disabled=false;}
@@ -3472,7 +3472,7 @@ function showCMUpdates(){
 
   var panel=document.createElement('div');
   panel.id='cmUpdatesPanel';
-  panel.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto;padding-bottom:80px';
+  panel.style.cssText='position:fixed;inset:0;background:var(--white);z-index:150;overflow-y:auto;padding-bottom:80px';
 
   var html='<div class="hdr" style="position:sticky;top:0">'
     '<button class="hdr-back" onclick="document.getElementById(&quot;cmUpdatesPanel&quot;).remove()">←</button>'
@@ -3491,7 +3491,7 @@ function showCMUpdates(){
     });
 
     Object.keys(bySchool).forEach(function(school){
-      html+='<div style="font-size:13px;font-weight:700;color:var(--pm-blue);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
+      html+='<div style="font-size:13px;font-weight:700;color:var(--pm);padding:4px 2px;margin-top:8px">'+esc(school)+'</div>';
       bySchool[school].forEach(function(q){
         html+='<div class="cmi open" id="queue-'+q.id+'">'
           +'<div class="cmi-top">'
@@ -3501,7 +3501,7 @@ function showCMUpdates(){
           +'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Serial: '+esc(q.scan.serial)+'</div>'
           +'<div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Proposed CM Update</div>'
           +'<textarea id="draft-'+q.id+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:70px;outline:none">'+esc(q.draftNote)+'</textarea>'
-          +(q.suggestClose?'<div style="font-size:12px;color:var(--green);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
+          +(q.suggestClose?'<div style="font-size:12px;color:var(--emerald);font-weight:600;margin-top:6px">💡 Suggested: Close this CM after update</div>':'')
           +'<div class="cmi-acts" style="margin-top:10px">'
           +'<button class="cmbtn primary" onclick="approveCMUpdate(this.dataset.id)" data-id="'+q.id+'">✓ Approve</button>'
           +(q.suggestClose?'<button class="cmbtn green" onclick="approveCMUpdate(this.dataset.id,true)" data-id="'+q.id+'">✓ Approve &amp; Close</button>':'')
@@ -3539,7 +3539,7 @@ async function approveCMUpdate(queueId, andClose){
     q.status='approved';
     saveCMQueue();
     var el=document.getElementById('queue-'+queueId);
-    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--green);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
+    if(el){el.style.opacity='0.4';el.innerHTML+='<div style="color:var(--emerald);font-weight:600;font-size:13px;margin-top:8px">✓ Saved to AIM'+(andClose?' & Closed':'')+'</div>';}
     showToast('CM updated ✓','success');
   }catch(err){
     showToast('Error: '+err.message,'error');
@@ -3649,11 +3649,11 @@ async function runMorningBriefing(){
   // ── SHELF CHECKLIST ──
   html+='<div class="slbl">📦 Shelf Checklist ('+shelfItems.length+')</div>';
   if(shelfItems.length===0){
-    html+='<div class="card" style="color:var(--green);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
+    html+='<div class="card" style="color:var(--emerald);font-weight:600;font-size:14px">✓ Nothing on your shelves today</div>';
   } else {
     shelfItems.forEach(function(item,i){
       html+='<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px">'
-        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--green);font-weight:700;flex-shrink:0"></div>'
+        +'<div onclick="toggleShelfCheck(this)" style="width:26px;height:26px;border-radius:7px;border:2px solid var(--border2);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--emerald);font-weight:700;flex-shrink:0"></div>'
         +'<div><div style="font-weight:600;font-size:14px">'+esc(item.description)+'</div><div style="font-size:12px;color:var(--muted)">'+esc(item.school)+'</div></div>'
         +'</div>';
     });
@@ -3666,7 +3666,7 @@ async function runMorningBriefing(){
       var dId='bDraft'+di;
       var mailHref=d.to?'mailto:'+d.to+'?subject='+encodeURIComponent('PM Music Center - '+d.school)+'&body='+encodeURIComponent(d.draft):'';
       html+='<div class="card">'
-        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm);margin-bottom:6px">'+esc(d.school)+'</div>'
         +'<textarea id="'+dId+'" style="width:100%;background:var(--pm-sky);border:1px solid #bfdbfe;border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:100px;outline:none">'+esc(d.draft)+'</textarea>'
         +'<div style="display:flex;gap:7px;margin-top:8px">'
         +(mailHref?'<a class="dact email" href="'+mailHref+'">✉️ Send</a>':'')
@@ -3682,8 +3682,8 @@ async function runMorningBriefing(){
     asNeededDrafts.forEach(function(d,dxi){
       var axId='ax'+dxi;
       html+='<div class="card">'
-        +'<div style="font-weight:700;font-size:13px;color:var(--pm-blue);margin-bottom:6px">'+esc(d.school)+'</div>'
-        +'<textarea id="'+axId+'" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
+        +'<div style="font-weight:700;font-size:13px;color:var(--pm);margin-bottom:6px">'+esc(d.school)+'</div>'
+        +'<textarea id="'+axId+'" style="width:100%;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;resize:none;min-height:80px;outline:none">'+esc(d.draft)+'</textarea>'
         +'<div style="display:flex;gap:7px;margin-top:8px">'
         +(d.to?'<a class="dact email" href="mailto:'+d.to+'?subject='+encodeURIComponent('PM Music - '+d.school)+'&body='+encodeURIComponent(d.draft)+'">✉️ Send</a>':'')
         +'<button class="dact" data-ax="'+axId+'" onclick="var t=document.getElementById(this.dataset.ax);if(t)copyText(t.value)">Copy</button>'
@@ -3695,8 +3695,8 @@ async function runMorningBriefing(){
   if(flags.length>0){
     html+='<div class="slbl" style="margin-top:8px">⚠️ Needs Attention ('+flags.length+')</div>';
     flags.forEach(function(f){
-      html+='<div class="card" style="border-left:3px solid var(--red)">'
-        +'<div style="font-weight:600;font-size:13px;color:var(--red)">'+esc(f.school)+'</div>'
+      html+='<div class="card" style="border-left:3px solid var(--rose)">'
+        +'<div style="font-weight:600;font-size:13px;color:var(--rose)">'+esc(f.school)+'</div>'
         +'<div style="font-size:13px;color:var(--text2);margin-top:3px">'+esc(f.issue)+'</div>'
         +'</div>';
     });
