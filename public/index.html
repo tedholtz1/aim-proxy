@@ -1754,81 +1754,95 @@ async function searchRepairs(){
 }
 
 // ── SCANS ─────────────────────────────────────────────────
-function filterScans(f,btn){
-  document.querySelectorAll('#screen-scans .dtab').forEach(b=>b.classList.remove('active'));
+var scanTabMode='all';
+var openScanDate=null;
+
+function setScanTab(mode,btn){
+  scanTabMode=mode;
+  document.querySelectorAll('#screen-scans .dtab').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
-  renderScans(f);
+  openScanDate=null;
+  renderScans();
 }
 
-function renderScans(filter='all'){
-  const el=document.getElementById('scansList');if(!el)return;
-  const today=new Date().toLocaleDateString();
-  let scans=scanLog;
-  if(filter==='today')scans=scans.filter(s=>s.date===today);
-  else if(filter==='cps')scans=scans.filter(s=>s.isCPS);
-  if(scans.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">🔍</div><div class="etxt">No scans found</div></div>`;return;}
-  let html='';
-  let lastDate='';
-  scans.forEach(s=>{
-    if(s.date!==lastDate){html+=`<div class="slbl">${s.date}</div>`;lastDate=s.date;}
-    html+=`<div class="scan-item">
-      <div class="si-top">
-        <div class="si-action ${s.action}">${s.action==='deliver'?'📥':'📤'}</div>
-        <div class="si-name">${esc(s.serial)}</div>
-        <span class="badge ${s.action==='deliver'?'b-green':'b-yellow'}">${s.action==='deliver'?'Delivery':'Pickup'}</span>
-        ${s.isCPS?'<span class="badge b-orange">CPS</span>':''}
-      </div>
-      <div class="si-meta">${s.time||''} · ${esc(s.school)}</div>
-    </div>`;
+function renderScans(){
+  var el=document.getElementById('scansList');if(!el)return;
+  var filtered=scanTabMode==='cps'?scanLog.filter(function(s){return s.isCPS;}):scanLog;
+  if(filtered.length===0){
+    el.innerHTML='<div class="empty-state"><div class="eicon">🔍</div><div class="etxt">No scans found</div></div>';
+    return;
+  }
+  var byDate={};
+  var dateOrder=[];
+  filtered.forEach(function(s){
+    if(!byDate[s.date]){byDate[s.date]=[];dateOrder.push(s.date);}
+    byDate[s.date].push(s);
+  });
+  var seen={};
+  dateOrder=dateOrder.filter(function(d){if(seen[d])return false;seen[d]=true;return true;});
+  var html='';
+  dateOrder.forEach(function(date){
+    var dayScans=byDate[date];
+    var isOpen=openScanDate===date;
+    html+='<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:8px">'
+      +'<div data-date="'+date+'" onclick="toggleScanDate(this.dataset.date)" style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer">'
+      +'<div style="font-weight:700;font-size:14px;color:var(--pm-blue)">'+date+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span class="badge b-gray">'+dayScans.length+' scan'+(dayScans.length!==1?'s':'')+'</span>'
+      +'<span style="color:var(--muted2);font-size:14px">'+(isOpen?'▲':'▼')+'</span>'
+      +'</div></div>';
+    if(isOpen){
+      html+='<div style="border-top:1px solid var(--border);padding:10px 15px">';
+      dayScans.forEach(function(s){
+        html+='<div class="scan-item" style="margin-bottom:8px">'
+          +'<div class="si-top">'
+          +'<div class="si-action '+(s.action==='deliver'?'deliver':'pickup')+'">'+(s.action==='deliver'?'📥':'📤')+'</div>'
+          +'<div class="si-name">'+esc(s.description||s.serial)+'</div>'
+          +'<span class="badge '+(s.action==='deliver'?'b-green':'b-yellow')+'">'+(s.action==='deliver'?'Delivery':'Pickup')+'</span>'
+          +(s.isCPS?'<span class="badge b-orange">CPS</span>':'')
+          +'<button data-sid="'+s.id+'" onclick="deleteScan(this.dataset.sid)" style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--red);cursor:pointer;margin-left:auto">✕</button>'
+          +'</div>'
+          +'<div class="si-meta">'+(s.time||'')+' · '+esc(s.school)+'</div>'
+          +'</div>';
+      });
+            html+='<div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap">'
+        +'<button class="dact email" data-d="'+date+'" data-r="nikki" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Nikki</button>'
+        +'<button class="dact" style="border-color:var(--green-border);background:var(--green-bg);color:var(--green)" data-d="'+date+'" data-r="office" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Office</button>'
+        +'<button class="dact" style="border-color:var(--pm-light);background:var(--pm-sky);color:var(--pm-blue2)" data-d="'+date+'" data-r="both" onclick="emailDayScans(this.dataset.d,this.dataset.r)">✉️ Both</button>'
+        +'</div></div>';
+    }
+    html+='</div>';
   });
   el.innerHTML=html;
 }
 
-async function emailScans(recipient){
-  var today=new Date().toLocaleDateString();
-  var isOffice=recipient==='office';
-  var scans=isOffice?scanLog.filter(function(s){return s.isCPS&&s.date===today;}):scanLog.filter(function(s){return s.date===today;});
-  if(scans.length===0){showToast('No scans to send','error');return;}
+function toggleScanDate(date){
+  openScanDate=openScanDate===date?null:date;
+  renderScans();
+}
 
-  // Build CSV content for Excel
-  var csvLines=['Action,Serial/Invoice,School,Time,CPS,Date'];
-  scans.forEach(function(s){
-    csvLines.push([
-      s.action==='deliver'?'Delivery':'Pickup',
-      s.serial,
-      s.school,
-      s.time||'',
-      s.isCPS?'Yes':'No',
-      s.date
-    ].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(','));
+function deleteScan(id){
+  scanLog=scanLog.filter(function(s){return String(s.id)!==String(id);});
+  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog));}catch(e){}
+  showToast('Scan deleted','success');
+  renderScans();
+}
+
+function emailDayScans(date,recipient){
+  var scans=scanLog.filter(function(s){
+    if(s.date!==date)return false;
+    if(scanTabMode==='cps')return s.isCPS;
+    return true;
   });
-  var csvContent=csvLines.join('\n');
-  var csvB64=btoa(unescape(encodeURIComponent(csvContent)));
-
-  var emailAddr=isOffice?OFFICE:RICKY;
-  var subject='Scan Log — '+today+(isOffice?' (CPS)':'');
-
-  try{
-    var resp=await fetch(PROXY+'/email',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        to:emailAddr,
-        subject:subject,
-        body:'Scan log for '+today+' attached as CSV (opens in Excel).\n\nSent from PM Music Field Rep App.',
-        attachments:[{filename:'scan-log-'+today.replace(/\//g,'-')+'.csv',data:csvB64,contentType:'text/csv'}]
-      })
-    });
-    var data=await resp.json();
-    if(data.error)throw new Error(data.error);
-    showToast('Scan log sent ✓','success');
-  }catch(err){
-    // Fallback to mailto with text
-    var lines=scans.map(function(s){return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+s.serial+' — '+s.school+' — '+(s.time||'');}).join('\n');
-    var body2='Scan log for '+today+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
-    window.location.href='mailto:'+emailAddr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body2);
-    showToast('Email app opened','');
-  }
+  if(scans.length===0){showToast('No scans for this date','error');return;}
+  var lines=scans.map(function(s){
+    return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+(s.description||s.serial)+' — '+s.school+' — '+(s.time||'');
+  }).join('\n');
+  var body='Scan log for '+date+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
+  var subject='Scan Log — '+date+(scanTabMode==='cps'?' (CPS)':'');
+  var addr=recipient==='nikki'?RICKY:recipient==='office'?OFFICE:RICKY+','+OFFICE;
+  window.location.href='mailto:'+addr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  showToast('Email app opened ✓','success');
 }
 
 // ── SHELVES ───────────────────────────────────────────────
