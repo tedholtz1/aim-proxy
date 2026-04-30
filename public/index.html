@@ -1865,17 +1865,16 @@ async function emailDayScans(date,recipient){
   var sent=0;
   for(var i=0;i<recipients.length;i++){
     try{
-      var resp=await fetch(PROXY+'/email-photo',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          to:recipients[i],
-          subject:subject,
-          body:body,
-          attachments:[{filename:filename,data:csvB64,contentType:'text/csv'}]
-        })
-      });
-      var data=await resp.json();
+      var xhr=new XMLHttpRequest();
+      xhr.open('POST',PROXY+'/email-photo',false); // sync for simplicity
+      xhr.setRequestHeader('Content-Type','application/json');
+      xhr.send(JSON.stringify({
+        to:recipients[i],
+        subject:subject,
+        body:body,
+        attachments:[{filename:filename,data:csvB64,contentType:'text/csv'}]
+      }));
+      var data=JSON.parse(xhr.responseText||'{}');
       if(data.success||data.id)sent++;
     }catch(e){}
   }
@@ -1885,8 +1884,8 @@ async function emailDayScans(date,recipient){
     // Fallback to mailto
     var lines=scans.map(function(s){return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+(s.description||s.serial)+' — '+s.school+' — '+(s.time||'');}).join('\n');
     var fbBody='Scan log for '+date+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
-    var addr=recipient==='nikki'?RICKY:recipient==='office'?OFFICE:RICKY+','+OFFICE;
-    window.location.href='mailto:'+addr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(fbBody);
+    var fbAddr=recipient==='nikki'?RICKY:recipient==='office'?OFFICE:RICKY+','+OFFICE;
+    window.location.href='mailto:'+fbAddr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(fbBody);
     showToast('Email app opened','');
   }
 }
