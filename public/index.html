@@ -1828,21 +1828,67 @@ function deleteScan(id){
   renderScans();
 }
 
-function emailDayScans(date,recipient){
+async function emailDayScans(date,recipient){
   var scans=scanLog.filter(function(s){
     if(s.date!==date)return false;
     if(scanTabMode==='cps')return s.isCPS;
     return true;
   });
   if(scans.length===0){showToast('No scans for this date','error');return;}
-  var lines=scans.map(function(s){
-    return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+(s.description||s.serial)+' — '+s.school+' — '+(s.time||'');
-  }).join('\n');
-  var body='Scan log for '+date+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
+
   var subject='Scan Log — '+date+(scanTabMode==='cps'?' (CPS)':'');
-  var addr=recipient==='nikki'?RICKY:recipient==='office'?OFFICE:RICKY+','+OFFICE;
-  window.location.href='mailto:'+addr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-  showToast('Email app opened ✓','success');
+  var body='Scan log for '+date+'. See attached CSV.\n\nSent from PM Music Field Rep App';
+
+  // Build CSV
+  var csvLines=['Action,Serial/Invoice,Description,School,Time,CPS,Date'];
+  scans.forEach(function(s){
+    csvLines.push([
+      s.action==='deliver'?'Delivery':'Pickup',
+      s.serial||'(manual)',
+      s.description||s.serial||'',
+      s.school,
+      s.time||'',
+      s.isCPS?'Yes':'No',
+      s.date
+    ].map(function(v){return '"'+String(v||'').replace(/"/g,'""')+'"';}).join(','));
+  });
+  var csv=csvLines.join('\n');
+  var csvB64=btoa(unescape(encodeURIComponent(csv)));
+  var filename='scan-log-'+date.replace(/\//g,'-')+(scanTabMode==='cps'?'-CPS':'')+'.csv';
+
+  // Determine recipients
+  var recipients=[];
+  if(recipient==='nikki'||recipient==='both')recipients.push(RICKY);
+  if(recipient==='office'||recipient==='both')recipients.push(OFFICE);
+
+  showToast('Sending...','');
+  var sent=0;
+  for(var i=0;i<recipients.length;i++){
+    try{
+      var resp=await fetch(PROXY+'/email-photo',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          to:recipients[i],
+          subject:subject,
+          body:body,
+          attachments:[{filename:filename,data:csvB64,contentType:'text/csv'}]
+        })
+      });
+      var data=await resp.json();
+      if(data.success||data.id)sent++;
+    }catch(e){}
+  }
+  if(sent>0){
+    showToast('Scan log sent ✓','success');
+  } else {
+    // Fallback to mailto
+    var lines=scans.map(function(s){return (s.action==='deliver'?'DELIVERY':'PICKUP')+' — '+(s.description||s.serial)+' — '+s.school+' — '+(s.time||'');}).join('\n');
+    var fbBody='Scan log for '+date+':\n\n'+lines+'\n\nSent from PM Music Field Rep App';
+    var addr=recipient==='nikki'?RICKY:recipient==='office'?OFFICE:RICKY+','+OFFICE;
+    window.location.href='mailto:'+addr+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(fbBody);
+    showToast('Email app opened','');
+  }
 }
 
 // ── SHELVES ───────────────────────────────────────────────
