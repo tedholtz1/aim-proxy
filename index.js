@@ -1,4 +1,3 @@
-// v8.1
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
@@ -23,6 +22,9 @@ async function getSheets() {
 }
 
 app.get('/', function(req, res) {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
