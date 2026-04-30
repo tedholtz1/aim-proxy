@@ -356,30 +356,26 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
     <div id="newCMFormContainer" style="display:none">
       <div class="fcard" style="margin-top:10px">
         <div class="ftitle">📝 New Contact Management</div>
-        <div class="ff"><div class="flbl">School</div><select class="fsel" id="cmSchool"></select></div>
+        <div class="ff"><div class="flbl">School</div>
+        <div style="position:relative">
+          <input type="text" class="finput" id="cmSchoolInput" placeholder="Type school name..." autocomplete="off" oninput="filterSchoolDropdown(this.value,'cmSchoolList','cmSchoolInput')" onfocus="filterSchoolDropdown(this.value,'cmSchoolList','cmSchoolInput')">
+          <div id="cmSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--shm)"></div>
+        </div>
+        <input type="hidden" id="cmSchool">
+        </div>
         <div class="ff"><div class="flbl">Action Type</div>
           <select class="fsel" id="cmAction">
-            <option>Repair Instrument</option><option>Deliver Instrument</option><option>Loaner</option>
-            <option>Return</option><option>Supply Order</option><option>Director Communication</option>
-            <option>Student Rental Inquiry</option><option>Other</option>
+            <option>Request Loaner</option>
+            <option>Instrument Upsize</option>
+            <option>Request New Tag</option>
+            <option>Request Folders</option>
+            <option>Return Pickup</option>
+            <option>Mouthpiece Replacement</option>
+            <option>Bow Replacement</option>
+            <option>Other</option>
           </select>
         </div>
-        <div class="ff"><div class="flbl">Subject</div><input type="text" class="finput" id="cmSubject" placeholder="Brief description"></div>
-        <div class="flbl" style="margin-bottom:7px">Quick Templates</div>
-        <div class="tgrid">
-          <button class="tbtn" onclick="setTemplate('Delivered upsize. Picked up smaller size. Closing.')">📦 Upsize delivered / Smaller picked up</button>
-          <button class="tbtn" onclick="setTemplate('Delivered upsize. Waiting on smaller size.')">📦 Upsize delivered / Waiting on smaller</button>
-          <button class="tbtn" onclick="setTemplate('T&D loaner. P/U repair.')">🔄 T&D loaner / P/U repair</button>
-          <button class="tbtn" onclick="setTemplate('T&D loaner. Waiting on repair.')">🔄 T&D loaner / Waiting on repair</button>
-          <button class="tbtn" onclick="setTemplate('Delivered repair. Waiting on loaner.')">🔧 Repair delivered / Waiting on loaner</button>
-          <button class="tbtn" onclick="setTemplate('Delivered repair. P/U loaner. Closing.')">🔧 Repair delivered / P/U loaner. Closing.</button>
-          <button class="tbtn" onclick="setTemplate('P/U smaller size. Closing.')">↩️ P/U smaller size. Closing.</button>
-          <button class="tbtn" onclick="setTemplate('P/U loaner. Closing.')">↩️ P/U loaner. Closing.</button>
-          <button class="tbtn" onclick="setTemplate('Return not yet available.')">⏳ Return not yet available</button>
-          <button class="tbtn" onclick="setTemplate('Return picked up. Closing.')">✅ Return picked up. Closing.</button>
-          <button class="tbtn" onclick="setTemplate('Bows exchanged. Closing.')">🎻 Bows exchanged. Closing.</button>
-          <button class="tbtn" onclick="setTemplate('Replacement bow delivered. Waiting on old bow.')">🎻 Replacement bow delivered / Waiting</button>
-        </div>
+        
         <div class="ff">
           <div class="flbl">Notes</div>
           <div class="sh-row">
@@ -481,25 +477,18 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
     <div class="hdr-title">Scan Log</div>
   </div>
   <div class="cnt">
-    <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <button class="dtab active" id="scanFilterAll" onclick="filterScans('all',this)">All</button>
-      <button class="dtab" id="scanFilterToday" onclick="filterScans('today',this)">Today</button>
-      <button class="dtab" id="scanFilterCPS" onclick="filterScans('cps',this)">CPS</button>
+    <div style="display:flex;gap:7px">
+      <button class="dtab active" id="scanTabAll" onclick="setScanTab('all',this)">All</button>
+      <button class="dtab" id="scanTabCPS" onclick="setScanTab('cps',this)">CPS</button>
     </div>
-    <!-- Standalone scan -->
     <div class="fcard">
       <div class="ftitle" style="font-size:14px;margin-bottom:10px">📦 Scan Without School</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">For deliveries not connected to a regular school visit</div>
       <div style="display:flex;gap:8px">
         <input type="text" class="finput" id="standaloneScanInput" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
         <button style="background:var(--pm-blue);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('standaloneScanInput').value=v;})">📷</button>
         <button style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('deliver')">📥 Deliver</button>
         <button style="background:var(--yellow);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logStandaloneScan('pickup')">📤 Pick Up</button>
       </div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-p" onclick="emailScans('nikki')" style="font-size:13px;padding:10px">Email to Nikki</button>
-      <button class="btn-p" onclick="emailScans('office')" style="font-size:13px;padding:10px;background:var(--green)">Email to Office (CPS)</button>
     </div>
     <div id="scansList"></div>
   </div>
@@ -516,7 +505,11 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
       <div class="ftitle">📝 New Visit Note</div>
       <div class="ff">
         <div class="flbl">School</div>
-        <select class="fsel" id="noteSchool"></select>
+        <div style="position:relative">
+          <input type="text" class="finput" id="noteSchoolInput" placeholder="Type school name..." autocomplete="off" oninput="filterSchoolDropdown(this.value,'noteSchoolList','noteSchoolInput')" onfocus="filterSchoolDropdown(this.value,'noteSchoolList','noteSchoolInput')">
+          <div id="noteSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--shm)"></div>
+        </div>
+        <input type="hidden" id="noteSchool">
       </div>
       <div class="ff">
         <div class="flbl">Notes</div>
@@ -585,7 +578,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
     <div class="irow">
       <div class="iitem">
         <div class="ilbl">Version</div>
-        <div class="ival">PM Music Field Rep v6.0</div>
+        <div class="ival">PM Music Field Rep v8.0</div>
       </div>
       <div class="iitem">
         <div class="ilbl">Ricky email</div>
@@ -1368,10 +1361,14 @@ function sortRepairs(by,btn,tickets){
 
 function openVisitNote(schoolName){
   navTo('notes');
-  setTimeout(()=>{
-    const sel=document.getElementById('noteSchool');
-    if(sel)sel.value=schoolName;
+  setTimeout(function(){
+    var inp=document.getElementById('noteSchoolInput');
+    var hid=document.getElementById('noteSchool');
+    if(inp)inp.value=schoolName;
+    if(hid)hid.value=schoolName;
     document.getElementById('noteText')?.focus();
+    // Show only this school's notes
+    renderNotes('',schoolName);
   },100);
 }
 
@@ -1560,6 +1557,45 @@ function insertShorthand(t){
   const ta=document.getElementById('cmNotes');if(!ta)return;
   const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+t+ta.value.substring(p);
   ta.selectionStart=ta.selectionEnd=p+t.length;ta.focus();
+}
+
+function filterSchoolDropdown(query,listId,inputId){
+  var list=document.getElementById(listId);
+  var hidden=document.getElementById(inputId==='cmSchoolInput'?'cmSchool':'noteSchool');
+  if(!list||!routeData)return;
+  var q=query.toLowerCase().trim();
+  var schools=routeData.allSchools;
+  var matches=q?schools.filter(function(s){return s.name.toLowerCase().includes(q);}):schools;
+  if(matches.length===0){list.style.display='none';return;}
+  list.style.display='block';
+  list.innerHTML='';
+  matches.slice(0,10).forEach(function(s){
+    var item=document.createElement('div');
+    item.style.cssText='padding:11px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #e2e8f0';
+    item.innerHTML=esc(s.name)+'<span style="font-size:11px;color:#64748b;margin-left:8px">Dist '+esc(s.district)+'</span>';
+    (function(sname){
+      item.addEventListener('click',function(){selectSchool(listId,inputId,sname);});
+      item.addEventListener('mouseover',function(){this.style.background='#dbeafe';});
+      item.addEventListener('mouseout',function(){this.style.background='';});
+    })(s.name);
+    list.appendChild(item);
+  });
+  // Close on outside click
+  setTimeout(function(){
+    document.addEventListener('click',function closeList(e){
+      if(!list.contains(e.target)&&e.target.id!==inputId){list.style.display='none';}
+      document.removeEventListener('click',closeList);
+    });
+  },100);
+}
+
+function selectSchool(listId,inputId,schoolName){
+  var input=document.getElementById(inputId);
+  var hidden=document.getElementById(inputId==='cmSchoolInput'?'cmSchool':'noteSchool');
+  var list=document.getElementById(listId);
+  if(input)input.value=schoolName;
+  if(hidden)hidden.value=schoolName;
+  if(list)list.style.display='none';
 }
 
 async function submitNewCM(){
@@ -1841,20 +1877,32 @@ function saveNote(){
 }
 
 function filterNotes(){
-  const q=document.getElementById('noteSearch').value.toLowerCase();
+  var q=document.getElementById('noteSearch')?document.getElementById('noteSearch').value.toLowerCase():'';
   renderNotes(q);
 }
 
-function renderNotes(query=''){
-  const el=document.getElementById('notesList');if(!el)return;
-  let notes=noteLog;
-  if(query)notes=notes.filter(n=>n.school.toLowerCase().includes(query)||n.text.toLowerCase().includes(query)||n.date.includes(query));
-  if(notes.length===0){el.innerHTML=`<div class="empty-state"><div class="eicon">📋</div><div class="etxt">No notes yet</div></div>`;return;}
-  el.innerHTML=notes.map(n=>`<div class="note-item">
-    <div class="note-school">${esc(n.school)}</div>
-    <div class="note-date">${n.date}</div>
-    <div class="note-text">${esc(n.text)}</div>
-  </div>`).join('');
+function renderNotes(query,schoolFilter){
+  var el=document.getElementById('notesList');if(!el)return;
+  var notes=noteLog;
+  if(schoolFilter)notes=notes.filter(function(n){return n.school===schoolFilter;});
+  if(query)notes=notes.filter(function(n){return n.school.toLowerCase().includes(query)||n.text.toLowerCase().includes(query)||n.date.includes(query);});
+  if(notes.length===0){el.innerHTML='<div class="empty-state"><div class="eicon">📋</div><div class="etxt">No notes yet</div></div>';return;}
+  el.innerHTML=notes.map(function(n){
+    return '<div class="note-item">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">'
+      +'<div><div class="note-school">'+esc(n.school)+'</div><div class="note-date">'+n.date+'</div></div>'
+      +'<button data-nid="'+n.id+'" onclick="deleteNote(this.dataset.nid)" style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--red);cursor:pointer;flex-shrink:0">Delete</button>'
+      +'</div>'
+      +'<div class="note-text">'+esc(n.text)+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function deleteNote(id){
+  noteLog=noteLog.filter(function(n){return String(n.id)!==String(id);});
+  try{localStorage.setItem('pmNoteLog',JSON.stringify(noteLog));}catch(e){}
+  showToast('Note deleted','success');
+  renderNotes(document.getElementById('noteSearch')?.value||'');
 }
 
 // ── DIRECTOR-Y ────────────────────────────────────────────
@@ -2649,11 +2697,15 @@ function updateDots(){
 function notConnMsg(){return`<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to see data</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>`;}
 
 // ── UI ────────────────────────────────────────────────────
+var NAV_PARENT={'school':'today','shelves':'home','scans':'home','notes':'home','settings':'home','cms':'home','briefing':'home'};
 function navTo(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(`screen-${name}`)?.classList.add('active');
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`nav-${name}`)?.classList.add('active');
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var screen=document.getElementById('screen-'+name);
+  if(screen)screen.classList.add('active');
+  document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('active');});
+  var navName=NAV_PARENT[name]||name;
+  var navBtn=document.getElementById('nav-'+navName);
+  if(navBtn)navBtn.classList.add('active');
 }
 function showConnectModal(){
   document.getElementById('mApiKey').value=settings.apiKey;
@@ -3268,11 +3320,15 @@ function updateDots(){
 function notConnMsg(){return`<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Connect to see data</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>`;}
 
 // ── UI ────────────────────────────────────────────────────
+var NAV_PARENT={'school':'today','shelves':'home','scans':'home','notes':'home','settings':'home','cms':'home','briefing':'home'};
 function navTo(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(`screen-${name}`)?.classList.add('active');
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`nav-${name}`)?.classList.add('active');
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var screen=document.getElementById('screen-'+name);
+  if(screen)screen.classList.add('active');
+  document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('active');});
+  var navName=NAV_PARENT[name]||name;
+  var navBtn=document.getElementById('nav-'+navName);
+  if(navBtn)navBtn.classList.add('active');
 }
 function showConnectModal(){
   document.getElementById('mApiKey').value=settings.apiKey;
