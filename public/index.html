@@ -392,28 +392,96 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 
 <!-- HOME -->
 <div class="screen active" id="screen-home">
-  <div class="hdr">
-    <img class="hdr-logo" id="hdrLogo" src="" alt="PM Music">
-    <div style="flex:1"></div>
-    <div class="conn-pill" onclick="showConnectModal()">
-      <div class="cdot" id="cdot0"></div><span id="ctxt0">Connect</span>
+  <!-- Hero header -->
+  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 40%,#1e4d9a 100%);padding:16px 20px 20px;position:relative;overflow:hidden">
+    <!-- Background music staff lines -->
+    <div style="position:absolute;inset:0;opacity:.04;pointer-events:none">
+      <div style="position:absolute;top:20%;left:0;right:0;height:1px;background:#fff"></div>
+      <div style="position:absolute;top:35%;left:0;right:0;height:1px;background:#fff"></div>
+      <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:#fff"></div>
+      <div style="position:absolute;top:65%;left:0;right:0;height:1px;background:#fff"></div>
+      <div style="position:absolute;top:80%;left:0;right:0;height:1px;background:#fff"></div>
+    </div>
+    <!-- Top row: logo + connect -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <img id="hdrLogo" src="" alt="PM Music" style="height:28px;width:auto">
+      <div class="conn-pill" onclick="showConnectModal()">
+        <div class="cdot" id="cdot0"></div><span id="ctxt0">Connect</span>
+      </div>
+    </div>
+    <!-- Rep + day info -->
+    <div style="margin-bottom:4px">
+      <div id="homeRepLabel" style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:6px">PM Music Center — Field Rep</div>
+      <div id="homeDayName" style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1.1">Loading...</div>
+      <div id="homeSubLine" style="font-size:13px;color:rgba(255,255,255,.55);margin-top:5px;font-weight:500"></div>
     </div>
   </div>
-  <div class="cnt">
-    <div class="day-banner" style="padding:16px 18px">
-      <div class="day-label" id="homeRepLabel">PM Music Center — Field Rep</div>
-      <div class="day-name" id="homeDayName" style="font-size:20px;margin-bottom:4px">Loading...</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.6)" id="homeSubLine"></div>
+
+  <div class="cnt" style="padding:14px;gap:10px">
+    <!-- Primary actions - 2 col -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+
+      <div onclick="navTo('briefing');runMorningBriefing()" style="background:linear-gradient(135deg,#1a3a6b,#1e4d9a);border-radius:16px;padding:16px 14px;cursor:pointer;position:relative;overflow:hidden;grid-column:1/-1;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(26,58,107,.3)">
+        <div style="font-size:32px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2))">☀️</div>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em">Morning Briefing</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;font-weight:500">Shelf check · email drafts · flags</div>
+        </div>
+        <div style="margin-left:auto;color:rgba(255,255,255,.4);font-size:18px">›</div>
+      </div>
+
+      <div onclick="navTo('cms');loadTodayCMs()" style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(10,14,26,.06);display:flex;flex-direction:column;gap:10px;transition:all .15s">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px">📝</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#0f172a;letter-spacing:-0.01em">CMs</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;font-weight:500">Contact Management</div>
+        </div>
+      </div>
+
+      <div onclick="navTo('shelves')" style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(10,14,26,.06);display:flex;flex-direction:column;gap:10px;transition:all .15s">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px">📦</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#0f172a;letter-spacing:-0.01em">My Shelves</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;font-weight:500">Van inventory</div>
+        </div>
+      </div>
+
+      <div onclick="navTo('scans')" style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(10,14,26,.06);display:flex;flex-direction:column;gap:10px;transition:all .15s">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px">🔍</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#0f172a;letter-spacing:-0.01em">Scans</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;font-weight:500">Daily scan log</div>
+        </div>
+      </div>
+
+      <div onclick="navTo('notes')" style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(10,14,26,.06);display:flex;flex-direction:column;gap:10px;transition:all .15s">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#fae8ff,#e9d5ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px">🎙️</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#0f172a;letter-spacing:-0.01em">Notes</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;font-weight:500">Visit notes</div>
+        </div>
+      </div>
+
     </div>
-    <div class="home-grid">
-      <div class="home-btn" onclick="navTo('shelves')"><div class="home-icon">📦</div><div class="home-label">My Shelves</div><div class="home-sub">View what is on your shelves</div></div>
-      <div class="home-btn" onclick="navTo('cms');loadTodayCMs()"><div class="home-icon">📝</div><div class="home-label">CMs</div><div class="home-sub">Create, open, edit and close CMs</div></div>
-      <div class="home-btn" onclick="navTo('scans')"><div class="home-icon">🔍</div><div class="home-label">Scans</div><div class="home-sub">View & email daily scan log</div></div>
-      <div class="home-btn" onclick="navTo('notes')"><div class="home-icon">🎙️</div><div class="home-label">Notes</div><div class="home-sub">Take and review notes</div></div>
-      <div class="home-btn" onclick="showRepairModal()"><div class="home-icon">🔧</div><div class="home-label">Repair Ticket</div><div class="home-sub">New ticket or search existing</div></div>
-      <div class="home-btn" onclick="showReceiptModal()"><div class="home-icon">📷</div><div class="home-label">Log Receipt</div><div class="home-sub">Photo receipt → email Ricky</div></div>
-      <div class="home-btn" onclick="navTo('briefing');runMorningBriefing()"><div class="home-icon">☀️</div><div class="home-label">Morning Briefing</div><div class="home-sub">Shelf check, email drafts & flags</div></div>
-      <div class="home-btn" onclick="navTo('settings')" style="grid-column:1/-1"><div class="home-icon">⚙️</div><div class="home-label">Settings</div><div class="home-sub">PIN, credentials, rep, preferences</div></div>
+
+    <!-- Secondary actions -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:2px">
+
+      <div onclick="showRepairModal()" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px 10px;cursor:pointer;box-shadow:0 1px 4px rgba(10,14,26,.05);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#fff7ed,#fed7aa);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">🔧</div>
+        <div style="font-size:11px;font-weight:700;color:#0f172a;line-height:1.3">Repair<br>Ticket</div>
+      </div>
+
+      <div onclick="showReceiptModal()" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px 10px;cursor:pointer;box-shadow:0 1px 4px rgba(10,14,26,.05);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">📷</div>
+        <div style="font-size:11px;font-weight:700;color:#0f172a;line-height:1.3">Log<br>Receipt</div>
+      </div>
+
+      <div onclick="navTo('settings')" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px 10px;cursor:pointer;box-shadow:0 1px 4px rgba(10,14,26,.05);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">⚙️</div>
+        <div style="font-size:11px;font-weight:700;color:#0f172a;line-height:1.3">Settings</div>
+      </div>
+
     </div>
   </div>
 </div>
