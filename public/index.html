@@ -68,11 +68,12 @@
   --surface:var(--bg);
 }
 
-html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;font-size:15px;line-height:1.5;overflow-x:hidden}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);height:100%;font-size:15px;line-height:1.5;overflow:hidden}
 
 /* SCREENS */
-.screen{display:none;min-height:100vh;flex-direction:column;padding-bottom:76px}
+.screen{display:none;flex-direction:column;padding-bottom:76px;position:fixed;inset:0;overflow-y:auto;background:var(--bg)}
 .screen.active{display:flex}
+html,body{overflow:hidden;height:100%}
 
 /* HEADER */
 .hdr{
@@ -374,20 +375,52 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-hei
 </head>
 <body>
 
-<!-- PIN -->
+<!-- PIN / LOGIN -->
 <div class="pin-screen" id="pinScreen">
-  <div class="pin-title">PM Music Center</div>
-  <div class="pin-dots">
-    <div class="pdot" id="d0"></div><div class="pdot" id="d1"></div>
-    <div class="pdot" id="d2"></div><div class="pdot" id="d3"></div>
+  <!-- Logo -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:8px">
+    <img id="pinLogo" src="" alt="PM Music Center" style="height:44px;width:auto;filter:brightness(0) invert(1);opacity:.9">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4)">Field Rep</div>
   </div>
-  <div class="pin-pad">
-    <button class="pkey" onclick="pinKey('1')">1</button><button class="pkey" onclick="pinKey('2')">2</button><button class="pkey" onclick="pinKey('3')">3</button>
-    <button class="pkey" onclick="pinKey('4')">4</button><button class="pkey" onclick="pinKey('5')">5</button><button class="pkey" onclick="pinKey('6')">6</button>
-    <button class="pkey" onclick="pinKey('7')">7</button><button class="pkey" onclick="pinKey('8')">8</button><button class="pkey" onclick="pinKey('9')">9</button>
-    <div class="pkey empty"></div><button class="pkey" onclick="pinKey('0')">0</button><button class="pkey" onclick="pinDel()">⌫</button>
+
+  <!-- Rep selector -->
+  <div id="repSelectView" style="width:100%;max-width:320px">
+    <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);text-align:center;margin-bottom:16px;letter-spacing:.04em">Select your name</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onclick="selectRepLogin('TH')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:-.01em">Ted Holtz</button>
+      <button onclick="selectRepLogin('HF')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:-.01em">Harley Figueroa</button>
+      <button onclick="selectRepLogin('LM')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:-.01em">Laurie Mills</button>
+      <button onclick="selectRepLogin('MP')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:-.01em">Mike Patterson</button>
+      <button onclick="selectRepLogin('ADMIN')" style="background:transparent;border:none;color:rgba(255,255,255,.2);font-family:var(--sans);font-size:11px;cursor:pointer;margin-top:4px;padding:8px">Admin</button>
+    </div>
   </div>
-  <div class="pin-err" id="pinErr"></div>
+
+  <!-- PIN entry -->
+  <div id="pinEntryView" style="display:none;width:100%;max-width:320px;align-items:center;flex-direction:column;gap:0">
+    <div id="pinRepName" style="font-size:18px;font-weight:800;color:#fff;margin-bottom:24px;letter-spacing:-.01em;text-align:center"></div>
+    <div class="pin-dots" style="margin-bottom:28px">
+      <div class="pdot" id="d0"></div>
+      <div class="pdot" id="d1"></div>
+      <div class="pdot" id="d2"></div>
+      <div class="pdot" id="d3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pkey" onclick="pinKey('1')">1</button>
+      <button class="pkey" onclick="pinKey('2')">2</button>
+      <button class="pkey" onclick="pinKey('3')">3</button>
+      <button class="pkey" onclick="pinKey('4')">4</button>
+      <button class="pkey" onclick="pinKey('5')">5</button>
+      <button class="pkey" onclick="pinKey('6')">6</button>
+      <button class="pkey" onclick="pinKey('7')">7</button>
+      <button class="pkey" onclick="pinKey('8')">8</button>
+      <button class="pkey" onclick="pinKey('9')">9</button>
+      <button class="pkey empty"></button>
+      <button class="pkey" onclick="pinKey('0')">0</button>
+      <button class="pkey" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="pin-err" id="pinErr"></div>
+    <button onclick="backToRepSelect()" style="background:transparent;border:none;color:rgba(255,255,255,.35);font-family:var(--sans);font-size:13px;cursor:pointer;margin-top:20px;padding:8px">← Back</button>
+  </div>
 </div>
 
 <!-- HOME -->
@@ -1034,6 +1067,14 @@ window.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('mUser').value=settings.user;
   document.getElementById('mPass').value=settings.pass;
   updateSettingsDisplay();
+  // Restore last logged-in rep
+  var savedRep=localStorage.getItem('pm_currentRep');
+  if(savedRep&&REPS_LOGIN[savedRep]){
+    currentRep=savedRep;
+    settings.rep=savedRep;
+    var rd=REPS_LOGIN[savedRep];
+    if(rd){settings.initials=rd.initials;settings.repName=rd.name;}
+  }
   await loadRoute();
   if(settings.saveCreds&&settings.apiKey&&settings.user&&settings.pass)autoConnect();
   updateCMUpdateBadge();
