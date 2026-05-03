@@ -1787,7 +1787,7 @@ async function readTagPhoto(event){
     const resp=await fetch(`${PROXY}/ai`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:200,
+        model:'claude-sonnet-4-6',max_tokens:200,
         messages:[{role:'user',content:[
           {type:'image',source:{type:'base64',media_type:file.type,data:b64}},
           {type:'text',text:'Extract serial number from this instrument tag. Respond ONLY with JSON: {"serial":"...","name":"...","account":"..."}'}
@@ -1856,6 +1856,148 @@ async function searchRepairs(){
   }catch(err){result.innerHTML=`<div class="empty-state"><div class="etxt">Error: ${esc(err.message)}</div></div>`;}
 }
 
+
+
+// ── MANUAL LOG ────────────────────────────────────────────
+var manualAction='deliver';
+function setManualAction(action,btn){
+  manualAction=action;
+  document.querySelectorAll('#manualDeliver,#manualPickup').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function showManualLog(schoolName){
+  var detail=document.getElementById('schoolDetail');
+  if(!detail)return;
+  detail.innerHTML='<div class="slbl" style="margin-top:12px">Log Manually — '+esc(schoolName)+'</div>'
+    +'<div class="fcard" style="margin-top:8px">'
+    +'<div style="font-size:13px;color:var(--muted);margin-bottom:12px">For items without a barcode — cases, bows, mouthpieces, supplies, folders, strings.</div>'
+    +'<div class="ff"><div class="flbl">Description</div>'
+    +'<input type="text" class="finput" id="manualDesc" placeholder="e.g. Clarinet case replacement" autocomplete="off"></div>'
+    +'<div class="ff"><div class="flbl">Action</div>'
+    +'<div style="display:flex;gap:8px;margin-top:4px">'
+    +'<button id="manualDeliver" class="dtab active" onclick="setManualAction(&quot;deliver&quot;,this)">📥 Delivered</button>'
+    +'<button id="manualPickup" class="dtab" onclick="setManualAction(&quot;pickup&quot;,this)">📤 Picked Up</button>'
+    +'</div></div>'
+    +'<div class="ff"><div class="flbl">Notes (optional)</div>'
+    +'<input type="text" class="finput" id="manualNotes" placeholder="e.g. Dropped off new case, picked up broken case"></div>'
+    +'<button class="btn-p" id="manualLogBtn" data-school="'+esc(schoolName)+'" onclick="submitManualLog(this.dataset.school)">Log This Item</button>'
+    +'</div>'
+    +'<div id="manualLogList"></div>';
+  renderManualLogs(schoolName);
+}
+
+function submitManualLog(schoolName){
+  var desc=document.getElementById('manualDesc');
+  var notes=document.getElementById('manualNotes');
+  var descVal=desc?desc.value.trim():'';
+  if(!descVal){showToast('Please enter a description','error');return;}
+  var isCPS=CPS_SCHOOLS.some(function(c){return schoolName.toLowerCase().includes(c.toLowerCase());});
+  var entry={id:Date.now(),serial:'(manual)',description:descVal,notes:notes?notes.value.trim():'',action:manualAction,school:schoolName,isCPS:isCPS,manual:true,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
+  scanLog.unshift(entry);
+  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
+  queueManualCMUpdate(entry);
+  if(desc)desc.value='';if(notes)notes.value='';
+  showToast((manualAction==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
+  renderManualLogs(schoolName);renderScans();
+}
+
+function renderManualLogs(schoolName){
+  var el=document.getElementById('manualLogList');if(!el)return;
+  var today=new Date().toLocaleDateString();
+  var logs=scanLog.filter(function(s){return s.school===schoolName&&s.date===today&&s.manual;});
+  if(logs.length===0)return;
+  var html='<div class="slbl" style="margin-top:12px">Today\'s Manual Logs</div>';
+  logs.forEach(function(s){
+    html+='<div class="scan-item"><div class="si-top">'
+      +'<div class="si-action '+(s.action==='deliver'?'deliver':'pickup')+'">'+(s.action==='deliver'?'📥':'📤')+'</div>'
+      +'<div class="si-name">'+esc(s.description||s.serial)+'</div>'
+      +'<span class="badge '+(s.action==='deliver'?'b-green':'b-yellow')+'">'+(s.action==='deliver'?'Delivered':'Picked Up')+'</span>'
+      +'</div>'+(s.notes?'<div class="si-meta">'+esc(s.notes)+'</div>':'')+'</div>';
+  });
+  el.innerHTML=html;
+}
+
+async function queueManualCMUpdate(entry){
+  if(!auth.connected)return;
+  try{
+    var custs=await callAIM('SearchCustomers',{LastName:entry.school.split(' ')[0]});
+    var match=(custs.Customers||[]).find(function(c){return c.Name&&c.Name.toLowerCase().includes(entry.school.toLowerCase().split(' ')[0]);});
+    if(!match)return;
+    var cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
+    var openCMs=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
+    if(openCMs.length===0)return;
+    var bestCM=openCMs.find(function(c){var n=(c.Comments||c.Notes||c.Subject||'').toLowerCase();return n.includes(entry.description.toLowerCase().split(' ')[0]);})||openCMs[0];
+    var ts=getTimestamp();
+    var draftNote=ts+'  '+(entry.action==='deliver'?'Delivered ':'P/U ')+entry.description+'.'+(entry.notes?' '+entry.notes+'.':'');
+    var queueItem={id:Date.now(),status:'pending',scan:entry,cm:{pk:bestCM.Pk||bestCM.ID,customerPk:match.Pk,subject:bestCM.Subject||'CM',notes:bestCM.Comments||bestCM.Notes||''},instrument:entry.description,draftNote:draftNote,suggestClose:false,school:entry.school,timestamp:new Date().toISOString()};
+    cmUpdateQueue.unshift(queueItem);saveCMQueue();
+    showToast('CM update queued ✓','success');
+  }catch(e){}
+}
+
+function logStandaloneScan(action){
+  action=action||'deliver';
+  var input=document.getElementById('standaloneScanInput');
+  var val=input?input.value.trim():'';
+  if(!val){showToast('Enter serial or invoice #','error');return;}
+  var entry={id:Date.now(),serial:val,action:action,school:'(No school)',isCPS:false,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
+  scanLog.unshift(entry);
+  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
+  queueCMUpdate(entry);
+  if(input)input.value='';
+  showToast((action==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
+  renderScans();
+}
+
+function openVisitNote(schoolName){
+  navTo('notes');
+  setTimeout(function(){
+    var inp=document.getElementById('noteSchoolInput');
+    var hid=document.getElementById('noteSchool');
+    if(inp)inp.value=schoolName;
+    if(hid)hid.value=schoolName;
+    var nt=document.getElementById('noteText');if(nt)nt.focus();
+    renderNotes('',schoolName);
+  },100);
+}
+
+function filterSchoolDropdown(query,listId,inputId){
+  var list=document.getElementById(listId);
+  if(!list||!routeData)return;
+  var q=query.toLowerCase().trim();
+  var schools=routeData.allSchools;
+  var matches=q?schools.filter(function(s){return s.name.toLowerCase().includes(q);}):schools;
+  if(matches.length===0){list.style.display='none';return;}
+  list.style.display='block';
+  list.innerHTML='';
+  matches.slice(0,10).forEach(function(s){
+    var item=document.createElement('div');
+    item.style.cssText='padding:11px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #e2e8f0';
+    item.innerHTML=esc(s.name)+'<span style="font-size:11px;color:#64748b;margin-left:8px">Dist '+esc(s.district)+'</span>';
+    (function(sname){
+      item.addEventListener('click',function(){selectSchool(listId,inputId,sname);});
+      item.addEventListener('mouseover',function(){this.style.background='#dbeafe';});
+      item.addEventListener('mouseout',function(){this.style.background='';});
+    })(s.name);
+    list.appendChild(item);
+  });
+  setTimeout(function(){
+    document.addEventListener('click',function closeList(e){
+      if(!list.contains(e.target)&&e.target.id!==inputId){list.style.display='none';}
+      document.removeEventListener('click',closeList);
+    });
+  },100);
+}
+
+function selectSchool(listId,inputId,schoolName){
+  var input=document.getElementById(inputId);
+  var hidden=document.getElementById(inputId==='cmSchoolInput'?'cmSchool':'noteSchool');
+  var list=document.getElementById(listId);
+  if(input)input.value=schoolName;
+  if(hidden)hidden.value=schoolName;
+  if(list)list.style.display='none';
+}
 
 // ── SCANS ─────────────────────────────────────────────────
 var scanTabMode='all';
@@ -2344,7 +2486,7 @@ async function sendAI(){
     const resp=await fetch(`${PROXY}/ai`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        model:'claude-sonnet-4-6',max_tokens:1000,
         system:`You are an AI assistant for ${REPS[currentRep].name}, an Educational Representative at PM Music Center in the Chicago suburbs. You help with AIM instrument rental management system queries.
 
 Today's schools: ${routeData?.schools?.map(s=>s.name).join(', ')||'loading'}.
@@ -2967,7 +3109,7 @@ async function sendAI(){
     const resp=await fetch(`${PROXY}/ai`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        model:'claude-sonnet-4-6',max_tokens:1000,
         system:`You are an AI assistant for ${REPS[currentRep].name}, an Educational Representative at PM Music Center in the Chicago suburbs. You help with AIM instrument rental management system queries.
 
 Today's schools: ${routeData?.schools?.map(s=>s.name).join(', ')||'loading'}.
