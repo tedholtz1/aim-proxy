@@ -1059,7 +1059,7 @@ const LOGO_B64='/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQw
 // ── INIT ──────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',async()=>{
   const logoSrc=LOGO_B64?'data:image/png;base64,'+LOGO_B64:'';
-  ['hdrLogo','hdrLogo2'].forEach(id=>{
+  ['hdrLogo','hdrLogo2','pinLogo'].forEach(id=>{
     const el=document.getElementById(id);
     if(el&&logoSrc)el.src=logoSrc;else if(el)el.style.display='none';
   });
@@ -1090,847 +1090,221 @@ window.addEventListener('DOMContentLoaded',async()=>{
   }
 });
 
-// ── PIN ───────────────────────────────────────────────────
+// ── MULTI-REP LOGIN ──────────────────────────────────────
+var pinBuf='';
+var loginRepId=null;
+var pinChanging=false;
+var pinChangeStep=0;
+var pinChangeFirst='';
+
+var REPS_LOGIN={
+  TH:{name:'Ted Holtz',initials:'TXHOLTZ',repKey:'MON-TH'},
+  HF:{name:'Harley Figueroa',initials:'HF',repKey:'MON-HF'},
+  LM:{name:'Laurie Mills',initials:'LM',repKey:'MON-LM'},
+  MP:{name:'Mike Patterson',initials:'MP',repKey:'MON-MP'},
+  ADMIN:{name:'Admin',initials:'ADMIN',repKey:''}
+};
+
+function getRepPin(repId){return localStorage.getItem('pmPin_'+repId)||'1234';}
+function setRepPin(repId,pin){localStorage.setItem('pmPin_'+repId,pin);}
+function getAdminPin(){return localStorage.getItem('pmAdminPin')||'9999';}
+
+function selectRepLogin(repId){
+  loginRepId=repId;
+  pinBuf='';
+  updatePinDots();
+  document.getElementById('pinErr').textContent='';
+  var repName=REPS_LOGIN[repId]?REPS_LOGIN[repId].name:repId;
+  document.getElementById('pinRepName').textContent=repId==='ADMIN'?'Admin Access':repName;
+  document.getElementById('repSelectView').style.display='none';
+  var pev=document.getElementById('pinEntryView');
+  pev.style.display='flex';
+}
+
+function backToRepSelect(){
+  loginRepId=null;pinBuf='';
+  updatePinDots();
+  document.getElementById('pinErr').textContent='';
+  document.getElementById('repSelectView').style.display='block';
+  document.getElementById('pinEntryView').style.display='none';
+}
+
 function pinKey(k){
-  if(pinInput.length>=4)return;
-  pinInput+=k;updatePinDots();
-  if(pinInput.length===4){
-    setTimeout(()=>{
-      if(pinInput===settings.pin){document.getElementById('pinScreen').classList.add('hidden');}
-      else{document.getElementById('pinErr').textContent='Incorrect PIN';pinInput='';updatePinDots();}
-    },150);
+  if(pinBuf.length>=4)return;
+  pinBuf+=k;
+  updatePinDots();
+  if(pinBuf.length===4){
+    setTimeout(function(){
+      if(pinChanging){checkNewPin();}
+      else if(loginRepId){checkRepPin();}
+    },120);
   }
 }
-function pinDel(){pinInput=pinInput.slice(0,-1);document.getElementById('pinErr').textContent='';updatePinDots();}
-function updatePinDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('filled',i<pinInput.length);}
-function showChangePIN(){document.getElementById('pinModal').classList.add('show');}
+
+function pinDel(){
+  pinBuf=pinBuf.slice(0,-1);
+  updatePinDots();
+  document.getElementById('pinErr').textContent='';
+}
+
+function updatePinDots(){
+  for(var i=0;i<4;i++){
+    var d=document.getElementById('d'+i);
+    if(d)d.className='pdot'+(i<pinBuf.length?' filled':'');
+  }
+}
+
+function checkRepPin(){
+  if(loginRepId==='ADMIN'){
+    if(pinBuf===getAdminPin()){
+      document.getElementById('pinScreen').classList.add('hidden');
+      showAdminPanel();
+    } else {
+      document.getElementById('pinErr').textContent='Incorrect PIN';
+      pinBuf='';updatePinDots();
+    }
+    return;
+  }
+  var correct=getRepPin(loginRepId);
+  if(pinBuf===correct){
+    currentRep=loginRepId;
+    settings.rep=loginRepId;
+    var rd=REPS_LOGIN[loginRepId];
+    if(rd){settings.initials=rd.initials;settings.repName=rd.name;}
+    localStorage.setItem('pm_currentRep',loginRepId);
+    document.getElementById('pinScreen').classList.add('hidden');
+    document.getElementById('pinErr').textContent='';
+    renderHome();renderToday();updateSettingsDisplay();
+    if(settings.saveCreds&&settings.apiKey&&settings.user&&settings.pass)autoConnect();
+  } else {
+    document.getElementById('pinErr').textContent='Incorrect PIN';
+    pinBuf='';updatePinDots();
+  }
+}
+
+function startPinChange(){
+  pinChanging=true;pinChangeStep=0;pinChangeFirst='';pinBuf='';
+  updatePinDots();
+  loginRepId=currentRep||'TH';
+  document.getElementById('repSelectView').style.display='none';
+  var pev=document.getElementById('pinEntryView');
+  pev.style.display='flex';
+  document.getElementById('pinRepName').textContent='New PIN for '+(REPS_LOGIN[loginRepId]?REPS_LOGIN[loginRepId].name:loginRepId);
+  document.getElementById('pinErr').textContent='Enter new PIN';
+  document.getElementById('pinScreen').classList.remove('hidden');
+}
+
+function checkNewPin(){
+  if(pinChangeStep===0){
+    pinChangeFirst=pinBuf;pinBuf='';pinChangeStep=1;
+    updatePinDots();
+    document.getElementById('pinErr').textContent='Confirm new PIN';
+  } else {
+    if(pinBuf===pinChangeFirst){
+      setRepPin(loginRepId,pinBuf);
+      pinChanging=false;pinBuf='';pinChangeStep=0;pinChangeFirst='';
+      updatePinDots();
+      document.getElementById('pinScreen').classList.add('hidden');
+      backToRepSelect();
+      showToast('PIN updated ✓','success');
+    } else {
+      document.getElementById('pinErr').textContent='PINs did not match';
+      pinBuf='';pinChangeStep=0;pinChangeFirst='';
+      updatePinDots();
+    }
+  }
+}
+
 function savePIN(){
-  const np=document.getElementById('newPIN').value;
-  const cp=document.getElementById('confirmPIN').value;
-  if(np.length!==4||!/^\d{4}$/.test(np)){showToast('PIN must be 4 digits','error');return;}
-  if(np!==cp){showToast('PINs do not match','error');return;}
-  settings.pin=np;localStorage.setItem('pm_pin',np);
-  hideMBG({target:document.getElementById('pinModal')},'pinModal');
+  var p=document.getElementById('newPIN')?document.getElementById('newPIN').value:'';
+  if(p.length!==4){showToast('PIN must be 4 digits','error');return;}
+  setRepPin(currentRep||'TH',p);
   showToast('PIN updated ✓','success');
 }
+
+function logout(){
+  backToRepSelect();
+  document.getElementById('pinScreen').classList.remove('hidden');
+  navTo('home');
+}
+
 function editInitials(){
-  const v=prompt('Enter your initials:',settings.initials);
+  var v=prompt('Enter your initials:',settings.initials);
   if(v&&v.trim()){settings.initials=v.trim().toUpperCase();localStorage.setItem('pm_initials',settings.initials);updateSettingsDisplay();showToast('Initials updated ✓','success');}
 }
 
-// ── REP SWITCH ────────────────────────────────────────────
+function showAdminPanel(){
+  var existing=document.getElementById('adminPanel');
+  if(existing)existing.remove();
+  var panel=document.createElement('div');
+  panel.id='adminPanel';
+  panel.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:600;overflow-y:auto;padding:24px 18px 80px';
+  var html='<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">'
+    +'<div style="font-size:22px;font-weight:800;color:var(--pm-blue);flex:1">⚙️ Admin Panel</div>'
+    +'<button data-panel="adminPanel" onclick="document.getElementById(this.dataset.panel).remove()" style="background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-family:var(--sans);font-weight:700;cursor:pointer">Done</button>'
+    +'</div>';
+  html+='<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Rep PINs</div>';
+  ['TH','HF','LM','MP'].forEach(function(id){
+    var rep=REPS_LOGIN[id];
+    html+='<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);">'
+      +'<div style="flex:1"><div style="font-weight:700;font-size:14px">'+rep.name+'</div><div style="font-size:11px;color:var(--muted2);margin-top:2px">'+rep.initials+'</div></div>'
+      +'<button data-rep="'+id+'" onclick="adminResetPin(this.dataset.rep)" style="background:var(--pm-light);border:1px solid rgba(37,99,199,.2);border-radius:9px;padding:8px 14px;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--pm-blue2);cursor:pointer">Reset PIN</button>'
+      +'</div>';
+  });
+  html+='<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;margin-top:20px">Admin PIN</div>';
+  html+='<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);">'
+    +'<div style="font-size:14px;font-weight:700;margin-bottom:10px">Change Admin PIN</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<input type="password" id="newAdminPin" maxlength="4" placeholder="New 4-digit PIN" style="flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:11px 13px;font-family:var(--mono);font-size:16px;outline:none">'
+    +'<button onclick="saveAdminPin()" style="background:var(--pm-blue);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-family:var(--sans);font-weight:700;cursor:pointer">Save</button>'
+    +'</div></div>';
+  panel.innerHTML=html;
+  document.body.appendChild(panel);
+}
+
+function adminResetPin(repId){
+  var newPin=prompt('Enter new 4-digit PIN for '+REPS_LOGIN[repId].name+':');
+  if(!newPin||newPin.length!==4||isNaN(newPin)){alert('PIN must be exactly 4 digits');return;}
+  setRepPin(repId,newPin);
+  alert('PIN reset for '+REPS_LOGIN[repId].name);
+}
+
+function saveAdminPin(){
+  var pin=document.getElementById('newAdminPin').value;
+  if(!pin||pin.length!==4||isNaN(pin)){alert('PIN must be exactly 4 digits');return;}
+  localStorage.setItem('pmAdminPin',pin);
+  alert('Admin PIN updated');
+  document.getElementById('newAdminPin').value='';
+}
+
+// ── REP SWITCH ─────────────────────────────────────────────
 function showRepSwitcher(){document.getElementById('repModal').classList.add('show');}
 function switchRep(rep){
   currentRep=rep;
-  const r=REPS[rep];
+  var r=REPS[rep];
   if(rep==='ted'){settings.initials=r.initials;localStorage.setItem('pm_initials',r.initials);}
   document.getElementById('currentRepDisplay').textContent=r.name+(rep!=='ted'?' (viewing as)':'');
   hideMBG({target:document.getElementById('repModal')},'repModal');
-  showToast(`Switched to ${r.name},'success`);
+  showToast('Switched to '+r.name,'success');
   renderToday();loadTodayCMs();
 }
 
 function getEmpCode(dayAbbr){
-  const r=REPS[currentRep];
-  const school=currentSchool?.name||'';
-  if(school&&['park junior high','gurrie middle'].some(n=>school.toLowerCase().includes(n)))return r.d102;
+  var r=REPS[currentRep]||REPS['ted'];
+  var school=currentSchool?currentSchool.name:'';
+  if(school&&['park junior high','gurrie middle'].some(function(n){return school.toLowerCase().includes(n);}))return r.d102;
   return r.emp[dayAbbr]||r.emp['Mon'];
 }
 
 function updateSettingsDisplay(){
-  const ak=document.getElementById('settingApiKey');
-  const su=document.getElementById('settingUser');
-  const si=document.getElementById('settingInitials');
-  const rep=document.getElementById('currentRepDisplay');
+  var ak=document.getElementById('settingApiKey');
+  var su=document.getElementById('settingUser');
+  var si=document.getElementById('settingInitials');
+  var rep=document.getElementById('currentRepDisplay');
   if(ak)ak.textContent=settings.apiKey?settings.apiKey.substring(0,8)+'...':'Not saved';
   if(su)su.textContent=settings.user||'Not saved';
   if(si)si.textContent=settings.initials||'TXHOLTZ';
-  if(rep)rep.textContent=REPS[currentRep].name+(currentRep!=='ted'?' (viewing as)':'');
-}
-
-// ── ROUTE ─────────────────────────────────────────────────
-async function loadRoute(){
-  try{
-    const r=await fetch(`${PROXY}/route`);
-    routeData=await r.json();
-    renderToday();renderHome();populateSchoolSelect();populateNoteSchools();
-  }catch(err){
-    document.getElementById('todayContent').innerHTML=`<div class="empty-state"><div class="eicon">⚠️</div><div class="etxt">Could not load route</div></div>`;
-  }
-}
-
-function renderHome(){
-  if(!routeData)return;
-  const el=document.getElementById('homeDayName');
-  const sub=document.getElementById('homeSubLine');
-  const lbl=document.getElementById('homeRepLabel');
-  if(el)el.textContent=`${routeData.today} — ${routeData.schools.length} schools`;
-  if(lbl)lbl.textContent=currentRep==='ted'?'PM Music Center — Field Rep':`Viewing as ${REPS[currentRep].name}`;
-  if(sub)sub.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-}
-
-function getDayAbbr(){
-  const da=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  return da[new Date().getDay()];
-}
-
-function renderToday(){
-  if(!routeData)return;
-  const{today,schools}=routeData;
-  const ta=getDayAbbr();
-  const routeKey=ta==='Thu'?'Thur':ta;
-  const orderedSchools=orderSchools(schools,routeKey);
-
-  let html=`<div class="day-banner">
-    <div class="day-label">${currentRep==='ted'?'Your Route Today':'Route — '+REPS[currentRep].name}</div>
-    <div class="day-name">${today}</div>
-    <div class="day-stats"><div><div class="ds-num">${orderedSchools.length}</div><div class="ds-lbl">Schools</div></div></div>
-  </div>`;
-
-  if(!auth.connected)html+=`<div class="conn-banner"><div class="conn-banner-text"><div class="conn-banner-title">Not connected to AIM</div><div class="conn-banner-sub">Tap to connect</div></div><button class="conn-banner-btn" onclick="showConnectModal()">Connect</button></div>`;
-
-  if(orderedSchools.length>0){
-    html+=`<div class="slbl">Today's Schools</div>`;
-    orderedSchools.forEach((s,i)=>{
-      const isCPS=CPS_SCHOOLS.some(c=>s.name.toLowerCase().includes(c.toLowerCase()));
-      const isGula=s.name.toLowerCase().includes('daniel')||s.name.toLowerCase().includes('gula');
-      const displayName=isGula?'Gula':s.name;
-      const displaySchool=isGula?{name:'Gula',district:'GULA'}:s;
-      html+=`<div class="scard" onclick="openSchool(${JSON.stringify(displaySchool).replace(/"/g,'&quot;')})" style="animation-delay:${i*.04}s">
-        <div class="snum">${i+1}</div>
-        <div class="sinfo"><div class="sname">${esc(displayName)}</div><div class="smeta">${isGula?'Gula Schools':'District '+esc(s.district)}</div></div>
-        ${isCPS?'<span class="badge b-orange" style="margin-right:4px">CPS</span>':''}
-        <div class="chev">›</div></div>`;
-    });
-  }
-
-  // Special visits placeholder
-  html+=`<div class="slbl" style="margin-top:6px">Special Visits</div>
-  <div class="card" style="padding:12px 15px">
-    <div style="font-size:13px;color:var(--muted)">One-off visits will appear here based on CMs assigned to you for schools not on your regular route.</div>
-  </div>`;
-
-  document.getElementById('todayContent').innerHTML=html;
-}
-
-function orderSchools(schools,dayKey){
-  const order=ROUTE_ORDER[dayKey]||[];
-  const ordered=[];
-  const rest=[];
-  order.forEach(name=>{
-    const found=schools.find(s=>s.name.toLowerCase().includes(name.toLowerCase().split(' ')[0]));
-    if(found&&!ordered.includes(found))ordered.push(found);
-  });
-  schools.forEach(s=>{if(!ordered.includes(s))rest.push(s);});
-  return[...ordered,...rest];
-}
-
-// ── SCHOOL DETAIL ─────────────────────────────────────────
-function showGulaDetail(){
-  currentSchool={name:'Gula Schools',district:'GULA'};
-  document.getElementById('detailName').textContent='Gula Schools';
-  document.getElementById('detailDist').textContent='Bill Gula — Multiple Schools';
-  navTo('school');
-  var GULA_SCHOOLS=['St. Daniel the Prophet','St. John Fisher','St. Mary Star of the Sea','Our Lady of the Snows','St. Symphorosa','St. Walter/St. Benedict','Infant Jesus of Prague','Sts. Cyril & Methodius','St. Alphonsus/St. Patrick','St. Michael','St. George','St. Catherine','Most Holy Redeemer','St. Barnabas','St. Damian'];
-  var cnt=document.getElementById('schoolContent');
-  var gulaHTML='<div class="agrid">';
-  gulaHTML+='<div class="acard blue" onclick="openSchoolCMs(&quot;Gula&quot;)"><div class="aicon">📝</div><div class="albl">CMs</div></div>';
-  gulaHTML+='<div class="acard green" onclick="showContactDirector(&quot;Gula&quot;)"><div class="aicon">📞</div><div class="albl">Contact Bill Gula</div></div>';
-  gulaHTML+='<div class="acard yellow" onclick="showScanDelivery(&quot;Gula&quot;)"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>';
-  gulaHTML+='<div class="acard orange" onclick="showRepairStatus(&quot;Gula&quot;)"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>';
-  gulaHTML+='<div class="acard purple" onclick="openVisitNote(&quot;Gula&quot;)"><div class="aicon">📋</div><div class="albl">Notes</div></div>';
-  gulaHTML+='</div>';
-  gulaHTML+='<div class="slbl" style="margin-top:10px">Gula Schools</div>';
-  gulaHTML+=GULA_SCHOOLS.map(function(s){return '<div class="card" style="padding:11px 14px;margin-bottom:6px;font-size:13px;font-weight:500">'+esc(s)+'</div>';}).join('');
-  gulaHTML+='<div id="schoolDetail"></div>';
-  cnt.innerHTML=gulaHTML;
-}
-
-async function openSchool(school){
-  currentSchool=school;
-  document.getElementById('detailName').textContent=school.name;
-  document.getElementById('detailDist').textContent=`District ${school.district}`;
-  navTo('school');
-  const cnt=document.getElementById('schoolContent');
-  const isCPS=CPS_SCHOOLS.some(c=>school.name.toLowerCase().includes(c.toLowerCase()));
-  cnt.innerHTML=`<div class="agrid">
-    <div class="acard blue" onclick="openSchoolCMs('${esc(school.name)}')"><div class="aicon">📝</div><div class="albl">CMs</div></div>
-    <div class="acard green" onclick="showContactDirector('${esc(school.name)}')"><div class="aicon">📞</div><div class="albl">Contact Director(s)</div></div>
-    <div class="acard yellow" onclick="showScanDelivery('${esc(school.name)}')"><div class="aicon">📦</div><div class="albl">Scan Delivery</div></div>
-    <div class="acard blue" onclick="showManualLog('${esc(school.name)}')"><div class="aicon">✏️</div><div class="albl">Log Manually</div></div>
-    <div class="acard orange" onclick="showRepairStatus('${esc(school.name)}')"><div class="aicon">🔧</div><div class="albl">Repair Status</div></div>
-    <div class="acard purple" onclick="openVisitNote('${esc(school.name)}')"><div class="aicon">📋</div><div class="albl">Notes</div></div>
-  </div>
-  ${isCPS?'<div class="card" style="background:var(--orange-bg);border-color:#fed7aa"><div style="font-size:12px;color:var(--orange);font-weight:600">🏫 CPS School — scans go to office email</div></div>':''}
-  <div id="schoolDetail"></div>`;
-}
-
-async function openSchoolCMs(schoolName){
-  const detail=document.getElementById('schoolDetail');
-  detail.innerHTML=`<div class="slbl" style="margin-top:12px">CMs — ${esc(schoolName)}</div><div class="loading-state"><div class="spinner"></div></div>`;
-  if(!auth.connected){detail.innerHTML+=notConnMsg();return;}
-  try{
-    const custs=await callAIM('SearchCustomers',{LastName:schoolName.split(' ')[0]});
-    const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(schoolName.toLowerCase().split(' ')[0]));
-    if(!match){detail.innerHTML=`<div class="empty-state"><div class="etxt">School not found in AIM</div></div>`;return;}
-    const cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
-    const cms=(cmData.ContactRecords||cmData.Records||[]).filter(c=>!c.Closed&&!c.IsClosed);
-    detail.innerHTML=`<div class="slbl" style="margin-top:12px">Open CMs (${cms.length})</div>`;
-    if(cms.length===0){detail.innerHTML+=`<div class="empty-state"><div class="eicon">✓</div><div class="etxt">No open CMs</div></div>`;}
-    else cms.forEach(cm=>{detail.innerHTML+=renderCM(cm,match.Pk);});
-    // Add new CM button
-    detail.innerHTML+=`<button class="btn-p" onclick="prefillCM('${esc(schoolName)}')" style="margin-top:10px">+ New CM for ${esc(schoolName)}</button>`;
-  }catch(err){detail.innerHTML=`<div class="empty-state"><div class="etxt">Error: ${esc(err.message)}</div></div>`;}
-}
-
-function showContactDirector(schoolName){
-  const dirs=DIRECTORS.filter(d=>d.school===schoolName||(d.school&&schoolName.toLowerCase().includes(d.school.toLowerCase().split(' ')[0])));
-  const detail=document.getElementById('schoolDetail');
-  if(dirs.length===0){showToast('No director info found','error');return;}
-  let html=`<div class="slbl" style="margin-top:12px">Director(s) — ${esc(schoolName)}</div>`;
-  dirs.forEach(d=>{
-    html+=`<div class="dcard">
-      <div class="dcard-school">${esc(d.name)} <span class="badge b-gray">${d.role||'B'}</span></div>
-      <div class="dcard-name">${esc(d.school)}</div>
-      <div class="dcard-acts">
-        ${d.email&&d.email!=='N/A'?`<a class="dact email" href="mailto:${d.email}">✉️ Email</a>`:''}
-        ${d.phone?`<a class="dact text" href="sms:${d.phone}">💬 Text</a>`:''}
-        ${d.phone?`<a class="dact" href="tel:${d.phone}" style="border-color:var(--border)">📞 Call</a>`:''}
-        <button class="dact" onclick="showArrival('${esc(schoolName)}')">📍 Arrival</button>
-      </div>
-    </div>`;
-  });
-  detail.innerHTML=html;
-}
-
-function showScanDelivery(schoolName){
-  const detail=document.getElementById('schoolDetail');
-  const isCPS=CPS_SCHOOLS.some(c=>schoolName.toLowerCase().includes(c.toLowerCase()));
-  detail.innerHTML=`
-    <div class="slbl" style="margin-top:12px">Scan Delivery — ${esc(schoolName)}</div>
-    <div class="fcard">
-      <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Enter serial # or invoice # for each item being delivered or picked up.</div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input type="text" class="finput" id="scanSerial" placeholder="Serial # or Invoice #" style="font-family:var(--mono);flex:1" autocomplete="off">
-        <button style="background:var(--pm);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="startScanner(function(v){document.getElementById('scanSerial').value=v;})">📷</button>
-        <button style="background:var(--emerald);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','deliver')">📥 Deliver</button>
-        <button style="background:var(--amber);color:#fff;border:none;border-radius:9px;padding:11px 12px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer" onclick="logDeliveryScan('${esc(schoolName)}','pickup')">📤 Pick Up</button>
-      </div>
-      ${isCPS?'<div style="font-size:11px;color:var(--orange);font-weight:600;padding:6px 10px;background:var(--orange-bg);border-radius:8px">CPS — scans will go to office email</div>':''}
-    </div>
-    <div id="schoolScanList"></div>`;
-  renderSchoolScans(schoolName);
-}
-
-function logStandaloneScan(action){
-  action=action||'deliver';
-  var input=document.getElementById('standaloneScanInput');
-  var val=input?input.value.trim():'';
-  if(!val){showToast('Enter serial or invoice #','error');return;}
-  var entry={id:Date.now(),serial:val,action:action,school:'(No school)',isCPS:false,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
-  scanLog.unshift(entry);
-  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
-  // Queue for CM update agent
-  queueCMUpdate(entry);
-  if(input)input.value='';
-  showToast((action==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
-  renderScans();
-}
-
-function showManualLog(schoolName){
-  var detail=document.getElementById('schoolDetail');
-  if(!detail)return;
-  detail.innerHTML='<div class="slbl" style="margin-top:12px">Log Manually — '+esc(schoolName)+'</div>'
-    +'<div class="fcard" style="margin-top:8px">'
-    +'<div style="font-size:13px;color:var(--muted);margin-bottom:12px">For items without a barcode — cases, bows, mouthpieces, supplies, folders, strings, etc.</div>'
-    +'<div class="ff"><div class="flbl">Description</div>'
-    +'<input type="text" class="finput" id="manualDesc" placeholder="e.g. Clarinet case replacement" autocomplete="off"></div>'
-    +'<div class="ff"><div class="flbl">Action</div>'
-    +'<div style="display:flex;gap:8px;margin-top:4px">'
-    +'<button id="manualDeliver" class="dtab active" onclick="setManualAction(&quot;deliver&quot;,this)">📥 Delivered</button>'
-    +'<button id="manualPickup" class="dtab" onclick="setManualAction(&quot;pickup&quot;,this)">📤 Picked Up</button>'
-    +'</div></div>'
-    +'<div class="ff"><div class="flbl">Notes (optional)</div>'
-    +'<input type="text" class="finput" id="manualNotes" placeholder="e.g. Dropped off new case, picked up broken case"></div>'
-    +'<button class="btn-p" id="manualLogBtn" data-school="'+esc(schoolName)+'" onclick="submitManualLog(this.dataset.school)">Log This Item</button>'
-    +'</div>'
-    +'<div id="manualLogList"></div>';
-  renderManualLogs(schoolName);
-}
-
-var manualAction='deliver';
-function setManualAction(action,btn){
-  manualAction=action;
-  document.querySelectorAll('#manualDeliver,#manualPickup').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-}
-
-function submitManualLog(schoolName){
-  var desc=document.getElementById('manualDesc');
-  var notes=document.getElementById('manualNotes');
-  var descVal=desc?desc.value.trim():'';
-  if(!descVal){showToast('Please enter a description','error');return;}
-  var isCPS=CPS_SCHOOLS.some(function(c){return schoolName.toLowerCase().includes(c.toLowerCase());});
-  var entry={
-    id:Date.now(),
-    serial:'(manual)',
-    description:descVal,
-    notes:notes?notes.value.trim():'',
-    action:manualAction,
-    school:schoolName,
-    isCPS:isCPS,
-    manual:true,
-    timestamp:new Date().toISOString(),
-    date:new Date().toLocaleDateString(),
-    time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})
-  };
-  scanLog.unshift(entry);
-  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
-  // Queue CM update
-  queueManualCMUpdate(entry);
-  if(desc)desc.value='';
-  if(notes)notes.value='';
-  showToast((manualAction==='deliver'?'Delivery':'Pickup')+' logged ✓','success');
-  renderManualLogs(schoolName);
-  renderScans();
-}
-
-function renderManualLogs(schoolName){
-  var el=document.getElementById('manualLogList');if(!el)return;
-  var today=new Date().toLocaleDateString();
-  var logs=scanLog.filter(function(s){return s.school===schoolName&&s.date===today&&s.manual;});
-  if(logs.length===0)return;
-  var html='<div class="slbl" style="margin-top:12px">Today\'s Manual Logs</div>';
-  logs.forEach(function(s){
-    html+='<div class="scan-item">'
-      +'<div class="si-top">'
-      +'<div class="si-action '+(s.action==='deliver'?'deliver':'pickup')+'">'+(s.action==='deliver'?'📥':'📤')+'</div>'
-      +'<div class="si-name">'+esc(s.description||s.serial)+'</div>'
-      +'<span class="badge '+(s.action==='deliver'?'b-green':'b-yellow')+'">'+(s.action==='deliver'?'Delivered':'Picked Up')+'</span>'
-      +'</div>'
-      +(s.notes?'<div class="si-meta">'+esc(s.notes)+'</div>':'')
-      +'</div>';
-  });
-  el.innerHTML=html;
-}
-
-async function queueManualCMUpdate(entry){
-  if(!auth.connected)return;
-  try{
-    var custs=await callAIM('SearchCustomers',{LastName:entry.school.split(' ')[0]});
-    var match=(custs.Customers||[]).find(function(c){
-      return c.Name&&c.Name.toLowerCase().includes(entry.school.toLowerCase().split(' ')[0]);
-    });
-    if(!match)return;
-    var cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
-    var openCMs=(cmData.ContactRecords||cmData.Records||[]).filter(function(c){return !c.Closed&&!c.IsClosed;});
-    if(openCMs.length===0)return;
-    // Find best matching CM
-    var bestCM=openCMs.find(function(c){
-      var n=(c.Comments||c.Notes||c.Subject||'').toLowerCase();
-      return n.includes(entry.description.toLowerCase().split(' ')[0]);
-    })||openCMs[0];
-    var ts=getTimestamp();
-    var draftNote;
-    if(entry.action==='deliver'){
-      draftNote=ts+'  Delivered '+entry.description+'.'+(entry.notes?' '+entry.notes+'.':'');
-    } else {
-      draftNote=ts+'  P/U '+entry.description+'.'+(entry.notes?' '+entry.notes+'.':'');
-    }
-    var suggestClose=entry.notes&&(entry.notes.toLowerCase().includes('closing')||entry.notes.toLowerCase().includes('picked up'));
-    var queueItem={
-      id:Date.now(),
-      status:'pending',
-      scan:entry,
-      cm:{pk:bestCM.Pk||bestCM.ID,customerPk:match.Pk,subject:bestCM.Subject||bestCM.Action||'CM',notes:bestCM.Comments||bestCM.Notes||''},
-      instrument:entry.description,
-      draftNote:draftNote,
-      suggestClose:suggestClose,
-      school:entry.school,
-      timestamp:new Date().toISOString()
-    };
-    cmUpdateQueue.unshift(queueItem);
-    saveCMQueue();
-    showToast('CM update queued ✓','success');
-  }catch(e){}
-}
-
-function logDeliveryScan(schoolName,action){
-  const input=document.getElementById('scanSerial');
-  const val=input?.value.trim();
-  if(!val){showToast('Enter serial or invoice #','error');return;}
-  const isCPS=CPS_SCHOOLS.some(c=>schoolName.toLowerCase().includes(c.toLowerCase()));
-  const entry={id:Date.now(),serial:val,action,school:schoolName,isCPS,timestamp:new Date().toISOString(),date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
-  scanLog.unshift(entry);
-  try{localStorage.setItem('pmScanLog',JSON.stringify(scanLog.slice(0,1000)));}catch(e){}
-  if(input)input.value='';
-  showToast(`${action==='deliver'?'Delivery':'Pickup'} logged ✓`,'success');
-  renderSchoolScans(schoolName);
-  renderScans();
-}
-
-function renderSchoolScans(schoolName){
-  const el=document.getElementById('schoolScanList');if(!el)return;
-  const today=new Date().toLocaleDateString();
-  const scans=scanLog.filter(s=>s.school===schoolName&&s.date===today);
-  if(scans.length===0){el.innerHTML='';return;}
-  let html=`<div class="slbl">Today's Scans for ${esc(schoolName)}</div>`;
-  scans.forEach(s=>{
-    html+=`<div class="scan-item">
-      <div class="si-top">
-        <div class="si-action ${s.action}">${s.action==='deliver'?'📥':'📤'}</div>
-        <div class="si-name">${esc(s.serial)}</div>
-        <span class="badge ${s.action==='deliver'?'b-green':'b-yellow'}">${s.action==='deliver'?'Delivery':'Pickup'}</span>
-      </div>
-      <div class="si-meta">${s.time} · ${esc(s.school)}${s.isCPS?' · CPS':''}</div>
-    </div>`;
-  });
-  el.innerHTML=html;
-}
-
-async function showRepairStatus(schoolName){
-  const detail=document.getElementById('schoolDetail');
-  detail.innerHTML=`<div class="slbl" style="margin-top:12px">Repair Status — ${esc(schoolName)}</div><div class="loading-state"><div class="spinner"></div></div>`;
-  if(!auth.connected){detail.innerHTML=notConnMsg();return;}
-  try{
-    const data=await callAIM('SearchServiceTickets',{ShipTo:schoolName});
-    const tickets=data.ServiceTickets||data.Records||[];
-    if(tickets.length===0){
-      detail.innerHTML=`<div class="slbl" style="margin-top:12px">Repair Status — ${esc(schoolName)}</div><div class="empty-state"><div class="eicon">✓</div><div class="etxt">No repairs found for this school</div></div>`;
-      return;
-    }
-    // Sort options
-    let html=`<div class="slbl" style="margin-top:12px">Repair Status — ${esc(schoolName)} (${tickets.length})</div>
-    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-      <button class="dtab active" onclick="sortRepairs('status',this,${JSON.stringify(tickets).replace(/"/g,'&quot;')})">By Status</button>
-      <button class="dtab" onclick="sortRepairs('age',this,${JSON.stringify(tickets).replace(/"/g,'&quot;')})">By Age</button>
-    </div>`;
-    html+=renderRepairItems(tickets);
-    detail.innerHTML=html;
-  }catch(err){
-    detail.innerHTML=`<div class="slbl" style="margin-top:12px">Repair Status</div><div class="empty-state"><div class="etxt">Error: ${esc(err.message)}<br><small>This feature requires live AIM data</small></div></div>`;
-  }
-}
-
-function renderRepairItems(tickets){
-  return tickets.map(t=>{
-    const status=(t.Status||'').toLowerCase();
-    const statusClass=status.includes('estimate')?'estimate':status.includes('invoice')?'invoice':'workorder';
-    const statusLabel=status.includes('estimate')?'ESTIMATE':status.includes('invoice')?'INVOICE':'WORK ORDER';
-    const days=t.Date?Math.floor((Date.now()-new Date(t.Date))/86400000):0;
-    return`<div class="repair-item ${statusClass}">
-      <div class="ri-top">
-        <div class="ri-name">${esc(t.CustomerName||t.Name||'Customer')}</div>
-        <span class="badge ${statusClass==='estimate'?'b-yellow':statusClass==='invoice'?'b-green':'b-blue'}">${statusLabel}</span>
-      </div>
-      <div class="ri-inst">${esc(t.Description||t.Instrument||'Instrument')} · S/N: ${esc(t.SerialNumber||'—')}</div>
-      <div class="ri-meta">Ticket #${esc(t.TicketNum||t.Pk||'—')} · ${days} days ago</div>
-    </div>`;
-  }).join('');
-}
-
-function sortRepairs(by,btn,tickets){
-  document.querySelectorAll('#schoolDetail .dtab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  let sorted=[...tickets];
-  if(by==='status')sorted.sort((a,b)=>{const o={ESTIMATE:0,'WORK ORDER':1,INVOICE:2};return(o[a.Status]||1)-(o[b.Status]||1);});
-  else sorted.sort((a,b)=>new Date(a.Date||0)-new Date(b.Date||0));
-  const container=btn.closest('div').nextElementSibling;
-  if(container)container.outerHTML=renderRepairItems(sorted);
-}
-
-function openVisitNote(schoolName){
-  navTo('notes');
-  setTimeout(function(){
-    var inp=document.getElementById('noteSchoolInput');
-    var hid=document.getElementById('noteSchool');
-    if(inp)inp.value=schoolName;
-    if(hid)hid.value=schoolName;
-    document.getElementById('noteText')?.focus();
-    // Show only this school's notes
-    renderNotes('',schoolName);
-  },100);
-}
-
-// ── CM RENDERING ──────────────────────────────────────────
-function renderCM(cm,pk){
-  const isOpen=!cm.Closed&&!cm.IsClosed;
-  const id=cm.Pk||cm.ID||cm.RefNum||'';
-  const notes=cm.Comments||cm.Notes||cm.Body||'';
-  const subj=cm.Subject||cm.Topic||cm.Action||'Contact Record';
-  const date=cm.Date||cm.EntryDate||cm.ActDate||'';
-  const emp=cm.Employee||cm.Emp||'';
-  return`<div class="cmi ${isOpen?'open':'closed'}" id="cm-${id}">
-    <div class="cmi-top"><div class="cmi-subj">${esc(subj)}</div><div class="cmi-pill ${isOpen?'pill-open':'pill-closed'}">${isOpen?'OPEN':'CLOSED'}</div></div>
-    <div class="cmi-notes">${esc(notes.substring(0,200))}${notes.length>200?'...':''}</div>
-    <div class="cmi-meta">${date?`<span>📅 ${esc(date)}</span>`:''} ${emp?`<span>👤 ${esc(emp)}</span>`:''}</div>
-    ${isOpen?`<div class="cmi-acts">
-      <button class="cmbtn primary" onclick="openEdit('${id}','${esc(pk)}')">Update</button>
-      <button class="cmbtn green" onclick="closeCM('${id}','${esc(pk)}')">✓ Close</button>
-      <button class="cmbtn" onclick="openTransfer('${id}','${esc(pk)}')">↗ Transfer</button>
-    </div>`:''}
-    <div id="edit-${id}"></div>
-  </div>`;
-}
-
-// ── CM EDIT ───────────────────────────────────────────────
-function openEdit(cmId,pk){
-  const div=document.getElementById(`edit-${cmId}`);
-  if(!div)return;
-  if(div.innerHTML){div.innerHTML='';return;}
-  const now=new Date();
-  const m=String(now.getMonth()+1).padStart(2,'0'),d=String(now.getDate()).padStart(2,'0'),y=now.getFullYear();
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const day=days[now.getDay()];
-  let h=now.getHours();const min=String(now.getMinutes()).padStart(2,'0');const ap=h>=12?'P':'A';
-  if(h>12)h-=12;if(h===0)h=12;
-  const ts=`${m}/${d}/${y} ${day} ${h}:${min}${ap} ${settings.initials}`;
-  div.innerHTML=`<div class="cmedit">
-    <div class="cmedit-lbl">Add Update — ${ts}</div>
-    <div class="sh-row">
-      <button class="sh-btn" onclick="insEdit('${cmId}','T&D ')">T&D</button>
-      <button class="sh-btn" onclick="insEdit('${cmId}','P/U ')">P/U</button>
-      <button class="sh-btn" onclick="insEdit('${cmId}','P.C. ')">P.C.</button>
-    </div>
-    <textarea class="cmedit-ta" id="et-${cmId}" placeholder="Add your update..."></textarea>
-    <div class="cmedit-acts">
-      <button class="btn-save" onclick="saveCMUpdate('${cmId}','${pk}','${ts}')">Save</button>
-      <button class="btn-ce" onclick="document.getElementById('edit-${cmId}').innerHTML=''">Cancel</button>
-    </div>
-  </div>`;
-  document.getElementById(`et-${cmId}`)?.focus();
-}
-
-function insEdit(id,text){
-  const ta=document.getElementById(`et-${id}`);if(!ta)return;
-  const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+text+ta.value.substring(p);
-  ta.selectionStart=ta.selectionEnd=p+text.length;ta.focus();
-}
-
-async function saveCMUpdate(cmId,pk,ts){
-  const ta=document.getElementById(`et-${cmId}`);
-  if(!ta||!ta.value.trim()){showToast('Enter update text','error');return;}
-  const newNote=`\n\n${ts}  ${ta.value.trim()}`;
-  const btn=document.querySelector(`#edit-${cmId} .btn-save`);
-  if(btn){btn.textContent='Saving...';btn.disabled=true;}
-  try{
-    const ex=await callAIM('SearchContactManagement',{CustomerID:pk});
-    const cms=ex.ContactRecords||ex.Records||[];
-    const cm=cms.find(c=>String(c.Pk||c.ID||c.RefNum)===String(cmId));
-    const existing=cm?(cm.Comments||cm.Notes||''):'';
-    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Comments:existing+newNote});
-    showToast('CM updated ✓','success');
-    document.getElementById(`edit-${cmId}`).innerHTML='';
-    loadTodayCMs();
-  }catch(err){showToast(err.message,'error');if(btn){btn.textContent='Save';btn.disabled=false;}}
-}
-
-async function closeCM(cmId,pk){
-  if(!confirm('Mark this CM as closed?'))return;
-  try{
-    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Closed:true});
-    showToast('CM closed ✓','success');loadTodayCMs();
-  }catch(err){showToast(err.message,'error');}
-}
-
-// ── CM TRANSFER ───────────────────────────────────────────
-function openTransfer(cmId,pk){
-  cmForTransfer={cmId,pk};
-  // Build transfer options: days for current rep + all employees
-  const r=REPS[currentRep];
-  const dayOpts=[
-    {label:'Monday — '+r.name,code:r.emp['Mon']},
-    {label:'Tuesday — '+r.name,code:r.emp['Tue']},
-    {label:'Wednesday — '+r.name,code:r.emp['Wed']},
-    {label:'Thursday — '+r.name,code:r.emp['Thur']},
-    {label:'Friday — '+r.name,code:r.emp['Fri']},
-    {label:'District 102 — '+r.name,code:r.d102},
-  ];
-  const repOpts=Object.entries(REPS).filter(([k])=>k!==currentRep).map(([k,v])=>({label:v.name,code:v.emp['Mon'].replace('MON-','')}));
-  const otherOpts=[{label:'Nikki',code:'Nikki'},{label:'Office Staff',code:'Office Staff'}];
-
-  let html='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Change Day</div>';
-  dayOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Assign to Rep</div>';
-  repOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Other</div>';
-  otherOpts.forEach(o=>{html+=`<div class="topt" onclick="doTransfer('${esc(o.code)}')">${esc(o.label)}<span style="color:var(--muted2)">›</span></div>`;});
-  document.getElementById('transferList').innerHTML=html;
-  document.getElementById('transferModal').classList.add('show');
-}
-
-async function doTransfer(emp){
-  if(!cmForTransfer)return;
-  const{cmId,pk}=cmForTransfer;
-  const popup=document.getElementById('popupCheck').checked;
-  document.getElementById('transferModal').classList.remove('show');
-  try{
-    await callAIM('EditContactRecord',{Pk:cmId,CustomerID:pk,Employee:emp,Popup:popup});
-    showToast(`Transferred ✓`,'success');loadTodayCMs();
-  }catch(err){showToast(err.message,'error');}
-}
-
-// ── TODAY's CMs ───────────────────────────────────────────
-function setCMFilter(f,btn){
-  cmFilter=f;
-  document.querySelectorAll('#filterOpen,#filterAll').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  loadTodayCMs();
-}
-
-function toggleNewCMForm(){
-  const c=document.getElementById('newCMFormContainer');
-  const btn=document.getElementById('newCMToggleBtn');
-  const open=c.style.display==='none';
-  c.style.display=open?'block':'none';
-  btn.textContent=open?'✕ Cancel':'+ New CM';
-  if(open)c.scrollIntoView({behavior:'smooth'});
-}
-
-async function loadTodayCMs(){
-  const cont=document.getElementById('cmsBySchool');if(!cont)return;
-  if(!auth.connected){cont.innerHTML=notConnMsg();return;}
-  if(!routeData){cont.innerHTML='';return;}
-  cont.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
-  const ta=getDayAbbr();const routeKey=ta==='Thu'?'Thur':ta;
-  const orderedSchools=orderSchools(routeData.schools,routeKey);
-  let html='';
-  for(const s of orderedSchools){
-    try{
-      const custs=await callAIM('SearchCustomers',{LastName:s.name.split(' ')[0]});
-      const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(s.name.toLowerCase().split(' ')[0]));
-      if(!match)continue;
-      const cmData=await callAIM('SearchContactManagement',{CustomerID:match.Pk});
-      const all=cmData.ContactRecords||cmData.Records||[];
-      const cms=cmFilter==='open'?all.filter(c=>!c.Closed&&!c.IsClosed):all;
-      if(cms.length===0)continue;
-      const oc=all.filter(c=>!c.Closed&&!c.IsClosed).length;
-      html+=`<div style="margin-bottom:16px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:13px;font-weight:700;color:var(--pm)">${esc(s.name)}</div>
-          ${oc>0?`<span class="badge b-yellow">${oc} open</span>`:''}
-        </div>
-        ${cms.map(cm=>renderCM(cm,match.Pk)).join('')}
-      </div>`;
-    }catch(e){}
-  }
-  cont.innerHTML=html||`<div class="empty-state"><div class="eicon">✓</div><div class="etxt">${cmFilter==='open'?'No open CMs for today\'s schools':'No CMs found'}</div></div>`;
-}
-
-function populateSchoolSelect(){
-  if(!routeData)return;
-  const sel=document.getElementById('cmSchool');if(!sel)return;
-  sel.innerHTML='<option value="">Select school...</option>';
-  routeData.allSchools.forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
-}
-
-function prefillCM(name){
-  navTo('cms');
-  const f=document.getElementById('newCMFormContainer');
-  const btn=document.getElementById('newCMToggleBtn');
-  f.style.display='block';btn.textContent='✕ Cancel';
-  setTimeout(()=>{const s=document.getElementById('cmSchool');if(s&&name)s.value=name;},150);
-}
-
-function setTemplate(t){document.getElementById('cmNotes').value=t;document.getElementById('cmNotes').focus();}
-function insertShorthand(t){
-  const ta=document.getElementById('cmNotes');if(!ta)return;
-  const p=ta.selectionStart;ta.value=ta.value.substring(0,p)+t+ta.value.substring(p);
-  ta.selectionStart=ta.selectionEnd=p+t.length;ta.focus();
-}
-
-function filterSchoolDropdown(query,listId,inputId){
-  var list=document.getElementById(listId);
-  var hidden=document.getElementById(inputId==='cmSchoolInput'?'cmSchool':'noteSchool');
-  if(!list||!routeData)return;
-  var q=query.toLowerCase().trim();
-  var schools=routeData.allSchools;
-  var matches=q?schools.filter(function(s){return s.name.toLowerCase().includes(q);}):schools;
-  if(matches.length===0){list.style.display='none';return;}
-  list.style.display='block';
-  list.innerHTML='';
-  matches.slice(0,10).forEach(function(s){
-    var item=document.createElement('div');
-    item.style.cssText='padding:11px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #e2e8f0';
-    item.innerHTML=esc(s.name)+'<span style="font-size:11px;color:#64748b;margin-left:8px">Dist '+esc(s.district)+'</span>';
-    (function(sname){
-      item.addEventListener('click',function(){selectSchool(listId,inputId,sname);});
-      item.addEventListener('mouseover',function(){this.style.background='#dbeafe';});
-      item.addEventListener('mouseout',function(){this.style.background='';});
-    })(s.name);
-    list.appendChild(item);
-  });
-  // Close on outside click
-  setTimeout(function(){
-    document.addEventListener('click',function closeList(e){
-      if(!list.contains(e.target)&&e.target.id!==inputId){list.style.display='none';}
-      document.removeEventListener('click',closeList);
-    });
-  },100);
-}
-
-function selectSchool(listId,inputId,schoolName){
-  var input=document.getElementById(inputId);
-  var hidden=document.getElementById(inputId==='cmSchoolInput'?'cmSchool':'noteSchool');
-  var list=document.getElementById(listId);
-  if(input)input.value=schoolName;
-  if(hidden)hidden.value=schoolName;
-  if(list)list.style.display='none';
-}
-
-async function submitNewCM(){
-  const school=document.getElementById('cmSchool').value;
-  const action=document.getElementById('cmAction').value;
-  const subject=document.getElementById('cmSubject').value.trim();
-  const notes=document.getElementById('cmNotes').value.trim();
-  if(!school){showToast('Please select a school','error');return;}
-  if(!notes){showToast('Please enter notes','error');return;}
-  if(!auth.connected){showToast('Connect to AIM first','error');return;}
-  const btn=document.getElementById('cmSubmitBtn');btn.textContent='Saving...';btn.disabled=true;
-  try{
-    const custs=await callAIM('SearchCustomers',{LastName:school.split(' ')[0]});
-    const match=(custs.Customers||[]).find(c=>c.Name?.toLowerCase().includes(school.toLowerCase().split(' ')[0]));
-    if(!match)throw new Error('School not found in AIM');
-    const ta=getDayAbbr();
-    const emp=getEmpCode(ta);
-    await callAIM('AddContactRecord',{CustomerID:match.Pk,Action:action,Subject:subject||action,Comments:notes,Employee:emp});
-    showToast('CM saved ✓','success');
-    document.getElementById('cmNotes').value='';document.getElementById('cmSubject').value='';
-    toggleNewCMForm();loadTodayCMs();
-  }catch(err){showToast(err.message,'error');}
-  finally{btn.textContent='Save CM to AIM';btn.disabled=false;}
-}
-
-// ── REPAIR TICKET ─────────────────────────────────────────
-function setRA(t){
-  repairAuth=t;
-  ['rtApproved','rtEstimate','rtRental'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
-  const m={approved:'rtApproved',estimate:'rtEstimate',rental:'rtRental'};
-  document.getElementById(m[t])?.classList.add('active');
-}
-
-function showRepairModal(){document.getElementById('repairModal').classList.add('show');}
-
-function showRepairTab(tab){
-  document.getElementById('repairNewForm').style.display=tab==='new'?'block':'none';
-  document.getElementById('repairSearchForm').style.display=tab==='search'?'block':'none';
-  document.getElementById('rtNew').classList.toggle('active',tab==='new');
-  document.getElementById('rtSearch').classList.toggle('active',tab==='search');
-}
-
-function setRepairSearchMode(mode,btn){
-  repairSearchMode=mode;
-  document.querySelectorAll('#repairSearchForm .dtab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const placeholder={school:'School name',date:'Date (MM/DD/YYYY)',serial:'Serial number'};
-  document.getElementById('repairSearchInput').placeholder=placeholder[mode]||'Enter search term...';
-}
-
-function openRepairScanner(){
-  if(typeof ZXing !== 'undefined'){
-    startScanner(function(v){
-      document.getElementById('rtSerial').value=v;
-      lookupSerialForRepair();
-    });
-  } else {
-    // ZXing not loaded - use file input fallback
-    document.getElementById('rtTagPhoto').click();
-  }
-}
-
-function openRepairScanner(){
-  if(typeof ZXing !== 'undefined'){
-    startScanner(function(v){
-      document.getElementById('rtSerial').value=v;
-      lookupSerialForRepair();
-    });
-  } else {
-    // ZXing not loaded - use file input fallback
-    document.getElementById('rtTagPhoto').click();
-  }
-}
-
-async function readTagPhoto(event){
-  const file=event.target.files?.[0];if(!file)return;
-  showToast('Reading tag...','');
-  try{
-    const b64=await new Promise((res,rej)=>{
-      const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Read failed'));r.readAsDataURL(file);
-    });
-    const resp=await fetch(`${PROXY}/ai`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:200,
-        messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:file.type,data:b64}},
-          {type:'text',text:'This is a barcode tag on a musical instrument case. Extract any serial number, student name, or account number visible. Respond with ONLY a JSON object like: {"serial":"...","name":"...","account":"..."}. If a field is not visible, use empty string.'}
-        ]}]
-      })
-    });
-    const data=await resp.json();
-    const text=data.content?.[0]?.text||'{}';
-    const clean=text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    if(parsed.serial){document.getElementById('rtSerial').value=parsed.serial;await lookupSerialForRepair();}
-    if(parsed.name&&!document.getElementById('rtName').value)document.getElementById('rtName').value=parsed.name;
-    if(parsed.account&&!document.getElementById('rtAcct').value)document.getElementById('rtAcct').value=parsed.account;
-    showToast('Tag read ✓','success');
-  }catch(err){showToast('Could not read tag','error');}
-}
-
-async function lookupSerialForRepair(){
-  const serial=document.getElementById('rtSerial').value.trim();
-  if(serial.length<4)return;
-  if(!auth.connected)return;
-  const result=document.getElementById('serialLookupResult');
-  try{
-    const data=await callAIM('SerialDetail',{SerialNumber:serial});
-    if(data.Status?.StatusCode==='Error')return;
-    const inst=data.SerialInfo||data;
-    if(inst.Description)document.getElementById('rtInst').value=inst.Description;
-    if(inst.CustomerName)document.getElementById('rtName').value=inst.CustomerName;
-    if(inst.CustomerAcct)document.getElementById('rtAcct').value=inst.CustomerAcct;
-    result.innerHTML=`<div style="font-size:12px;color:var(--emerald);padding:6px 10px;background:var(--emerald-bg);border-radius:8px;margin-bottom:8px">✓ Found: ${esc(inst.Description||'')} — ${esc(inst.CustomerName||'')}</div>`;
-  }catch(e){}
-}
-
-async function submitRepair(){
-  const inst=document.getElementById('rtInst').value.trim();
-  const notes=document.getElementById('rtNotes').value.trim();
-  if(!inst||!notes){showToast('Instrument and description required','error');return;}
-  if(!auth.connected){showToast('Connect to AIM first','error');return;}
-  const btn=document.getElementById('rtBtn');btn.textContent='Creating...';btn.disabled=true;
-  try{
-    await callAIM('PostServiceTicket',{
-      CustomerID:document.getElementById('rtAcct').value.trim()||'',
-      SerialNumber:document.getElementById('rtSerial').value.trim(),
-      Description:inst,Notes:notes,
-      Status:repairAuth==='estimate'?'ESTIMATE':'WORK ORDER',
-      IsRental:repairAuth==='rental'
-    });
-    showToast('Repair ticket created ✓','success');
-    ['rtName','rtAcct','rtInst','rtSerial','rtNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    hideMBG({target:document.getElementById('repairModal')},'repairModal');
-  }catch(err){showToast(err.message,'error');}
-  finally{btn.textContent='Create Service Ticket in AIM';btn.disabled=false;}
-}
-
-async function searchRepairs(){
-  const query=document.getElementById('repairSearchInput').value.trim();
-  if(!query)return;
-  if(!auth.connected){showToast('Connect to AIM first','error');return;}
-  const result=document.getElementById('repairSearchResults');
-  result.innerHTML=`<div class="loading-state"><div class="spinner"></div></div>`;
-  try{
-    const params={};
-    if(repairSearchMode==='school')params.ShipTo=query;
-    else if(repairSearchMode==='serial')params.SerialNumber=query;
-    else params.Date=query;
-    const data=await callAIM('SearchServiceTickets',params);
-    const tickets=data.ServiceTickets||data.Records||[];
-    if(tickets.length===0){result.innerHTML=`<div class="empty-state"><div class="etxt">No repairs found</div></div>`;return;}
-    result.innerHTML=`<div class="slbl">${tickets.length} results</div>`+renderRepairItems(tickets);
-  }catch(err){result.innerHTML=`<div class="empty-state"><div class="etxt">Error: ${esc(err.message)}</div></div>`;}
+  if(rep){var cr=REPS[currentRep]||REPS['ted'];rep.textContent=cr.name+(currentRep!=='ted'?' (viewing as)':'');}
 }
 
 // ── SCANS ─────────────────────────────────────────────────
