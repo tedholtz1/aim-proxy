@@ -523,9 +523,7 @@ html,body{overflow:hidden;height:100%}
 
 <!-- CMs -->
 <div class="screen" id="screen-cms">
-  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Contact Management</div></div></div>
-    <div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot2"></div><span id="ctxt2">AIM</span></div>
-  </div>
+  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Contact Management</div><div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot2"></div><span id="ctxt2">AIM</span></div></div></div>
   <div class="cnt">
     <div style="display:flex;gap:7px;flex-wrap:wrap">
       <button id="filterOpen" class="dtab active" onclick="setCMFilter('open',this)">Open</button>
@@ -593,9 +591,7 @@ html,body{overflow:hidden;height:100%}
 
 <!-- AI -->
 <div class="screen" id="screen-ai">
-  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">AI Assistant</div></div></div>
-    <div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot3"></div><span id="ctxt3">AIM</span></div>
-  </div>
+  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">AI Assistant</div><div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot3"></div><span id="ctxt3">AIM</span></div></div></div>
   <div class="cnt" style="gap:0">
     <div class="chat-wrap">
       <div class="chat-msgs" id="chatMessages">
@@ -625,14 +621,13 @@ html,body{overflow:hidden;height:100%}
 
 <!-- CALENDAR -->
 <div class="screen" id="screen-calendar">
-  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Recruiting Calendar</div></div></div></div>
+  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Recruiting Calendar</div></div></div>
   <div class="cnt" id="calContent"><div class="loading-state"><div class="spinner"></div></div></div>
 </div>
 
 <!-- SHELVES -->
 <div class="screen" id="screen-shelves">
   <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">My Shelves</div></div></div>
-  </div>
   <div class="cnt" id="shelvesContent">
     <div class="card">
       <div style="font-size:15px;font-weight:700;color:var(--pm);margin-bottom:8px">📦 Shelf Checker</div>
@@ -653,7 +648,6 @@ html,body{overflow:hidden;height:100%}
 <!-- SCANS -->
 <div class="screen" id="screen-scans">
   <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Scan Log</div></div></div>
-  </div>
   <div class="cnt">
     <div style="display:flex;gap:7px">
       <button class="dtab active" id="scanTabAll" onclick="setScanTab('all',this)">All</button>
@@ -675,7 +669,6 @@ html,body{overflow:hidden;height:100%}
 <!-- NOTES -->
 <div class="screen" id="screen-notes">
   <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Notes</div></div></div>
-  </div>
   <div class="cnt">
     <div class="fcard">
       <div class="ftitle">📝 New Visit Note</div>
@@ -708,7 +701,6 @@ html,body{overflow:hidden;height:100%}
 <!-- SETTINGS -->
 <div class="screen" id="screen-settings">
   <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">Settings</div></div></div>
-  </div>
   <div class="cnt">
     <div class="slbl">Rep</div>
     <div class="irow" style="margin-bottom:12px">
@@ -768,9 +760,7 @@ html,body{overflow:hidden;height:100%}
 
 <!-- MORNING BRIEFING -->
 <div class="screen" id="screen-briefing">
-  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">☀️ Morning Briefing</div></div></div>
-    <div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot5"></div><span id="ctxt5">AIM</span></div>
-  </div>
+  <div style="background:linear-gradient(160deg,#0f2552 0%,#1a3a6b 100%);padding:14px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,58,107,.25)"><div style="display:flex;align-items:center;gap:12px"><button onclick="navTo('home')" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">←</button><div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.01em;flex:1">☀️ Morning Briefing</div><div class="conn-pill" onclick="showConnectModal()"><div class="cdot" id="cdot5"></div><span id="ctxt5">AIM</span></div></div></div>
   <div class="cnt" id="briefingContent">
     <div class="loading-state"><div class="spinner"></div><div>Building your morning briefing...</div></div>
   </div>
